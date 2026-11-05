@@ -1,0 +1,55 @@
+/* KHAITECH shared design tokens and base styles. Used by the store and the admin dashboard. */
+:root{
+  --paper:#F0F3F1; --surface:#FFFFFF; --ink:#0D1B26; --muted:#566874; --line:#D3DBD7;
+  --accent:#2346F0; --accent-ink:#FFFFFF; --signal:#FFD23F; --signal-ink:#2A2200;
+  --wa:#1FAF56; --wa-ink:#FFFFFF; --screen:#0B1622; --danger:#C62F2F;
+  --t1:#E1E8FF; --t2:#FFF0BA; --t3:#DAEEE1; --t4:#EBE5EF; --grid:rgba(13,27,38,.055);
+  --ok:#146C36; --ok-bg:#DCF2E3; --warn:#7A5200; --warn-bg:#FFF0BA; --bad:#B42318; --bad-bg:#FBE0DD; --info:#1F3FD0; --info-bg:#E1E8FF;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Instrument Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#09111A; --surface:#111C28; --ink:#E8EEF2; --muted:#93A4B1; --line:#223344;
+    --accent:#7D97FF; --accent-ink:#07101A; --wa:#25D366; --wa-ink:#04200E; --danger:#FF8A8A;
+    --t1:#16254A; --t2:#3A3112; --t3:#123221; --t4:#2A2234; --grid:rgba(232,238,242,.05);
+    --ok:#6FE3A0; --ok-bg:#123221; --warn:#FFD23F; --warn-bg:#3A3112; --bad:#FF9C9C; --bad-bg:#3F1B1B; --info:#9FB2FF; --info-bg:#16254A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#09111A; --surface:#111C28; --ink:#E8EEF2; --muted:#93A4B1; --line:#223344;
+  --accent:#7D97FF; --accent-ink:#07101A; --wa:#25D366; --wa-ink:#04200E; --danger:#FF8A8A;
+  --t1:#16254A; --t2:#3A3112; --t3:#123221; --t4:#2A2234; --grid:rgba(232,238,242,.05);
+  --ok:#6FE3A0; --ok-bg:#123221; --warn:#FFD23F; --warn-bg:#3A3112; --bad:#FF9C9C; --bad-bg:#3F1B1B; --info:#9FB2FF; --info-bg:#16254A;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:60}
+h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;border:2px solid var(--ink);background:transparent;color:var(--ink);padding:.72rem 1.15rem;border-radius:999px;font-weight:600;text-decoration:none;cursor:pointer;line-height:1.1;transition:transform .15s,background .15s,color .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:var(--wa-ink)}
+.btn.small{padding:.5rem .85rem;font-size:.9rem}
+.btn.block{width:100%}
+.btn svg{flex:none}
+
+
+/* standalone-page safety (the preview host adds these too) */
+[hidden]{display:none!important}
+img{max-width:100%}
+body{margin:0}
