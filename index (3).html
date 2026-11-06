@@ -1,0 +1,1196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="KHAITECH sells phones, accessories and gadgets and repairs phones at Mandate Market, Ilorin, Kwara State. Chat on WhatsApp 0915 149 5696.">
+<title>KHAITECH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* KHAITECH shared design tokens and base styles. Used by the store and the admin dashboard. */
+:root{
+  --paper:#F0F3F1; --surface:#FFFFFF; --ink:#0D1B26; --muted:#566874; --line:#D3DBD7;
+  --accent:#2346F0; --accent-ink:#FFFFFF; --signal:#FFD23F; --signal-ink:#2A2200;
+  --wa:#1FAF56; --wa-ink:#FFFFFF; --screen:#0B1622; --danger:#C62F2F;
+  --t1:#E1E8FF; --t2:#FFF0BA; --t3:#DAEEE1; --t4:#EBE5EF; --grid:rgba(13,27,38,.055);
+  --ok:#146C36; --ok-bg:#DCF2E3; --warn:#7A5200; --warn-bg:#FFF0BA; --bad:#B42318; --bad-bg:#FBE0DD; --info:#1F3FD0; --info-bg:#E1E8FF;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Instrument Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#09111A; --surface:#111C28; --ink:#E8EEF2; --muted:#93A4B1; --line:#223344;
+    --accent:#7D97FF; --accent-ink:#07101A; --wa:#25D366; --wa-ink:#04200E; --danger:#FF8A8A;
+    --t1:#16254A; --t2:#3A3112; --t3:#123221; --t4:#2A2234; --grid:rgba(232,238,242,.05);
+    --ok:#6FE3A0; --ok-bg:#123221; --warn:#FFD23F; --warn-bg:#3A3112; --bad:#FF9C9C; --bad-bg:#3F1B1B; --info:#9FB2FF; --info-bg:#16254A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#09111A; --surface:#111C28; --ink:#E8EEF2; --muted:#93A4B1; --line:#223344;
+  --accent:#7D97FF; --accent-ink:#07101A; --wa:#25D366; --wa-ink:#04200E; --danger:#FF8A8A;
+  --t1:#16254A; --t2:#3A3112; --t3:#123221; --t4:#2A2234; --grid:rgba(232,238,242,.05);
+  --ok:#6FE3A0; --ok-bg:#123221; --warn:#FFD23F; --warn-bg:#3A3112; --bad:#FF9C9C; --bad-bg:#3F1B1B; --info:#9FB2FF; --info-bg:#16254A;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:60}
+h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;border:2px solid var(--ink);background:transparent;color:var(--ink);padding:.72rem 1.15rem;border-radius:999px;font-weight:600;text-decoration:none;cursor:pointer;line-height:1.1;transition:transform .15s,background .15s,color .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:var(--wa-ink)}
+.btn.small{padding:.5rem .85rem;font-size:.9rem}
+.btn.block{width:100%}
+.btn svg{flex:none}
+
+
+/* standalone-page safety (the preview host adds these too) */
+[hidden]{display:none!important}
+img{max-width:100%}
+body{margin:0}
+
+</style>
+<style>
+/* top strip + header */
+.strip{background:var(--ink);color:var(--paper);font-size:.82rem}
+.strip .wrap{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;justify-content:space-between;padding-block:.5rem}
+.strip span{white-space:nowrap}
+header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
+header.site .wrap{display:flex;align-items:center;gap:1rem;padding-block:.7rem}
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-family:var(--display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em}
+.logo b{color:var(--accent);font-weight:800}
+nav.main{margin-left:auto;display:flex;gap:1.35rem;align-items:center}
+nav.main a{text-decoration:none;font-weight:500;font-size:.95rem;color:var(--muted)}
+nav.main a:hover{color:var(--ink)}
+.hdr-actions{display:flex;gap:.5rem;align-items:center}
+.cart-btn{position:relative}
+.badge{background:var(--signal);color:var(--signal-ink);border-radius:999px;min-width:1.35rem;height:1.35rem;display:inline-grid;place-items:center;font-size:.78rem;font-weight:700;padding:0 .3rem}
+.menu-btn{display:none}
+@media (max-width:860px){
+  nav.main{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:flex-start;gap:0;background:var(--paper);border-bottom:1px solid var(--line);padding:.5rem max(16px,env(safe-area-inset-left,0px)) 1rem}
+  nav.main.open{display:flex}
+  nav.main a{padding:.7rem 0;width:100%;font-size:1.05rem;color:var(--ink)}
+  .menu-btn{display:inline-flex;margin-left:auto}
+  .hdr-actions{margin-left:0}
+  .hide-sm{display:none}
+}
+
+/* hero */
+.hero{background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:2.5rem;align-items:center;padding-block:clamp(2.5rem,6vw,5rem)}
+.hero h1{font-size:clamp(2.5rem,7.2vw,4.9rem);font-weight:800}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--signal) 62% 92%,transparent 92%);padding:0 .08em}
+.hero .lede{font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--muted);max-width:34rem;margin-top:1.25rem}
+.cta-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.75rem}
+.facts{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin-top:1.75rem;font-size:.92rem;color:var(--muted)}
+.facts span::before{content:"";display:inline-block;width:.5rem;height:.5rem;background:var(--signal);border:1.5px solid var(--ink);border-radius:2px;margin-right:.5rem;vertical-align:.05em}
+.hero-art{min-width:0;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.hero-art svg{width:min(100%,320px);height:auto;filter:drop-shadow(0 18px 24px rgba(13,27,38,.18))}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
+.chips span{font-family:var(--mono);font-size:.74rem;border:1.5px solid var(--ink);background:var(--surface);padding:.2rem .6rem;border-radius:999px}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}.hero-art{order:-1}.hero-art svg{width:min(70%,230px)}}
+
+/* sections */
+section{scroll-margin-top:72px}
+.sec{padding-block:clamp(3rem,7vw,5.5rem)}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:1rem 2rem;margin-bottom:2rem}
+.sec-head h2{font-size:clamp(1.9rem,4.6vw,3rem);font-weight:700;max-width:22ch}
+.sec-head p{color:var(--muted);max-width:36rem;margin-top:.7rem}
+.band{background:var(--surface);border-block:1px solid var(--line)}
+
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:1rem}
+.svc{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1.2rem;display:flex;flex-direction:column;gap:.55rem;min-width:0}
+.svc h3{font-size:1.25rem;font-weight:700}
+.svc p{color:var(--muted);font-size:.94rem;flex:1}
+.svc a{font-weight:600;font-size:.92rem;color:var(--accent);text-decoration:none;margin-top:.3rem}
+.svc a:hover{text-decoration:underline}
+.svc .ico{width:42px;height:42px;border-radius:12px;background:var(--t2);display:grid;place-items:center}
+
+/* shop */
+.tools{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:center;margin-bottom:1.25rem}
+.search{flex:1 1 240px;min-width:0;border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:.65rem 1.1rem}
+.sort{border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:.6rem 1rem}
+.pills{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.5rem}
+.pill{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:.4rem .95rem;cursor:pointer;font-weight:500;font-size:.93rem}
+.pill[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,222px),1fr));gap:1.1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:transform .18s,box-shadow .18s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 28px -14px rgba(13,27,38,.35)}
+.art{position:relative;aspect-ratio:1/.82;max-width:100%;display:grid;place-items:center}
+.art svg{width:62%;height:auto;max-height:86%}
+.tone-a{background:var(--t1)}.tone-b{background:var(--t2)}.tone-c{background:var(--t3)}.tone-d{background:var(--t4)}
+.tag{position:absolute;left:.7rem;top:.7rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:.18rem .5rem;border-radius:6px}
+.card-body{padding:1rem 1rem 1.1rem;display:flex;flex-direction:column;gap:.4rem;flex:1}
+.card h3{font-size:1.08rem;font-weight:700;letter-spacing:-.01em}
+.spec{font-size:.85rem;color:var(--muted);flex:1}
+.buy{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.5rem;flex-wrap:wrap}
+.price{font-family:var(--mono);font-weight:500;font-size:1.02rem;font-variant-numeric:tabular-nums}
+.ask{font-size:.82rem;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.ask:hover{color:var(--ink)}
+.note{margin-top:1.5rem;font-size:.88rem;color:var(--muted)}
+.empty{grid-column:1/-1;padding:2.5rem 1rem;text-align:center;color:var(--muted);border:2px dashed var(--line);border-radius:16px}
+
+/* repair form */
+.repair-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:start}
+@media (max-width:900px){.repair-wrap{grid-template-columns:1fr}}
+.imei-tip{margin-top:1.5rem;border:1.5px solid var(--ink);border-radius:16px;background:var(--paper);padding:1.1rem 1.2rem}
+.imei-tip .dial{font-family:var(--mono);font-size:1.7rem;font-weight:500;letter-spacing:.06em;display:inline-block;background:var(--screen);color:#fff;border-radius:10px;padding:.25rem .8rem;margin:.5rem 0}
+.imei-tip p{font-size:.92rem;color:var(--muted)}
+form.rf{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:clamp(1.1rem,3vw,2rem);display:grid;gap:1.1rem;min-width:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+@media (max-width:560px){.row2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.field label,.field legend{font-weight:600;font-size:.92rem}
+.field .hint{font-size:.8rem;color:var(--muted);font-weight:400}
+.in{width:100%;min-width:0;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:.7rem .85rem}
+.in:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.in[aria-invalid="true"]{border-color:var(--danger)}
+textarea.in{min-height:96px;resize:vertical}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.err{color:var(--danger);font-size:.84rem;font-weight:500}
+.faults{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.25rem}
+.fchip{position:relative}
+.fchip input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.fchip span{display:inline-block;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:.42rem .95rem;font-size:.92rem;font-weight:500}
+.fchip input:checked + span{background:var(--signal);border-color:var(--ink);color:var(--signal-ink)}
+.fchip input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.check{display:flex;gap:.55rem;align-items:flex-start;font-size:.88rem;color:var(--muted)}
+.check input{margin-top:.25rem}
+.imei-count{font-family:var(--mono);font-size:.78rem;color:var(--muted);align-self:flex-end}
+.result{border:2px solid var(--ink);border-radius:18px;background:var(--surface);padding:1.1rem;display:grid;gap:.8rem}
+.result pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:.82rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:.8rem}
+.result .acts{display:flex;flex-wrap:wrap;gap:.6rem}
+.result p{font-size:.88rem;color:var(--muted)}
+
+/* process */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:1rem;counter-reset:s}
+.steps li{counter-increment:s;border-top:3px solid var(--ink);padding-top:.9rem;min-width:0}
+.steps li::before{content:counter(s);font-family:var(--mono);font-size:.85rem;background:var(--signal);color:var(--signal-ink);border:1.5px solid var(--ink);border-radius:6px;padding:.05rem .45rem;display:inline-block;margin-bottom:.6rem}
+.steps h3{font-size:1.15rem;font-weight:700;margin-bottom:.3rem}
+.steps p{font-size:.93rem;color:var(--muted)}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1rem}
+.why div{padding:1.25rem;border-radius:16px;background:var(--surface);border:1px solid var(--line);min-width:0}
+.why h3{font-size:1.15rem;margin-bottom:.35rem}
+.why p{color:var(--muted);font-size:.94rem}
+
+/* faq */
+.faq{max-width:760px;display:grid;gap:.6rem}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:.2rem 1.1rem}
+summary{cursor:pointer;font-weight:600;padding:.85rem 0;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--mono);font-size:1.2rem}
+details[open] summary::after{content:"\2212"}
+details p{color:var(--muted);padding-bottom:1rem;font-size:.96rem}
+
+/* visit */
+.visit{display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem}
+@media (max-width:860px){.visit{grid-template-columns:1fr}}
+.addr{background:var(--ink);color:var(--paper);border-radius:22px;padding:clamp(1.4rem,3.5vw,2.4rem);display:flex;flex-direction:column;gap:1.1rem;min-width:0}
+.addr h3{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800}
+.addr .eyebrow{color:color-mix(in srgb,var(--paper) 65%,transparent)}
+.addr .btn{border-color:var(--paper);color:var(--paper)}
+.addr .btn.wa{border-color:var(--wa);color:var(--wa-ink)}
+.contact{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(1.4rem,3.5vw,2.2rem);display:grid;gap:1rem;align-content:start;min-width:0}
+.num{font-family:var(--mono);font-size:clamp(1.4rem,4vw,2rem);font-weight:500;letter-spacing:.02em;user-select:all}
+
+footer{border-top:1px solid var(--line);padding-block:2rem 6rem;color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:.8rem 2rem;justify-content:space-between}
+footer nav{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+footer a{text-decoration:none}
+footer a:hover{color:var(--ink)}
+
+/* floating whatsapp */
+.fab{position:fixed;z-index:40;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:.6rem;background:var(--wa);color:var(--wa-ink);text-decoration:none;font-weight:700;padding:.85rem 1.15rem;border-radius:999px;box-shadow:0 10px 26px -6px rgba(0,0,0,.45)}
+.fab:hover{transform:translateY(-2px)}
+@media (max-width:520px){.fab span{display:none}.fab{padding:.95rem}}
+
+/* cart drawer */
+.scrim{position:fixed;inset:0;background:rgba(5,10,15,.55);z-index:70}
+.drawer{position:fixed;z-index:80;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--paper);border-left:2px solid var(--ink);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.1rem;border-bottom:1px solid var(--line)}
+.drawer h2{font-size:1.35rem}
+.xbtn{border:2px solid var(--ink);background:transparent;border-radius:999px;width:2.4rem;height:2.4rem;cursor:pointer;font-size:1.1rem;line-height:1}
+.lines{flex:1;overflow-y:auto;padding:.5rem 1.1rem;display:flex;flex-direction:column}
+.line{display:grid;grid-template-columns:1fr auto;gap:.2rem .8rem;padding:.85rem 0;border-bottom:1px solid var(--line)}
+.line b{font-weight:600;font-size:.96rem}
+.line .lp{font-family:var(--mono);font-size:.9rem}
+.qty{display:flex;align-items:center;gap:.4rem}
+.qty button{width:1.9rem;height:1.9rem;border-radius:8px;border:1.5px solid var(--ink);background:var(--surface);cursor:pointer;font-weight:700}
+.qty span{min-width:1.4rem;text-align:center;font-family:var(--mono)}
+.rm{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:.82rem;justify-self:end}
+.cart-empty{margin:auto;text-align:center;color:var(--muted);padding:2rem 0}
+.drawer footer{border-top:1px solid var(--line);padding:1rem 1.1rem;display:grid;gap:.75rem}
+.tot{display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem}
+.tot span:last-child{font-family:var(--mono)}
+body.lock{overflow:hidden}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* real product photos */
+.art img{width:100%;height:100%;object-fit:cover;display:block}
+.art.photo{display:block;padding:0;background:var(--t1)}
+.art.noimg{align-content:center}
+.art.noimg span{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center;padding:1rem}
+.art .sold{position:absolute;inset:0;background:rgba(9,17,26,.55);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.3rem;letter-spacing:.02em}
+.tag.cond{left:.7rem;top:.7rem}
+.card .open{all:unset;cursor:pointer;display:block}
+.card .open:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.chiprow{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.15rem}
+.chiprow span{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line);border-radius:6px;padding:.1rem .45rem;color:var(--muted)}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+.pmodal{position:fixed;z-index:90;inset:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));margin:auto;max-width:940px;max-height:calc(100% - 24px);overflow:auto;background:var(--paper);border:2px solid var(--ink);border-radius:22px;display:grid;grid-template-columns:1.05fr .95fr;gap:1.4rem;padding:1.2rem;height:fit-content}
+@media (max-width:760px){.pmodal{grid-template-columns:1fr}}
+.pmodal[hidden]{display:none}
+.pclose{position:absolute;top:.7rem;right:.7rem;background:var(--paper);z-index:2}
+.pgal{min-width:0}
+.pmain{aspect-ratio:1/1;max-width:100%;border-radius:16px;overflow:hidden;background:var(--t1);display:grid;place-items:center}
+.pmain img{width:100%;height:100%;object-fit:contain;background:var(--surface)}
+.pthumbs{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
+.pthumbs button{width:62px;height:62px;border:2px solid var(--line);border-radius:10px;padding:0;overflow:hidden;cursor:pointer;background:var(--surface)}
+.pthumbs button[aria-current="true"]{border-color:var(--ink)}
+.pthumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.pinfo{min-width:0;display:flex;flex-direction:column;gap:.8rem;padding-right:2.2rem}
+.pinfo h3{font-size:1.6rem;font-weight:700}
+.pinfo .price{font-size:1.5rem}
+.pinfo dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;margin:0;font-size:.93rem}
+.pinfo dt{color:var(--muted)}
+.pinfo dd{margin:0;font-weight:500}
+.pinfo .desc{color:var(--muted);white-space:pre-line}
+
+</style>
+</head>
+<body>
+<div class="strip">
+  <div class="wrap">
+    <span>Mandate Market, Ilorin, Kwara State</span>
+    <span class="mono">WhatsApp 0915 149 5696</span>
+  </div>
+</div>
+
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="KHAITECH home">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="1.5" y="1.5" width="31" height="31" rx="9" fill="var(--accent)"/><rect x="11" y="7" width="12" height="20" rx="3" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><circle cx="17" cy="23" r="1.4" fill="var(--signal)"/><path d="M13.5 12l7 5" stroke="var(--signal)" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>KHAI<b>TECH</b></span>
+    </a>
+    <button class="btn small menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="main" id="mainNav" aria-label="Main">
+      <a href="#shop">Shop</a>
+      <a href="#services">Repairs</a>
+      <a href="#repair">Book a repair</a>
+      <a href="#faq">FAQ</a>
+      <a href="#visit">Visit us</a>
+    </nav>
+    <div class="hdr-actions">
+      <button class="btn small cart-btn" id="cartBtn" aria-controls="cart" aria-expanded="false">Order <span class="badge" id="cartCount">0</span></button>
+      <a class="btn small wa hide-sm" data-wa="Hello KHAITECH, I have an enquiry." target="_blank" rel="noopener" href="https://wa.me/2349151495696">WhatsApp</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="hero" aria-labelledby="h1">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Phone sales, repairs and gadgets</p>
+      <h1 id="h1" style="margin-top:.9rem">Buy it. <em>Fix it.</em> Keep it running.</h1>
+      <p class="lede">KHAITECH sells phones, accessories and gadgets, and repairs the faults that stop your phone from working, from a cracked screen to a dead phone. Find us at Mandate Market, Ilorin.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#shop">Shop the store</a>
+        <a class="btn" href="#repair">Book a repair</a>
+        <a class="btn wa" data-wa="Hello KHAITECH, I would like to make an enquiry." target="_blank" rel="noopener" href="https://wa.me/2349151495696">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.6-4.8A8.5 8.5 0 1 1 8 19.6L3 21z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2.2-1-1 .8c-1-.4-1.9-1.300-2.300-2.300l.8-1-1-2.200L9 8.500z" fill="currentColor" stroke="none"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+      <div class="facts">
+        <span>Mandate Market, Ilorin</span>
+        <span>Direct WhatsApp line</span>
+        <span>Sales, repairs, accessories</span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 320 420" role="img" aria-label="A phone showing the IMEI dial code star hash zero six hash">
+        <rect x="30" y="8" width="260" height="404" rx="40" fill="var(--ink)"/>
+        <rect x="42" y="20" width="236" height="380" rx="30" fill="var(--screen)"/>
+        <rect x="124" y="30" width="72" height="16" rx="8" fill="#000"/>
+        <text x="160" y="104" text-anchor="middle" font-family="var(--mono)" font-size="13" fill="#8fa3b3" letter-spacing="2">DIAL TO READ IMEI</text>
+        <text x="160" y="162" text-anchor="middle" font-family="var(--mono)" font-size="44" fill="#fff" letter-spacing="3">*#06#</text>
+        <rect x="64" y="190" width="192" height="92" rx="14" fill="#13263a"/>
+        <text x="78" y="214" font-family="var(--mono)" font-size="11" fill="#8fa3b3">IMEI  (sample)</text>
+        <text x="78" y="240" font-family="var(--mono)" font-size="17" fill="#fff" letter-spacing="1.5">35 612908 417721 3</text>
+        <rect x="78" y="254" width="64" height="10" rx="5" fill="var(--signal)"/>
+        <rect x="150" y="254" width="92" height="10" rx="5" fill="#2b4258"/>
+        <path d="M232 40 L262 96 L244 118 L270 176 L252 214" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="2"/>
+        <path d="M262 96 L284 84 M244 118 L222 124" fill="none" stroke="#ffffff" stroke-opacity=".2" stroke-width="1.5"/>
+        <rect x="64" y="312" width="192" height="46" rx="23" fill="var(--accent)"/>
+        <text x="160" y="341" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="17" fill="var(--accent-ink)">Book a repair</text>
+      </svg>
+      <div class="chips" aria-hidden="true"><span>Screen</span><span>Dead phone</span><span>Battery</span><span>Charging port</span><span>Software</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec band" id="services" aria-labelledby="svcH">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Repairs</p>
+        <h2 id="svcH" style="margin-top:.6rem">What we repair</h2>
+        <p>Pick the fault that matches your phone and we will start your repair request for you.</p>
+      </div>
+    </div>
+    <div class="svc-grid" id="svcGrid"></div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="sec" id="shop" aria-labelledby="shopH">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow" id="shopCount">Store</p>
+        <h2 id="shopH" style="margin-top:.6rem">Phones, accessories and gadgets</h2>
+        <p>Add what you want to your order, then send it to us on WhatsApp. We confirm stock and the final price with you.</p>
+      </div>
+    </div>
+    <div class="tools">
+      <label class="sr" for="q">Search the store</label>
+      <input class="search" id="q" type="search" placeholder="Search phones, chargers, earbuds" autocomplete="off">
+      <label class="sr" for="cond">Filter by condition</label>
+      <select class="sort" id="cond"><option value="">Any condition</option></select>
+      <label class="sr" for="sort">Sort products</label>
+      <select class="sort" id="sort">
+        <option value="featured">Featured</option>
+        <option value="low">Price: low to high</option>
+        <option value="high">Price: high to low</option>
+        <option value="name">Name A to Z</option>
+      </select>
+    </div>
+    <div class="pills" id="pills" role="group" aria-label="Filter by category"></div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <p class="note">Prices are in naira and are a guide only. Availability and the final price are confirmed with you on WhatsApp.</p>
+  </div>
+</section>
+
+<!-- REPAIR -->
+<section class="sec band" id="repair" aria-labelledby="repH">
+  <div class="wrap repair-wrap">
+    <div>
+      <p class="eyebrow">Repair request</p>
+      <h2 id="repH" style="margin-top:.6rem;font-size:clamp(1.9rem,4.6vw,3rem);font-weight:700">Tell us what is wrong with your phone</h2>
+      <p style="color:var(--muted);margin-top:.8rem;max-width:30rem">Fill in the form and it opens a ready-written message to us on WhatsApp. You check it, then tap send. Nothing leaves your phone until you do.</p>
+      <div class="imei-tip">
+        <p class="eyebrow">Find your IMEI</p>
+        <span class="dial">*#06#</span>
+        <p>Open your phone dialer and type this code. The 15-digit number shown is your IMEI. It is also printed on the phone box and under Settings, About phone. Dual-SIM phones show two numbers; either one works.</p>
+      </div>
+    </div>
+
+    <div style="min-width:0">
+      <form class="rf" id="repairForm" novalidate>
+        <div class="row2">
+          <div class="field">
+            <label for="rName">Your name</label>
+            <input class="in" id="rName" autocomplete="name" placeholder="Full name">
+            <p class="err" id="eName" hidden></p>
+          </div>
+          <div class="field">
+            <label for="rPhone">Your phone number</label>
+            <input class="in" id="rPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0801 234 5678">
+            <p class="err" id="ePhone" hidden></p>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="rMaker">Phone maker</label>
+            <select class="in" id="rMaker"><option value="">Select maker</option></select>
+            <p class="err" id="eMaker" hidden></p>
+          </div>
+          <div class="field">
+            <label for="rSeries">Phone series</label>
+            <select class="in" id="rSeries" disabled><option value="">Select maker first</option></select>
+            <p class="err" id="eSeries" hidden></p>
+          </div>
+        </div>
+        <div class="field" id="otherWrap" hidden>
+          <label for="rOther">Maker and series</label>
+          <input class="in" id="rOther" placeholder="For example: Nokia G21">
+        </div>
+        <div class="field">
+          <label for="rModel">Exact model <span class="hint">(optional)</span></label>
+          <input class="in" id="rModel" placeholder="For example: Spark 20 Pro, iPhone 13 Pro Max, A54">
+        </div>
+        <div class="field">
+          <label for="rImei">IMEI number</label>
+          <input class="in" id="rImei" inputmode="numeric" autocomplete="off" maxlength="19" placeholder="15 digits" aria-describedby="imeiHelp">
+          <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+            <p class="err" id="eImei" hidden></p>
+            <span class="imei-count" id="imeiCount">0 / 15</span>
+          </div>
+          <label class="check" for="noImei"><input type="checkbox" id="noImei"> I cannot get the IMEI now (for example, the phone is dead). I will show it at the shop.</label>
+        </div>
+        <fieldset class="field">
+          <legend>Fault to repair <span class="hint">(choose one or more)</span></legend>
+          <div class="faults" id="faults"></div>
+          <p class="err" id="eFault" hidden></p>
+        </fieldset>
+        <div class="field">
+          <label for="rNote">More details <span class="hint">(optional)</span></label>
+          <textarea class="in" id="rNote" placeholder="When did it start? Did it fall or get wet? Any repair before?"></textarea>
+        </div>
+        <div class="field">
+          <label for="rWhen">When will you bring it in?</label>
+          <select class="in" id="rWhen">
+            <option>Today</option><option>Tomorrow</option><option>Later this week</option><option>Not sure yet</option>
+          </select>
+        </div>
+        <button class="btn primary block" type="submit">Prepare my repair request</button>
+      </form>
+
+      <div class="result" id="result" hidden aria-live="polite" style="margin-top:1.25rem">
+        <h3 style="font-size:1.25rem" id="resultH">Your request is ready</h3>
+        <pre id="resultText"></pre>
+        <div class="acts">
+          <a class="btn wa" id="resultWa" target="_blank" rel="noopener" href="https://wa.me/2349151495696">Send on WhatsApp</a>
+          <button class="btn" type="button" id="copyBtn">Copy message</button>
+        </div>
+        <p id="copyStatus">Tap Send on WhatsApp, then press send inside WhatsApp to deliver it to us. If WhatsApp does not open, copy the message and send it to 0915 149 5696.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec" id="process" aria-labelledby="procH">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">How a repair works</p><h2 id="procH" style="margin-top:.6rem">From broken to working</h2></div></div>
+    <ol class="steps">
+      <li><h3>Send the request</h3><p>Fill the form above or message us on WhatsApp with your phone and its fault.</p></li>
+      <li><h3>Bring it in</h3><p>Come to our shop at Mandate Market, Ilorin, with the phone and its IMEI.</p></li>
+      <li><h3>We diagnose it</h3><p>We check the phone and tell you what is wrong and what the repair involves.</p></li>
+      <li><h3>We repair it</h3><p>Once you agree, we carry out the repair and test the phone.</p></li>
+      <li><h3>You collect it</h3><p>Check that everything works, then take your phone home.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="sec band" aria-labelledby="whyH">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">Why KHAITECH</p><h2 id="whyH" style="margin-top:.6rem">One shop for your phone, from buying to fixing</h2></div></div>
+    <div class="why">
+      <div><h3>Sales and repairs together</h3><p>Buy a phone, get an accessory for it and bring it back for repair, all in one place.</p></div>
+      <div><h3>Talk to us directly</h3><p>Message our WhatsApp line for prices, stock, repair questions or help choosing a phone.</p></div>
+      <div><h3>Clear repair requests</h3><p>Our form records your phone, IMEI and fault so we know what to expect before you arrive.</p></div>
+      <div><h3>In the heart of Ilorin</h3><p>We are at Mandate Market, easy to reach from anywhere in the city.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq" aria-labelledby="faqH">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">Questions</p><h2 id="faqH" style="margin-top:.6rem">Before you visit</h2></div></div>
+    <div class="faq">
+      <details><summary>What is an IMEI and why do you ask for it?</summary><p>The IMEI is the 15-digit identity number of your phone. It helps us record exactly which phone is being repaired. Dial *#06# to see it, or check the phone box or Settings, About phone.</p></details>
+      <details><summary>My phone is dead. How do I get the IMEI?</summary><p>Tick the box on the repair form that says you cannot get the IMEI. You can also check the phone box, the SIM tray on some models, or the sticker under the battery on older phones. Otherwise we record it at the shop.</p></details>
+      <details><summary>How long will my repair take?</summary><p>It depends on the fault and the parts needed. We tell you what to expect after we have looked at your phone.</p></details>
+      <details><summary>Can I order gadgets without coming to the shop?</summary><p>Yes. Add items to your order and send it to us on WhatsApp. We confirm availability and the final price, then agree how you will pay and collect.</p></details>
+      <details><summary>Do you sell new and used phones?</summary><p>Our store shows the condition of each phone, new or UK used. Ask on WhatsApp for what is currently available.</p></details>
+      <details><summary>Where are you located?</summary><p>KHAITECH is at Mandate Market, Ilorin, Kwara State.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section class="sec band" id="visit" aria-labelledby="visitH">
+  <div class="wrap visit">
+    <div class="addr">
+      <p class="eyebrow">Visit the shop</p>
+      <h3 id="visitH">Mandate Market,<br>Ilorin, Kwara State</h3>
+      <p style="max-width:28rem;color:color-mix(in srgb,var(--paper) 80%,transparent)">Bring your phone for repair, or come and see our phones and gadgets in person.</p>
+      <div class="cta-row" style="margin-top:.2rem">
+        <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Mandate+Market+Ilorin+Kwara">Open in Google Maps</a>
+      </div>
+    </div>
+    <div class="contact">
+      <p class="eyebrow">WhatsApp and calls</p>
+      <p class="num" id="numText">0915 149 5696</p>
+      <p style="color:var(--muted)">Message us for sales, repairs or any enquiry. You can select and copy the number above.</p>
+      <a class="btn wa block" data-wa="Hello KHAITECH, I would like to make an enquiry." target="_blank" rel="noopener" href="https://wa.me/2349151495696">Chat on WhatsApp</a>
+      <button class="btn block" type="button" id="copyNum">Copy number</button>
+      <p id="numStatus" class="err" style="color:var(--muted)" hidden></p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <strong style="color:var(--ink);font-family:var(--display)">KHAITECH</strong><br>
+      Phone sales, repairs and gadgets.<br>Mandate Market, Ilorin, Kwara State.
+      <br>&copy; 2026 KHAITECH. All rights reserved.
+    </div>
+    <nav aria-label="Footer"><a href="#shop">Shop</a><a href="#services">Repairs</a><a href="#repair">Book a repair</a><a href="#faq">FAQ</a><a href="#visit">Visit us</a><a href="admin.html" rel="nofollow">Staff login</a></nav>
+  </div>
+</footer>
+
+<a class="fab" data-wa="Hello KHAITECH, I would like to make an enquiry." target="_blank" rel="noopener" href="https://wa.me/2349151495696" aria-label="Chat with KHAITECH on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.6-4.8A8.5 8.5 0 1 1 8 19.6L3 21z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2.2-1-1 .8c-1-.4-1.9-1.300-2.300-2.300l.8-1-1-2.200L9 8.500z" fill="currentColor" stroke="none"/></svg>
+  <span>Chat on WhatsApp</span>
+</a>
+
+<!-- Product detail -->
+<div class="scrim" id="pScrim" hidden></div>
+<div class="pmodal" id="pModal" role="dialog" aria-modal="true" aria-labelledby="pTitle" hidden>
+  <button class="xbtn pclose" id="pClose" aria-label="Close">&#10005;</button>
+  <div class="pgal"><div class="pmain" id="pMain"></div><div class="pthumbs" id="pThumbs"></div></div>
+  <div class="pinfo" id="pInfo"></div>
+</div>
+
+<!-- Order drawer -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="cart" aria-label="Your order" hidden>
+  <header>
+    <h2>Your order</h2>
+    <button class="xbtn" id="cartClose" aria-label="Close order">&#10005;</button>
+  </header>
+  <div class="lines" id="lines"></div>
+  <footer>
+    <div class="tot"><span>Total (guide)</span><span id="cartTotal">₦0</span></div>
+    <div class="field">
+      <label for="cName">Your name <span class="hint" id="cNameHint">(optional)</span></label>
+      <input class="in" id="cName" autocomplete="name" placeholder="So we know who to reply to">
+    </div>
+    <div class="field" id="cPhoneWrap" hidden>
+      <label for="cPhone">Your phone number</label>
+      <input class="in" id="cPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0801 234 5678">
+    </div>
+    <div class="field" id="cNoteWrap" hidden>
+      <label for="cNote">Note <span class="hint">(optional: delivery, colour, anything else)</span></label>
+      <input class="in" id="cNote" maxlength="300">
+    </div>
+    <p class="err" id="cErr" hidden></p>
+    <button class="btn primary block" type="button" id="placeOrder" hidden>Place order</button>
+    <a class="btn wa block" id="cartWa" target="_blank" rel="noopener" href="https://wa.me/2349151495696">Send order on WhatsApp</a>
+    <button class="btn small block" type="button" id="cartClear">Clear order</button>
+  </footer>
+</aside>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+/* KHAITECH data layer.
+   Every page talks to data only through window.KDB.
+   - If config.js has a Supabase URL and key, data is stored online (shared by all devices).
+   - Otherwise data is stored in this browser (IndexedDB). */
+(function () {
+  var CFG = window.KHAITECH_CONFIG || {};
+  var SB = CFG.supabase || {};
+  var wantOnline = !!(SB.url && SB.anonKey);
+  var STORES = ['products', 'repairs', 'sales', 'orders'];
+  var BUCKET = 'product-photos';
+
+  function uid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+  }
+
+  /* ---------- Supabase client ---------- */
+  var sb = null, sbError = null;
+  if (wantOnline) {
+    if (window.supabase && window.supabase.createClient) {
+      try { sb = window.supabase.createClient(SB.url, SB.anonKey, { auth: { persistSession: true, autoRefreshToken: true } }); }
+      catch (e) { sbError = e; }
+    } else {
+      sbError = new Error('The online database library could not be loaded. Check your internet connection.');
+    }
+  }
+
+  /* ---------- row mapping (camelCase in the app, snake_case in the database) ---------- */
+  var COLS = {
+    products: 'id name category brand condition price cost_price qty status storage color battery imei description photos created_at updated_at',
+    repairs: 'id ticket customer phone maker model imei faults notes price paid date_in return_date status collected collected_date created_at updated_at',
+    sales: 'id product_id name category condition qty unit_price unit_cost buyer method date created_at',
+    orders: 'id number customer phone note items total status created_at updated_at'
+  };
+  Object.keys(COLS).forEach(function (k) { var o = {}; COLS[k].split(' ').forEach(function (c) { o[c] = 1; }); COLS[k] = o; });
+  var DATECOLS = { date_in: 1, return_date: 1, collected_date: 1, date: 1 };
+  function snake(k) { return k.replace(/[A-Z]/g, function (c) { return '_' + c.toLowerCase(); }); }
+  function camel(k) { return k.replace(/_([a-z])/g, function (m, c) { return c.toUpperCase(); }); }
+  function toRow(o, col) {
+    var r = {};
+    Object.keys(o).forEach(function (k) {
+      var s = snake(k), v = o[k];
+      if (!COLS[col][s] || v === undefined) return;
+      if (DATECOLS[s] && v === '') v = null;
+      r[s] = v;
+    });
+    return r;
+  }
+  function fromRow(r) {
+    var o = {};
+    Object.keys(r).forEach(function (k) { o[camel(k)] = r[k] === null ? '' : r[k]; });
+    return o;
+  }
+  function must(res) { if (res && res.error) throw new Error(res.error.message || 'Database error'); return res; }
+
+  /* ---------- local backend (IndexedDB) ---------- */
+  var mem = { products: [], repairs: [], sales: [], orders: [] };
+  var dbp = null;
+  function open() {
+    if (dbp) return dbp;
+    dbp = new Promise(function (res, rej) {
+      if (!window.indexedDB) { rej(new Error('IndexedDB unavailable')); return; }
+      var r = indexedDB.open('khaitech', 2);
+      r.onupgradeneeded = function () {
+        var d = r.result;
+        STORES.forEach(function (s) { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: 'id' }); });
+      };
+      r.onsuccess = function () { res(r.result); };
+      r.onerror = function () { rej(r.error); };
+    });
+    return dbp;
+  }
+  var ready = wantOnline ? Promise.resolve(false) : open().then(function () { return true; }, function () { return false; });
+  function run(store, mode, fn) {
+    return open().then(function (d) {
+      return new Promise(function (res, rej) {
+        var t = d.transaction(store, mode), s = t.objectStore(store), r = fn(s);
+        t.oncomplete = function () { res(r && 'result' in r ? r.result : undefined); };
+        t.onerror = t.onabort = function () { rej(t.error); };
+      });
+    });
+  }
+  var local = {
+    list: function (col) {
+      return ready.then(function (ok) { return ok ? run(col, 'readonly', function (s) { return s.getAll(); }) : mem[col].slice(); });
+    },
+    save: function (col, obj) {
+      var now = new Date().toISOString();
+      if (!obj.id) { obj.id = uid(); obj.createdAt = now; }
+      obj.updatedAt = now;
+      return ready.then(function (ok) {
+        if (ok) return run(col, 'readwrite', function (s) { return s.put(obj); }).then(function () { return obj; });
+        var i = mem[col].findIndex(function (x) { return x.id === obj.id; });
+        if (i > -1) mem[col][i] = obj; else mem[col].push(obj);
+        return obj;
+      });
+    },
+    remove: function (col, id) {
+      return ready.then(function (ok) {
+        if (ok) return run(col, 'readwrite', function (s) { return s.delete(id); });
+        mem[col] = mem[col].filter(function (x) { return x.id !== id; });
+      });
+    },
+    replaceAll: function (col, arr) {
+      return ready.then(function (ok) {
+        if (!ok) { mem[col] = arr.slice(); return; }
+        return open().then(function (d) {
+          return new Promise(function (res, rej) {
+            var t = d.transaction(col, 'readwrite'), s = t.objectStore(col);
+            s.clear(); arr.forEach(function (o) { s.put(o); });
+            t.oncomplete = function () { res(); }; t.onerror = t.onabort = function () { rej(t.error); };
+          });
+        });
+      });
+    }
+  };
+
+  /* ---------- online backend (Supabase) ---------- */
+  function uploadPhotos(obj) {
+    var photos = (obj.photos || []).slice(), chain = Promise.resolve();
+    photos.forEach(function (p, i) {
+      if (typeof p !== 'string' || p.indexOf('data:') !== 0) return;
+      chain = chain.then(function () {
+        return fetch(p).then(function (r) { return r.blob(); }).then(function (blob) {
+          var path = obj.id + '/' + Date.now() + '-' + i + '.jpg';
+          return sb.storage.from(BUCKET).upload(path, blob, { contentType: 'image/jpeg', upsert: true }).then(function (res) {
+            must(res);
+            photos[i] = sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
+          });
+        });
+      });
+    });
+    return chain.then(function () { obj.photos = photos; });
+  }
+  var online = {
+    list: function (col) {
+      return sb.from(col).select('*').then(function (r) { must(r); return (r.data || []).map(fromRow); });
+    },
+    save: function (col, obj) {
+      var now = new Date().toISOString();
+      if (!obj.id) { obj.id = uid(); obj.createdAt = now; }
+      obj.updatedAt = now;
+      var pre = col === 'products' ? uploadPhotos(obj) : Promise.resolve();
+      return pre.then(function () { return sb.from(col).upsert(toRow(obj, col)); }).then(function (r) { must(r); return obj; });
+    },
+    remove: function (col, id) {
+      return sb.from(col).delete().eq('id', id).then(function (r) { must(r); });
+    }
+  };
+
+  var be = sb ? online : local;
+  function list(col) { return be.list(col); }
+  function save(col, obj) { return be.save(col, obj); }
+  function remove(col, id) { return be.remove(col, id); }
+
+  function exportAll() {
+    return Promise.all(STORES.map(list)).then(function (r) {
+      return { app: 'khaitech', version: 2, exportedAt: new Date().toISOString(), products: r[0], repairs: r[1], sales: r[2], orders: r[3] };
+    });
+  }
+  function importAll(data) {
+    if (!data || data.app !== 'khaitech') return Promise.reject(new Error('This is not a KHAITECH backup file.'));
+    if (!sb) return Promise.all(STORES.map(function (c) { return local.replaceAll(c, Array.isArray(data[c]) ? data[c] : []); }));
+    // Online: add or update the records in the file; nothing is deleted.
+    var chain = Promise.resolve();
+    STORES.forEach(function (c) {
+      (Array.isArray(data[c]) ? data[c] : []).forEach(function (o) { chain = chain.then(function () { return online.save(c, o); }); });
+    });
+    return chain;
+  }
+
+  /* ---------- public store ---------- */
+  function catalog(base) {
+    function fromFile() {
+      return fetch((base || '') + 'data/catalog.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r : fetch((base || '') + 'catalog.json', { cache: 'no-cache' }); })
+        .then(function (r) { return r.ok ? r.json() : { products: [] }; })
+        .then(function (j) { return { items: j.products || [], source: 'file' }; })
+        .catch(function () { return { items: [], source: 'file' }; });
+    }
+    if (sb) {
+      return sb.from('public_products').select('*').then(function (r) {
+        must(r);
+        return { items: (r.data || []).map(fromRow), source: 'online' };
+      }).catch(fromFile);
+    }
+    if (wantOnline) return fromFile();
+    return local.list('products').then(function (l) { return l.length ? { items: l, source: 'local' } : fromFile(); }, fromFile);
+  }
+  /* Customers send orders and repair requests; they can write but never read. */
+  function submit(col, obj) {
+    if (!sb) return Promise.reject(new Error('Online ordering is not switched on.'));
+    obj.id = obj.id || uid();
+    return sb.from(col).insert(toRow(obj, col)).then(function (r) { must(r); return obj; });
+  }
+
+  /* ---------- staff login (online mode) ---------- */
+  var auth = {
+    session: function () { return sb.auth.getSession().then(function (r) { return r.data && r.data.session; }); },
+    signIn: function (email, password) { return sb.auth.signInWithPassword({ email: email, password: password }).then(function (r) { must(r); return r.data; }); },
+    signOut: function () { return sb.auth.signOut(); },
+    isStaff: function () { return sb.rpc('is_staff').then(function (r) { must(r); return r.data === true; }); },
+    changePassword: function (pw) { return sb.auth.updateUser({ password: pw }).then(function (r) { must(r); }); }
+  };
+
+  window.KDB = {
+    mode: wantOnline ? 'supabase' : 'local',
+    online: !!sb,
+    error: sbError,
+    auth: auth,
+    uid: uid, list: list, save: save, remove: remove, exportAll: exportAll, importAll: importAll, catalog: catalog,
+    submitOrder: function (o) { return submit('orders', o); },
+    submitRequest: function (r) { return submit('repairs', r); }
+  };
+})();
+
+</script>
+<script>
+
+(function(){
+  var CFG=window.KHAITECH_CONFIG||{};
+  var WA=CFG.whatsapp||'2349151495696';
+  function $(s,r){return (r||document).querySelector(s)}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+  function naira(n){return '₦'+Math.round(n).toLocaleString('en-NG')}
+  function rand(n){var c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',o='';for(var i=0;i<n;i++)o+=c[Math.floor(Math.random()*c.length)];return o}
+  function todayISO(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+  function wa(t){return 'https://wa.me/'+WA+'?text='+encodeURIComponent(t)}
+  $$('[data-wa]').forEach(function(a){a.href=wa(a.getAttribute('data-wa'))});
+
+  /* mobile menu */
+  var menuBtn=$('#menuBtn'),nav=$('#mainNav');
+  menuBtn.addEventListener('click',function(){
+    var o=nav.classList.toggle('open');menuBtn.setAttribute('aria-expanded',o?'true':'false');
+  });
+  $$('a',nav).forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')})});
+
+  /* products: loaded from the data layer (admin device) or data/catalog.json (everyone else) */
+  var CATS=['All','Phones','Chargers & power','Audio','Cases & protection','Gadgets','Other'];
+  var P=[],byId={};
+  var state={cat:'All',q:'',sort:'featured',cond:''};
+  function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function priceText(x){return x.price>0?naira(x.price):'Ask for price'}
+  function soldOut(x){return x.status==='sold'||(x.qty!=null&&+x.qty<=0)}
+  function chips(x){
+    var c=[];
+    if(x.storage)c.push(x.storage);
+    if(x.color)c.push(x.color);
+    if(x.battery)c.push('Battery '+x.battery+'%');
+    return c.length?'<div class="chiprow">'+c.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div>':'';
+  }
+  function artHtml(x){
+    var ph=(x.photos||[])[0];
+    var inner=ph?'<img src="'+esc(ph)+'" alt="'+esc(x.name)+'" loading="lazy">':'<span>'+esc(x.category||'Photo coming soon')+'<br>Photo coming soon</span>';
+    return '<div class="art '+(ph?'photo':'noimg tone-a')+'">'+inner+
+      (x.condition?'<span class="tag cond">'+esc(x.condition)+'</span>':'')+
+      (soldOut(x)?'<span class="sold">Sold out</span>':'')+'</div>';
+  }
+  function renderPills(){
+    var counts={};P.forEach(function(x){counts[x.category]=(counts[x.category]||0)+1});
+    var cats=CATS.filter(function(c){return c==='All'||counts[c]});
+    if(cats.indexOf(state.cat)<0)state.cat='All';
+    $('#pills').innerHTML=cats.map(function(c){return '<button type="button" class="pill" data-cat="'+esc(c)+'" aria-pressed="'+(state.cat===c)+'">'+esc(c)+'</button>'}).join('');
+    var conds=[];P.forEach(function(x){if(x.condition&&conds.indexOf(x.condition)<0)conds.push(x.condition)});
+    $('#cond').innerHTML='<option value="">Any condition</option>'+conds.map(function(c){return '<option'+(state.cond===c?' selected':'')+'>'+esc(c)+'</option>'}).join('');
+    $('#cond').hidden=conds.length<2;
+  }
+  function renderGrid(){
+    var q=state.q.trim().toLowerCase();
+    var list=P.filter(function(x){
+      return (state.cat==='All'||x.category===state.cat)&&(!state.cond||x.condition===state.cond)&&
+        (!q||[x.name,x.brand,x.description,x.category,x.condition,x.storage,x.color].join(' ').toLowerCase().indexOf(q)>-1);
+    });
+    if(state.sort==='low')list.sort(function(a,b){return (a.price||1e12)-(b.price||1e12)});
+    if(state.sort==='high')list.sort(function(a,b){return (b.price||0)-(a.price||0)});
+    if(state.sort==='name')list.sort(function(a,b){return a.name.localeCompare(b.name)});
+    if(state.sort==='featured')list.sort(function(a,b){return (soldOut(a)-soldOut(b))||(String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')))});
+    $('#shopCount').textContent='Store · '+list.length+(list.length===1?' item':' items');
+    if(!P.length){
+      $('#grid').innerHTML='<div class="empty">We are updating the store with new stock. Message us on WhatsApp to ask what is available today.<br><br><a class="btn wa" target="_blank" rel="noopener" href="'+wa('Hello KHAITECH, what phones and accessories do you have available today?')+'">Ask on WhatsApp</a></div>';
+      return;
+    }
+    if(!list.length){
+      $('#grid').innerHTML='<div class="empty">Nothing matches that search. Ask us on WhatsApp and we will check if we can get it for you.</div>';
+      return;
+    }
+    $('#grid').innerHTML=list.map(function(x){
+      var out=soldOut(x);
+      return '<article class="card"><button type="button" class="open" data-open="'+esc(x.id)+'" aria-label="View '+esc(x.name)+'">'+artHtml(x)+'</button>'+
+      '<div class="card-body"><h3>'+esc(x.name)+'</h3>'+chips(x)+'<p class="spec">'+esc(x.brand||'')+(x.brand&&x.category?' · ':'')+esc(x.category||'')+'</p>'+
+      '<div class="buy"><span class="price">'+priceText(x)+'</span>'+
+      (out?'<button type="button" class="btn small" disabled>Sold out</button>':'<button type="button" class="btn small primary" data-add="'+esc(x.id)+'">Add to order</button>')+'</div>'+
+      '<a class="ask" target="_blank" rel="noopener" href="'+wa('Hello KHAITECH, is the '+x.name+(x.condition?' ('+x.condition+')':'')+' available?'+(x.price>0?' Price shown: '+naira(x.price):''))+'">Ask about this on WhatsApp</a></div></article>';
+    }).join('');
+  }
+  $('#pills').addEventListener('click',function(e){
+    var b=e.target.closest('[data-cat]');if(!b)return;
+    state.cat=b.getAttribute('data-cat');renderPills();renderGrid();
+  });
+  $('#q').addEventListener('input',function(e){state.q=e.target.value;renderGrid()});
+  $('#sort').addEventListener('change',function(e){state.sort=e.target.value;renderGrid()});
+  $('#cond').addEventListener('change',function(e){state.cond=e.target.value;renderGrid()});
+  $('#grid').addEventListener('click',function(e){
+    var b=e.target.closest('[data-add]');
+    if(b){add(b.getAttribute('data-add'));b.textContent='Added';setTimeout(function(){b.textContent='Add to order'},900);return}
+    var o=e.target.closest('[data-open]');
+    if(o)openProduct(o.getAttribute('data-open'));
+  });
+
+  /* product detail window */
+  var pLast=null;
+  function openProduct(id){
+    var x=byId[id];if(!x)return;
+    pLast=document.activeElement;
+    var ph=x.photos||[];
+    function main(i){
+      $('#pMain').innerHTML=ph.length?'<img src="'+esc(ph[i])+'" alt="'+esc(x.name)+' photo '+(i+1)+'">':'<span class="eyebrow">Photo coming soon</span>';
+      $$('#pThumbs button').forEach(function(t,j){t.setAttribute('aria-current',j===i?'true':'false')});
+    }
+    $('#pThumbs').innerHTML=ph.length>1?ph.map(function(u,i){return '<button type="button" data-i="'+i+'" aria-label="Photo '+(i+1)+'"><img src="'+esc(u)+'" alt=""></button>'}).join(''):'';
+    $('#pThumbs').onclick=function(e){var t=e.target.closest('[data-i]');if(t)main(+t.getAttribute('data-i'))};
+    main(0);
+    var rows=[['Condition',x.condition],['Brand',x.brand],['Category',x.category],['Storage',x.storage],['Colour',x.color],['Battery health',x.battery?x.battery+'%':'']].filter(function(r){return r[1]});
+    $('#pInfo').innerHTML='<p class="eyebrow">'+esc(x.category||'')+'</p><h3 id="pTitle">'+esc(x.name)+'</h3><span class="price">'+priceText(x)+'</span>'+
+      (rows.length?'<dl>'+rows.map(function(r){return '<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>'}).join('')+'</dl>':'')+
+      (x.description?'<p class="desc">'+esc(x.description)+'</p>':'')+
+      '<div class="cta-row" style="margin-top:.4rem">'+
+      (soldOut(x)?'<button class="btn" disabled>Sold out</button>':'<button type="button" class="btn primary" data-padd="'+esc(x.id)+'">Add to order</button>')+
+      '<a class="btn wa" target="_blank" rel="noopener" href="'+wa('Hello KHAITECH, I am interested in the '+x.name+(x.condition?' ('+x.condition+')':'')+'. Is it available?')+'">Ask on WhatsApp</a></div>';
+    $('#pScrim').hidden=false;$('#pModal').hidden=false;document.body.classList.add('lock');$('#pClose').focus();
+  }
+  function closeProduct(){
+    $('#pScrim').hidden=true;$('#pModal').hidden=true;document.body.classList.remove('lock');
+    if(pLast&&pLast.focus)pLast.focus();
+  }
+  $('#pClose').addEventListener('click',closeProduct);
+  $('#pScrim').addEventListener('click',closeProduct);
+  $('#pInfo').addEventListener('click',function(e){
+    var b=e.target.closest('[data-padd]');if(!b)return;
+    add(b.getAttribute('data-padd'));b.textContent='Added to order';
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('#pModal').hidden)closeProduct()});
+
+  /* cart */
+  var cart={};
+  try{
+    var saved=JSON.parse(localStorage.getItem('khaitech-cart')||'{}');
+    Object.keys(saved).forEach(function(k){if(saved[k]>0)cart[k]=Math.min(99,saved[k]|0)});
+  }catch(err){}
+  function persist(){try{localStorage.setItem('khaitech-cart',JSON.stringify(cart))}catch(err){}}
+  var done=null;
+  function add(id){var x=byId[id];if(!x)return;done=null;var max=(x.qty!=null&&+x.qty>0)?+x.qty:99;cart[id]=Math.min(max,(cart[id]||0)+1);renderCart()}
+  function renderCart(){
+    Object.keys(cart).forEach(function(k){if(!byId[k])delete cart[k]});
+    var ids=Object.keys(cart),count=0,total=0;
+    ids.forEach(function(k){count+=cart[k];total+=cart[k]*(byId[k].price||0)});
+    $('#cartCount').textContent=count;
+    $('#cartTotal').textContent=naira(total);
+    var box=$('#lines');
+    if(!ids.length){
+      box.innerHTML=done?done:'<div class="cart-empty">Your order is empty.<br>Add phones or accessories from the store.</div>';
+    }else{
+      box.innerHTML=ids.map(function(k){var x=byId[k];
+        return '<div class="line"><b>'+esc(x.name)+(x.condition?' <span class="hint" style="font-weight:400;color:var(--muted)">('+esc(x.condition)+')</span>':'')+'</b><span class="lp">'+(x.price>0?naira(x.price*cart[k]):'Ask')+'</span>'+
+        '<div class="qty"><button type="button" data-dec="'+k+'" aria-label="One less">−</button><span>'+cart[k]+'</span><button type="button" data-inc="'+k+'" aria-label="One more">+</button></div>'+
+        '<button type="button" class="rm" data-rm="'+k+'">Remove</button></div>';
+      }).join('');
+    }
+    $('#cartClear').hidden=!ids.length;
+    updateCartLink();persist();
+  }
+  function updateCartLink(){
+    var ids=Object.keys(cart),name=$('#cName').value.trim();
+    var t='*KHAITECH order*\n';
+    if(!ids.length){t='Hello KHAITECH, I would like to place an order.'}
+    else{
+      var total=0;
+      ids.forEach(function(k){var x=byId[k];total+=(x.price||0)*cart[k];t+=cart[k]+' x '+x.name+(x.condition?' ['+x.condition+']':'')+' ('+(x.price>0?naira(x.price*cart[k]):'price on request')+')\n'});
+      t+='Total (guide): '+naira(total)+'\n';
+      if(name)t+='Name: '+name+'\n';
+      t+='Please confirm availability and the final price.';
+    }
+    $('#cartWa').href=wa(t);
+  }
+  $('#cName').addEventListener('input',updateCartLink);
+  /* online ordering: the order is saved for the shop and also opens on WhatsApp */
+  if(KDB.online){
+    $('#cPhoneWrap').hidden=false;$('#cNoteWrap').hidden=false;$('#placeOrder').hidden=false;
+    $('#cNameHint').textContent='';
+    $('#cartWa').textContent='Or send on WhatsApp instead';$('#cartWa').classList.remove('wa');
+    $('#placeOrder').addEventListener('click',function(){
+      var ids=Object.keys(cart),err=$('#cErr'),name=$('#cName').value.trim(),phone=$('#cPhone').value.trim();
+      function bad(m){err.textContent=m;err.hidden=false}
+      if(!ids.length)return bad('Your order is empty.');
+      if(!name)return bad('Enter your name.');
+      if(phone.replace(/\D/g,'').length<10)return bad('Enter a phone number we can call, at least 10 digits.');
+      err.hidden=true;
+      var total=0,items=ids.map(function(k){var x=byId[k];total+=(x.price||0)*cart[k];return {id:x.id,name:x.name,condition:x.condition||'',qty:cart[k],price:x.price||0}});
+      var order={id:KDB.uid(),number:'OR-'+rand(5),customer:name,phone:phone,note:$('#cNote').value.trim(),items:items,total:total,status:'new'};
+      var btn=$('#placeOrder');btn.disabled=true;btn.textContent='Sending...';
+      KDB.submitOrder(order).then(function(){
+        var lines=items.map(function(i){return i.qty+' x '+i.name}).join(', ');
+        done='<div class="cart-empty"><b style="color:var(--ink);font-family:var(--display);font-size:1.3rem">Order '+esc(order.number)+' received</b><br><br>Thank you, '+esc(name)+'. We will contact you on '+esc(phone)+' to confirm availability and the final price.<br><br><a class="btn wa" target="_blank" rel="noopener" href="'+wa('Hello KHAITECH, I just placed order '+order.number+' on your website: '+lines+'.')+'">Message us about this order</a></div>';
+        cart={};renderCart();
+      },function(){
+        bad('We could not send the order right now. Please use the WhatsApp button below.');
+      }).then(function(){btn.disabled=false;btn.textContent='Place order'});
+    });
+  }
+  $('#lines').addEventListener('click',function(e){
+    var t=e.target;
+    if(t.dataset.inc){add(t.dataset.inc);return}
+    else if(t.dataset.dec){cart[t.dataset.dec]--;if(cart[t.dataset.dec]<=0)delete cart[t.dataset.dec]}
+    else if(t.dataset.rm){delete cart[t.dataset.rm]}
+    else return;
+    renderCart();
+  });
+  $('#cartClear').addEventListener('click',function(){cart={};renderCart()});
+  var lastFocus=null;
+  function openCart(){
+    lastFocus=document.activeElement;
+    $('#scrim').hidden=false;$('#cart').hidden=false;document.body.classList.add('lock');
+    $('#cartBtn').setAttribute('aria-expanded','true');$('#cartClose').focus();
+  }
+  function closeCart(){
+    $('#scrim').hidden=true;$('#cart').hidden=true;document.body.classList.remove('lock');
+    $('#cartBtn').setAttribute('aria-expanded','false');
+    if(lastFocus&&lastFocus.focus)lastFocus.focus();
+  }
+  $('#cartBtn').addEventListener('click',openCart);
+  $('#cartClose').addEventListener('click',closeCart);
+  $('#scrim').addEventListener('click',closeCart);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('#cart').hidden)closeCart()});
+
+  /* services */
+  var FAULTS=['Screen','Dead phone','Battery','Charging port','Water damage','Software / unlock','Camera','Speaker / mic','Back glass','Other'];
+  var SVC=[
+    ['Screen','Screen replacement','Cracked, shattered, lines on the display or a touch that does not respond.'],
+    ['Dead phone','Dead phone','The phone will not switch on, will not charge or is stuck on the logo.'],
+    ['Battery','Battery replacement','The battery drains quickly, swells or the phone switches off by itself.'],
+    ['Charging port','Charging port','Loose cable, slow charging or the phone does not charge at all.'],
+    ['Water damage','Water damage','Phone dropped in water or liquid. Switch it off and bring it in quickly.'],
+    ['Software / unlock','Software and unlocking','Hanging, forgotten passcode, updates, network unlock and software faults.'],
+    ['Camera','Camera repair','Blurry, black or cracked camera, or the camera app will not open.'],
+    ['Speaker / mic','Speaker and microphone','No sound, crackling calls or people cannot hear you.'],
+    ['Back glass','Back glass and body','Broken back cover, bent frame or damaged housing.']
+  ];
+  var iconPaths={
+    'Screen':'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M9 7l3 4-2 3 3 3"/>',
+    'Dead phone':'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M12 9v4M10 10.500a3 3 0 1 0 4 0"/>',
+    'Battery':'<rect x="3" y="8" width="16" height="8" rx="2"/><path d="M21 11v2M7 11v2M10 11v2"/>',
+    'Charging port':'<path d="M13 3L6 13h5l-1 8 8-11h-5z"/>',
+    'Water damage':'<path d="M12 3s6 6.500 6 11a6 6 0 0 1-12 0c0-4.500 6-11 6-11z"/>',
+    'Software / unlock':'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    'Camera':'<rect x="3" y="7" width="18" height="13" rx="3"/><circle cx="12" cy="13.500" r="3.500"/><path d="M9 7l1-3h4l1 3"/>',
+    'Speaker / mic':'<path d="M4 10v4h4l5 4V6L8 10z"/><path d="M16 9a4 4 0 0 1 0 6"/>',
+    'Back glass':'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M7 9l10 4M12 3l-2 7"/>'
+  };
+  $('#svcGrid').innerHTML=SVC.map(function(s){
+    return '<div class="svc"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+iconPaths[s[0]]+'</svg></div><h3>'+s[1]+'</h3><p>'+s[2]+'</p><a href="#repair" data-fault="'+s[0]+'">Book this repair</a></div>';
+  }).join('');
+
+  /* repair form */
+  var SERIES={
+    'Apple (iPhone)':['iPhone 6 / 7 / 8 series','iPhone X / XR / XS series','iPhone 11 series','iPhone 12 series','iPhone 13 series','iPhone 14 series','iPhone 15 series','iPhone 16 series','Other iPhone'],
+    'Samsung':['Galaxy S series','Galaxy A series','Galaxy Note series','Galaxy Z Fold / Flip','Galaxy M / J series','Other Samsung'],
+    'Tecno':['Spark','Camon','Phantom','Pova','Pop','Other Tecno'],
+    'Infinix':['Hot','Note','Zero','Smart','Other Infinix'],
+    'itel':['A series','P series','S series','Vision','Other itel'],
+    'Xiaomi / Redmi / Poco':['Redmi','Redmi Note','Poco','Xiaomi (Mi / numbered)','Other Xiaomi'],
+    'Oppo':['A series','Reno','Find','Other Oppo'],
+    'Huawei':['P series','Nova','Y series','Other Huawei'],
+    'Google Pixel':['Pixel 6 series','Pixel 7 series','Pixel 8 series','Pixel 9 series','Other Pixel'],
+    'Other maker':[]
+  };
+  var maker=$('#rMaker'),series=$('#rSeries');
+  Object.keys(SERIES).forEach(function(m){var o=document.createElement('option');o.value=m;o.textContent=m;maker.appendChild(o)});
+  maker.addEventListener('change',function(){
+    var m=maker.value,list=SERIES[m]||[];
+    series.innerHTML='';
+    if(m==='Other maker'){
+      series.disabled=true;series.innerHTML='<option value="">Not needed</option>';
+      $('#otherWrap').hidden=false;
+    }else if(m){
+      series.disabled=false;
+      series.innerHTML='<option value="">Select series</option>'+list.map(function(s){return '<option>'+s+'</option>'}).join('');
+      $('#otherWrap').hidden=true;
+    }else{
+      series.disabled=true;series.innerHTML='<option value="">Select maker first</option>';$('#otherWrap').hidden=true;
+    }
+  });
+  $('#faults').innerHTML=FAULTS.map(function(f,i){
+    return '<label class="fchip"><input type="checkbox" name="fault" value="'+f+'" id="f'+i+'"><span>'+f+'</span></label>';
+  }).join('');
+
+  var imei=$('#rImei');
+  imei.addEventListener('input',function(){
+    var d=imei.value.replace(/\D/g,'').slice(0,17);
+    $('#imeiCount').textContent=Math.min(d.length,15)+' / 15';
+    imei.value=d.replace(/(\d{2})(\d{6})(\d{6})(\d{0,3})/,function(m,a,b,c,e){return a+' '+b+' '+c+(e?' '+e:'')});
+  });
+  function luhn(s){
+    var sum=0,alt=false;
+    for(var i=s.length-1;i>=0;i--){var n=+s[i];if(alt){n*=2;if(n>9)n-=9}sum+=n;alt=!alt}
+    return sum%10===0;
+  }
+  function showErr(id,msg){var e=$('#'+id);e.textContent=msg||'';e.hidden=!msg}
+  function mark(el,bad){if(el)el.setAttribute('aria-invalid',bad?'true':'false')}
+
+  $('#svcGrid').addEventListener('click',function(e){
+    var a=e.target.closest('[data-fault]');if(!a)return;
+    $$('input[name="fault"]').forEach(function(c){if(c.value===a.getAttribute('data-fault'))c.checked=true});
+    showErr('eFault','');
+  });
+
+  var lastMsg='';
+  $('#repairForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=$('#rName').value.trim(),phone=$('#rPhone').value.replace(/[^\d+]/g,''),m=maker.value,s=series.value,other=$('#rOther').value.trim(),
+        model=$('#rModel').value.trim(),digits=imei.value.replace(/\D/g,''),skip=$('#noImei').checked,
+        faults=$$('input[name="fault"]:checked').map(function(c){return c.value}),note=$('#rNote').value.trim(),when=$('#rWhen').value;
+    var first=null;
+    function bad(el,id,msg){showErr(id,msg);mark(el,true);if(!first)first=el}
+    function ok(el,id){showErr(id,'');mark(el,false)}
+    name?ok($('#rName'),'eName'):bad($('#rName'),'eName','Enter your name.');
+    (phone.replace(/\D/g,'').length>=10)?ok($('#rPhone'),'ePhone'):bad($('#rPhone'),'ePhone','Enter a phone number we can reach, at least 10 digits.');
+    m?ok(maker,'eMaker'):bad(maker,'eMaker','Choose the phone maker.');
+    if(m==='Other maker'){other?ok($('#rOther'),'eSeries'):bad($('#rOther'),'eSeries','Type the maker and series.')}
+    else{(m&&s)?ok(series,'eSeries'):bad(series,'eSeries','Choose the phone series.')}
+    if(skip){ok(imei,'eImei')}
+    else if(digits.length!==15){bad(imei,'eImei','The IMEI has 15 digits. Dial *#06# to see it, or tick the box below.')}
+    else if(!luhn(digits)){bad(imei,'eImei','This IMEI does not look right. Check the digits and try again.')}
+    else ok(imei,'eImei');
+    faults.length?showErr('eFault',''):(showErr('eFault','Choose at least one fault.'),first=first||$('#f0'));
+    if(first){first.focus();return}
+
+    var phoneLine=(m==='Other maker')?other:(m+', '+s);
+    var ref=KDB.online?'REQ-'+rand(6):'';
+    var msg='*KHAITECH repair request*\n'+(ref?'Ref: '+ref+'\n':'')+
+      'Name: '+name+'\n'+
+      'Phone number: '+$('#rPhone').value.trim()+'\n'+
+      'Phone: '+phoneLine+(model?' ('+model+')':'')+'\n'+
+      'IMEI: '+(skip?'Not available now, will show at the shop':digits)+'\n'+
+      'Fault: '+faults.join(', ')+'\n'+
+      (note?'Details: '+note+'\n':'')+
+      'Bringing it in: '+when;
+    lastMsg=msg;
+    $('#resultText').textContent=msg;
+    $('#resultWa').href=wa(msg);
+    $('#copyStatus').textContent='Tap Send on WhatsApp, then press send inside WhatsApp to deliver it to us. If WhatsApp does not open, copy the message and send it to 0915 149 5696.';
+    $('#resultH').textContent='Your request is ready';
+    if(KDB.online){
+      KDB.submitRequest({id:KDB.uid(),ticket:ref,customer:name,phone:$('#rPhone').value.trim(),maker:(m==='Other maker')?other:m,model:(m==='Other maker')?model:(s+(model?' ('+model+')':'')),imei:skip?'':digits,faults:faults,notes:note,price:0,paid:0,dateIn:todayISO(),returnDate:'',status:'request',collected:false,collectedDate:''}).then(function(){
+        $('#resultH').textContent='Request '+ref+' received';
+        $('#copyStatus').textContent='We have your request and will contact you. To reach us faster, tap Send on WhatsApp and press send.';
+      },function(){});
+    }
+    var r=$('#result');r.hidden=false;
+    r.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+
+  function copyText(text,statusEl,okMsg,failMsg,selectEl){
+    function fallback(){
+      try{
+        var range=document.createRange();range.selectNodeContents(selectEl);
+        var sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+      }catch(err){}
+      statusEl.textContent=failMsg;statusEl.hidden=false;
+    }
+    try{
+      navigator.clipboard.writeText(text).then(function(){statusEl.textContent=okMsg;statusEl.hidden=false},fallback);
+    }catch(err){fallback()}
+  }
+  $('#copyBtn').addEventListener('click',function(){
+    copyText(lastMsg,$('#copyStatus'),'Copied. Paste it into WhatsApp and send to 0915 149 5696.','Copy was blocked here. The message is selected, so use your phone or keyboard copy option.',$('#resultText'));
+  });
+  $('#copyNum').addEventListener('click',function(){
+    copyText('09151495696',$('#numStatus'),'Number copied.','Copy was blocked here. The number is selected, so use your phone or keyboard copy option.',$('#numText'));
+  });
+
+  /* start: show an empty state at once, then load the real catalog */
+  renderPills();renderGrid();renderCart();
+  KDB.catalog('').then(function(c){
+    P=(c.items||[]).filter(function(x){return x&&x.name&&x.status!=='hidden'});
+    byId={};P.forEach(function(x){byId[x.id]=x});
+    renderPills();renderGrid();renderCart();
+  });
+})();
+
+</script>
+</body>
+</html>
