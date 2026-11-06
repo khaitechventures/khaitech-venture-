@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex,nofollow">
-<title>KHAITECH Admin</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="KHAITECH sells phones, accessories and gadgets and repairs phones at Mandate Market, Ilorin, Kwara State. Chat on WhatsApp 0915 149 5696.">
+<title>KHAITECH</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -67,241 +68,527 @@ body{margin:0}
 
 </style>
 <style>
-/* KHAITECH admin dashboard */
-body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
-h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;letter-spacing:-.01em;text-wrap:balance}
-p{margin:0}
-button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
-.mono{font-family:var(--mono)}
-.muted{color:var(--muted)}
-.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-
-/* shell */
-.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
-.side{position:sticky;top:0;align-self:start;height:100vh;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:1.4rem;padding:1.2rem 1rem;padding-left:max(1rem,env(safe-area-inset-left,0px))}
-.alogo{display:flex;gap:.6rem;align-items:center;text-decoration:none;font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
-.alogo small{display:block;font-family:var(--mono);font-weight:500;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-#nav{display:flex;flex-direction:column;gap:.2rem}
-#nav a{display:flex;justify-content:space-between;align-items:center;text-decoration:none;font-weight:600;padding:.6rem .8rem;border-radius:10px;color:var(--muted)}
-#nav a:hover{background:var(--paper);color:var(--ink)}
-#nav a[aria-current="page"]{background:var(--ink);color:var(--paper)}
-.nb{background:var(--signal);color:var(--signal-ink);border-radius:999px;font-size:.75rem;padding:0 .5rem;min-width:1.4rem;text-align:center}
-.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:.5rem;font-size:.9rem}
-.side-foot a{color:var(--muted)}
-.side-foot button{all:unset;cursor:pointer;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
-.side-foot button:focus-visible{outline:3px solid var(--accent)}
-.main{min-width:0;padding-block:1.6rem 5rem;padding-left:clamp(16px,3vw,2.2rem);padding-right:max(16px,env(safe-area-inset-right,0px),clamp(16px,3vw,2.2rem))}
-.main:focus{outline:none}
+/* top strip + header */
+.strip{background:var(--ink);color:var(--paper);font-size:.82rem}
+.strip .wrap{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem;justify-content:space-between;padding-block:.5rem}
+.strip span{white-space:nowrap}
+header.site{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
+header.site .wrap{display:flex;align-items:center;gap:1rem;padding-block:.7rem}
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;font-family:var(--display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em}
+.logo b{color:var(--accent);font-weight:800}
+nav.main{margin-left:auto;display:flex;gap:1.35rem;align-items:center}
+nav.main a{text-decoration:none;font-weight:500;font-size:.95rem;color:var(--muted)}
+nav.main a:hover{color:var(--ink)}
+.hdr-actions{display:flex;gap:.5rem;align-items:center}
+.cart-btn{position:relative}
+.badge{background:var(--signal);color:var(--signal-ink);border-radius:999px;min-width:1.35rem;height:1.35rem;display:inline-grid;place-items:center;font-size:.78rem;font-weight:700;padding:0 .3rem}
+.menu-btn{display:none}
 @media (max-width:860px){
-  .shell{grid-template-columns:minmax(0,1fr)}
-  .side{position:sticky;top:0;z-index:30;height:auto;flex-direction:row;align-items:center;gap:.8rem;padding:.6rem max(12px,env(safe-area-inset-right,0px)) .6rem max(12px,env(safe-area-inset-left,0px));padding-top:calc(.6rem + env(safe-area-inset-top,0px));border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
-  .alogo span{display:none}
-  #nav{flex-direction:row;gap:.15rem}
-  #nav a{white-space:nowrap;padding:.5rem .7rem}
-  .side-foot{margin:0 0 0 auto;flex-direction:row;gap:1rem;white-space:nowrap}
-  .main{padding-left:max(16px,env(safe-area-inset-left,0px))}
+  nav.main{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;align-items:flex-start;gap:0;background:var(--paper);border-bottom:1px solid var(--line);padding:.5rem max(16px,env(safe-area-inset-left,0px)) 1rem}
+  nav.main.open{display:flex}
+  nav.main a{padding:.7rem 0;width:100%;font-size:1.05rem;color:var(--ink)}
+  .menu-btn{display:inline-flex;margin-left:auto}
+  .hdr-actions{margin-left:0}
+  .hide-sm{display:none}
 }
 
-/* page head */
-.phead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:.8rem 1.5rem;margin-bottom:1.3rem}
-.phead h1{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:800}
-.phead p{color:var(--muted);margin-top:.35rem;max-width:40rem}
-.acts{display:flex;flex-wrap:wrap;gap:.5rem}
+/* hero */
+.hero{background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:2.5rem;align-items:center;padding-block:clamp(2.5rem,6vw,5rem)}
+.hero h1{font-size:clamp(2.5rem,7.2vw,4.9rem);font-weight:800}
+.hero h1 em{font-style:normal;background:linear-gradient(transparent 62%,var(--signal) 62% 92%,transparent 92%);padding:0 .08em}
+.hero .lede{font-size:clamp(1.05rem,2.2vw,1.25rem);color:var(--muted);max-width:34rem;margin-top:1.25rem}
+.cta-row{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.75rem}
+.facts{display:flex;flex-wrap:wrap;gap:.5rem 1.4rem;margin-top:1.75rem;font-size:.92rem;color:var(--muted)}
+.facts span::before{content:"";display:inline-block;width:.5rem;height:.5rem;background:var(--signal);border:1.5px solid var(--ink);border-radius:2px;margin-right:.5rem;vertical-align:.05em}
+.hero-art{min-width:0;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.hero-art svg{width:min(100%,320px);height:auto;filter:drop-shadow(0 18px 24px rgba(13,27,38,.18))}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center}
+.chips span{font-family:var(--mono);font-size:.74rem;border:1.5px solid var(--ink);background:var(--surface);padding:.2rem .6rem;border-radius:999px}
+@media (max-width:860px){.hero .wrap{grid-template-columns:1fr}.hero-art{order:-1}.hero-art svg{width:min(70%,230px)}}
 
-/* buttons (extends base .btn) */
-.btn.small{padding:.45rem .8rem;font-size:.88rem}
-.btn.ghost{border-color:var(--line)}
-.btn.danger{border-color:var(--bad);color:var(--bad)}
-.btn.block{width:100%}
-.btn[disabled]{opacity:.5;cursor:not-allowed}
+/* sections */
+section{scroll-margin-top:72px}
+.sec{padding-block:clamp(3rem,7vw,5.5rem)}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:1rem 2rem;margin-bottom:2rem}
+.sec-head h2{font-size:clamp(1.9rem,4.6vw,3rem);font-weight:700;max-width:22ch}
+.sec-head p{color:var(--muted);max-width:36rem;margin-top:.7rem}
+.band{background:var(--surface);border-block:1px solid var(--line)}
 
-/* tiles */
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:.8rem;margin-bottom:1.4rem}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.25rem;min-width:0;text-decoration:none}
-.tile .k{font-size:.85rem;color:var(--muted)}
-.tile .v{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,3vw,2rem);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.tile .s{font-size:.8rem;color:var(--muted)}
-.tile.alert{border-color:var(--bad);background:var(--bad-bg)}
-.tile.alert .v{color:var(--bad)}
-.tile.good .v{color:var(--ok)}
-.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:1rem;align-items:start}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.1rem 1.2rem;min-width:0}
-.panel h2{font-size:1.15rem;margin-bottom:.7rem}
-.panel .hint{font-size:.9rem;color:var(--muted)}
-.li{display:flex;justify-content:space-between;gap:.8rem;align-items:center;padding:.65rem 0;border-top:1px solid var(--line);min-width:0}
-.li:first-of-type{border-top:0}
-.li b{font-weight:600}
-.li .l{min-width:0}
-.li .l span{display:block;font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}
-.li button.lnk{all:unset;cursor:pointer;font-weight:600;color:var(--accent);font-size:.9rem;white-space:nowrap}
-.li button.lnk:focus-visible{outline:3px solid var(--accent)}
+/* services */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr));gap:1rem}
+.svc{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:1.2rem;display:flex;flex-direction:column;gap:.55rem;min-width:0}
+.svc h3{font-size:1.25rem;font-weight:700}
+.svc p{color:var(--muted);font-size:.94rem;flex:1}
+.svc a{font-weight:600;font-size:.92rem;color:var(--accent);text-decoration:none;margin-top:.3rem}
+.svc a:hover{text-decoration:underline}
+.svc .ico{width:42px;height:42px;border-radius:12px;background:var(--t2);display:grid;place-items:center}
 
-/* badges */
-.st{display:inline-block;font-size:.76rem;font-weight:600;border-radius:999px;padding:.12rem .6rem;white-space:nowrap}
-.st-received{background:var(--info-bg);color:var(--info)}
-.st-repair{background:var(--warn-bg);color:var(--warn)}
-.st-ready{background:var(--ok-bg);color:var(--ok)}
-.st-cannot,.st-bad{background:var(--bad-bg);color:var(--bad)}
-.st-collected,.st-muted{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
-.st-ok{background:var(--ok-bg);color:var(--ok)}
-.st-warn{background:var(--warn-bg);color:var(--warn)}
-
-/* toolbar */
-.toolbar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:.9rem}
-.toolbar .in{width:auto;flex:1 1 220px}
-.toolbar select.in{flex:0 1 auto}
-.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
-.pill{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:.35rem .9rem;cursor:pointer;font-weight:500;font-size:.9rem}
+/* shop */
+.tools{display:flex;flex-wrap:wrap;gap:.75rem 1rem;align-items:center;margin-bottom:1.25rem}
+.search{flex:1 1 240px;min-width:0;border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:.65rem 1.1rem}
+.sort{border:2px solid var(--ink);background:var(--surface);border-radius:999px;padding:.6rem 1rem}
+.pills{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.5rem}
+.pill{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:.4rem .95rem;cursor:pointer;font-weight:500;font-size:.93rem}
 .pill[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-.summary{font-size:.9rem;color:var(--muted);margin-bottom:.9rem}
-.empty{border:2px dashed var(--line);border-radius:18px;padding:2.4rem 1.2rem;text-align:center;color:var(--muted);display:grid;gap:.9rem;justify-items:center}
-.empty b{color:var(--ink);font-family:var(--display);font-size:1.2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,222px),1fr));gap:1.1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:transform .18s,box-shadow .18s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 28px -14px rgba(13,27,38,.35)}
+.art{position:relative;aspect-ratio:1/.82;max-width:100%;display:grid;place-items:center}
+.art svg{width:62%;height:auto;max-height:86%}
+.tone-a{background:var(--t1)}.tone-b{background:var(--t2)}.tone-c{background:var(--t3)}.tone-d{background:var(--t4)}
+.tag{position:absolute;left:.7rem;top:.7rem;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;background:var(--ink);color:var(--paper);padding:.18rem .5rem;border-radius:6px}
+.card-body{padding:1rem 1rem 1.1rem;display:flex;flex-direction:column;gap:.4rem;flex:1}
+.card h3{font-size:1.08rem;font-weight:700;letter-spacing:-.01em}
+.spec{font-size:.85rem;color:var(--muted);flex:1}
+.buy{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-top:.5rem;flex-wrap:wrap}
+.price{font-family:var(--mono);font-weight:500;font-size:1.02rem;font-variant-numeric:tabular-nums}
+.ask{font-size:.82rem;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.ask:hover{color:var(--ink)}
+.note{margin-top:1.5rem;font-size:.88rem;color:var(--muted)}
+.empty{grid-column:1/-1;padding:2.5rem 1rem;text-align:center;color:var(--muted);border:2px dashed var(--line);border-radius:16px}
 
-/* repair cards */
-.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:.9rem}
-.rcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.55rem;min-width:0}
-.rcard.late{border-color:var(--bad)}
-.rcard header{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
-.ticket{font-family:var(--mono);font-size:.82rem;font-weight:500}
-.rcard h3{font-size:1.15rem;overflow-wrap:anywhere}
-.rcard .sub{font-size:.9rem;color:var(--muted);overflow-wrap:anywhere}
-.rcard .dev{font-weight:600;overflow-wrap:anywhere}
-.rcard .imei{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
-.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem;margin:0}
-.kv.two{grid-template-columns:repeat(2,minmax(0,1fr))}
-.kv div{background:var(--paper);border-radius:10px;padding:.4rem .6rem;min-width:0}
-.kv dt{font-size:.72rem;color:var(--muted)}
-.kv dd{margin:0;font-weight:600;font-size:.92rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
-.kv .due dd{color:var(--bad)}
-.rcard footer{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.2rem}
-.flag{font-size:.8rem;font-weight:600;color:var(--bad)}
-
-/* stock cards */
-.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:.9rem}
-.scard{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
-.sph{aspect-ratio:1/.8;background:var(--t1);display:grid;place-items:center;position:relative;max-width:100%}
-.sph img{width:100%;height:100%;object-fit:cover;display:block}
-.sph .np{font-family:var(--mono);font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:center;padding:.5rem}
-.sph .st{position:absolute;left:.6rem;top:.6rem}
-.sph .cnt{position:absolute;right:.6rem;top:.6rem;background:var(--ink);color:var(--paper);border-radius:6px;font-family:var(--mono);font-size:.7rem;padding:.1rem .45rem}
-.sbody{padding:.8rem .9rem 1rem;display:flex;flex-direction:column;gap:.35rem;flex:1}
-.sbody h3{font-size:1.02rem;overflow-wrap:anywhere}
-.sbody .meta{font-size:.82rem;color:var(--muted)}
-.sbody .price{font-family:var(--mono);font-weight:500}
-.sbody .row{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
-.sbody .btns{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:auto;padding-top:.5rem}
-
-/* sales list */
-.table{display:grid;gap:0;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
-.trow{display:grid;grid-template-columns:90px minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto;gap:.6rem;padding:.7rem 1rem;align-items:center;border-top:1px solid var(--line)}
-.trow:first-child{border-top:0}
-.trow.head{background:var(--paper);font-size:.78rem;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
-.trow div{min-width:0;overflow-wrap:anywhere}
-.trow .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
-@media (max-width:700px){
-  .trow{grid-template-columns:1fr auto;grid-template-areas:"a b" "c c" "d e"}
-  .trow.head{display:none}
-  .trow>:nth-child(1){grid-area:a;color:var(--muted);font-size:.85rem}
-  .trow>:nth-child(2){grid-area:c;font-weight:600}
-  .trow>:nth-child(3){grid-area:d;color:var(--muted);font-size:.85rem}
-  .trow>:nth-child(4){grid-area:b;text-align:right;font-weight:600}
-  .trow>:nth-child(5){grid-area:e;justify-self:end}
-}
-
-/* forms */
-.field{display:flex;flex-direction:column;gap:.3rem;min-width:0}
-.field label,.field legend{font-weight:600;font-size:.9rem}
-.field .hint{font-size:.78rem;color:var(--muted);font-weight:400}
-.in{width:100%;min-width:0;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:.62rem .8rem}
+/* repair form */
+.repair-wrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:start}
+@media (max-width:900px){.repair-wrap{grid-template-columns:1fr}}
+.imei-tip{margin-top:1.5rem;border:1.5px solid var(--ink);border-radius:16px;background:var(--paper);padding:1.1rem 1.2rem}
+.imei-tip .dial{font-family:var(--mono);font-size:1.7rem;font-weight:500;letter-spacing:.06em;display:inline-block;background:var(--screen);color:#fff;border-radius:10px;padding:.25rem .8rem;margin:.5rem 0}
+.imei-tip p{font-size:.92rem;color:var(--muted)}
+form.rf{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:clamp(1.1rem,3vw,2rem);display:grid;gap:1.1rem;min-width:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+@media (max-width:560px){.row2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.field label,.field legend{font-weight:600;font-size:.92rem}
+.field .hint{font-size:.8rem;color:var(--muted);font-weight:400}
+.in{width:100%;min-width:0;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:.7rem .85rem}
 .in:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
 .in[aria-invalid="true"]{border-color:var(--danger)}
-textarea.in{min-height:84px;resize:vertical}
+textarea.in{min-height:96px;resize:vertical}
 fieldset{border:0;margin:0;padding:0;min-width:0}
 .err{color:var(--danger);font-size:.84rem;font-weight:500}
-.row2,.row3{display:grid;gap:.9rem}
-.row2{grid-template-columns:repeat(2,minmax(0,1fr))}
-.row3{grid-template-columns:repeat(3,minmax(0,1fr))}
-@media (max-width:560px){.row2,.row3{grid-template-columns:minmax(0,1fr)}}
-.faults{display:flex;flex-wrap:wrap;gap:.45rem}
+.faults{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.25rem}
 .fchip{position:relative}
 .fchip input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
-.fchip span{display:inline-block;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:.35rem .85rem;font-size:.88rem;font-weight:500}
-.fchip input:checked+span{background:var(--signal);border-color:var(--ink);color:var(--signal-ink)}
-.fchip input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
-.check{display:flex;gap:.55rem;align-items:flex-start;font-size:.92rem}
-.check input{margin-top:.28rem}
-.bal{font-family:var(--mono);font-weight:500;background:var(--paper);border-radius:10px;padding:.5rem .7rem;font-size:.9rem}
-.private{font-size:.7rem;font-family:var(--mono);background:var(--warn-bg);color:var(--warn);padding:.05rem .4rem;border-radius:5px;margin-left:.3rem;font-weight:500}
+.fchip span{display:inline-block;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:.42rem .95rem;font-size:.92rem;font-weight:500}
+.fchip input:checked + span{background:var(--signal);border-color:var(--ink);color:var(--signal-ink)}
+.fchip input:focus-visible + span{outline:3px solid var(--accent);outline-offset:2px}
+.check{display:flex;gap:.55rem;align-items:flex-start;font-size:.88rem;color:var(--muted)}
+.check input{margin-top:.25rem}
+.imei-count{font-family:var(--mono);font-size:.78rem;color:var(--muted);align-self:flex-end}
+.result{border:2px solid var(--ink);border-radius:18px;background:var(--surface);padding:1.1rem;display:grid;gap:.8rem}
+.result pre{margin:0;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:.82rem;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:.8rem}
+.result .acts{display:flex;flex-wrap:wrap;gap:.6rem}
+.result p{font-size:.88rem;color:var(--muted)}
 
-/* photo editor */
-.phlist{display:flex;flex-wrap:wrap;gap:.6rem}
-.ph{width:96px;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);position:relative}
-.ph.main{border-color:var(--ink)}
-.ph img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
-.ph .mk{position:absolute;left:4px;top:4px;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:.62rem;padding:0 .35rem;border-radius:4px}
-.ph .pb{display:flex;justify-content:space-between;padding:.2rem .3rem;font-size:.72rem}
-.ph .pb button{all:unset;cursor:pointer;color:var(--accent);text-decoration:underline}
-.ph .pb button:focus-visible{outline:2px solid var(--accent)}
-.phadd{width:96px;aspect-ratio:1/1;border:2px dashed var(--muted);border-radius:12px;display:grid;place-items:center;text-align:center;font-size:.8rem;color:var(--muted);cursor:pointer;padding:.3rem}
-.phadd:hover,.phadd:focus-within{border-color:var(--ink);color:var(--ink)}
-.phadd input{position:absolute;opacity:0;width:1px;height:1px}
+/* process */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:1rem;counter-reset:s}
+.steps li{counter-increment:s;border-top:3px solid var(--ink);padding-top:.9rem;min-width:0}
+.steps li::before{content:counter(s);font-family:var(--mono);font-size:.85rem;background:var(--signal);color:var(--signal-ink);border:1.5px solid var(--ink);border-radius:6px;padding:.05rem .45rem;display:inline-block;margin-bottom:.6rem}
+.steps h3{font-size:1.15rem;font-weight:700;margin-bottom:.3rem}
+.steps p{font-size:.93rem;color:var(--muted)}
 
-/* modal */
-.mscrim{position:fixed;inset:0;background:rgba(5,10,15,.6);z-index:100}
-.modal{position:fixed;z-index:110;top:max(12px,env(safe-area-inset-top,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 24px));height:fit-content;max-height:calc(100% - 24px);margin:auto 0;background:var(--paper);border:2px solid var(--ink);border-radius:22px;display:flex;flex-direction:column;overflow:hidden}
-.modal>header{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.2rem;border-bottom:1px solid var(--line);background:var(--surface)}
-.modal h2{font-size:1.3rem}
-.xbtn{border:2px solid var(--ink);background:transparent;border-radius:999px;width:2.3rem;height:2.3rem;cursor:pointer;line-height:1;flex:none}
-.mbody{padding:1.1rem 1.2rem 1.3rem;overflow-y:auto;display:grid;gap:1rem}
-.mfoot{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:space-between;align-items:center;margin-top:.3rem}
+/* why */
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1rem}
+.why div{padding:1.25rem;border-radius:16px;background:var(--surface);border:1px solid var(--line);min-width:0}
+.why h3{font-size:1.15rem;margin-bottom:.35rem}
+.why p{color:var(--muted);font-size:.94rem}
+
+/* faq */
+.faq{max-width:760px;display:grid;gap:.6rem}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:.2rem 1.1rem}
+summary{cursor:pointer;font-weight:600;padding:.85rem 0;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-family:var(--mono);font-size:1.2rem}
+details[open] summary::after{content:"\2212"}
+details p{color:var(--muted);padding-bottom:1rem;font-size:.96rem}
+
+/* visit */
+.visit{display:grid;grid-template-columns:1.1fr .9fr;gap:1.5rem}
+@media (max-width:860px){.visit{grid-template-columns:1fr}}
+.addr{background:var(--ink);color:var(--paper);border-radius:22px;padding:clamp(1.4rem,3.5vw,2.4rem);display:flex;flex-direction:column;gap:1.1rem;min-width:0}
+.addr h3{font-size:clamp(1.7rem,4vw,2.6rem);font-weight:800}
+.addr .eyebrow{color:color-mix(in srgb,var(--paper) 65%,transparent)}
+.addr .btn{border-color:var(--paper);color:var(--paper)}
+.addr .btn.wa{border-color:var(--wa);color:var(--wa-ink)}
+.contact{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:clamp(1.4rem,3.5vw,2.2rem);display:grid;gap:1rem;align-content:start;min-width:0}
+.num{font-family:var(--mono);font-size:clamp(1.4rem,4vw,2rem);font-weight:500;letter-spacing:.02em;user-select:all}
+
+footer{border-top:1px solid var(--line);padding-block:2rem 6rem;color:var(--muted);font-size:.9rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:.8rem 2rem;justify-content:space-between}
+footer nav{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem}
+footer a{text-decoration:none}
+footer a:hover{color:var(--ink)}
+
+/* floating whatsapp */
+.fab{position:fixed;z-index:40;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));display:inline-flex;align-items:center;gap:.6rem;background:var(--wa);color:var(--wa-ink);text-decoration:none;font-weight:700;padding:.85rem 1.15rem;border-radius:999px;box-shadow:0 10px 26px -6px rgba(0,0,0,.45)}
+.fab:hover{transform:translateY(-2px)}
+@media (max-width:520px){.fab span{display:none}.fab{padding:.95rem}}
+
+/* cart drawer */
+.scrim{position:fixed;inset:0;background:rgba(5,10,15,.55);z-index:70}
+.drawer{position:fixed;z-index:80;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--paper);border-left:2px solid var(--ink);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.drawer header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.1rem;border-bottom:1px solid var(--line)}
+.drawer h2{font-size:1.35rem}
+.xbtn{border:2px solid var(--ink);background:transparent;border-radius:999px;width:2.4rem;height:2.4rem;cursor:pointer;font-size:1.1rem;line-height:1}
+.lines{flex:1;overflow-y:auto;padding:.5rem 1.1rem;display:flex;flex-direction:column}
+.line{display:grid;grid-template-columns:1fr auto;gap:.2rem .8rem;padding:.85rem 0;border-bottom:1px solid var(--line)}
+.line b{font-weight:600;font-size:.96rem}
+.line .lp{font-family:var(--mono);font-size:.9rem}
+.qty{display:flex;align-items:center;gap:.4rem}
+.qty button{width:1.9rem;height:1.9rem;border-radius:8px;border:1.5px solid var(--ink);background:var(--surface);cursor:pointer;font-weight:700}
+.qty span{min-width:1.4rem;text-align:center;font-family:var(--mono)}
+.rm{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:.82rem;justify-self:end}
+.cart-empty{margin:auto;text-align:center;color:var(--muted);padding:2rem 0}
+.drawer footer{border-top:1px solid var(--line);padding:1rem 1.1rem;display:grid;gap:.75rem}
+.tot{display:flex;justify-content:space-between;font-weight:700;font-size:1.1rem}
+.tot span:last-child{font-family:var(--mono)}
 body.lock{overflow:hidden}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 
-/* toast */
-#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:200;background:var(--ink);color:var(--paper);padding:.7rem 1.1rem;border-radius:999px;font-weight:600;max-width:calc(100% - 32px);box-shadow:0 10px 26px -6px rgba(0,0,0,.5)}
-#toast:empty{display:none}
-
-/* login */
-.login{min-height:100vh;display:grid;place-items:center;padding:1.5rem max(16px,env(safe-area-inset-right,0px)) 1.5rem max(16px,env(safe-area-inset-left,0px));background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
-.lbox{width:min(420px,100%);background:var(--surface);border:2px solid var(--ink);border-radius:22px;padding:1.6rem;display:grid;gap:1rem}
-.lbox h1{font-size:1.7rem}
-.lbox .fine{font-size:.8rem;color:var(--muted)}
-
-/* settings */
-.steps{margin:.2rem 0 0;padding-left:1.2rem;display:grid;gap:.4rem;color:var(--muted);font-size:.93rem}
-.steps b{color:var(--ink)}
-code,.code{font-family:var(--mono);font-size:.85em;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:0 .3rem}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* real product photos */
+.art img{width:100%;height:100%;object-fit:cover;display:block}
+.art.photo{display:block;padding:0;background:var(--t1)}
+.art.noimg{align-content:center}
+.art.noimg span{font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:center;padding:1rem}
+.art .sold{position:absolute;inset:0;background:rgba(9,17,26,.55);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:1.3rem;letter-spacing:.02em}
+.tag.cond{left:.7rem;top:.7rem}
+.card .open{all:unset;cursor:pointer;display:block}
+.card .open:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.chiprow{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.15rem}
+.chiprow span{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line);border-radius:6px;padding:.1rem .45rem;color:var(--muted)}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none}
+.pmodal{position:fixed;z-index:90;inset:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));margin:auto;max-width:940px;max-height:calc(100% - 24px);overflow:auto;background:var(--paper);border:2px solid var(--ink);border-radius:22px;display:grid;grid-template-columns:1.05fr .95fr;gap:1.4rem;padding:1.2rem;height:fit-content}
+@media (max-width:760px){.pmodal{grid-template-columns:1fr}}
+.pmodal[hidden]{display:none}
+.pclose{position:absolute;top:.7rem;right:.7rem;background:var(--paper);z-index:2}
+.pgal{min-width:0}
+.pmain{aspect-ratio:1/1;max-width:100%;border-radius:16px;overflow:hidden;background:var(--t1);display:grid;place-items:center}
+.pmain img{width:100%;height:100%;object-fit:contain;background:var(--surface)}
+.pthumbs{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
+.pthumbs button{width:62px;height:62px;border:2px solid var(--line);border-radius:10px;padding:0;overflow:hidden;cursor:pointer;background:var(--surface)}
+.pthumbs button[aria-current="true"]{border-color:var(--ink)}
+.pthumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.pinfo{min-width:0;display:flex;flex-direction:column;gap:.8rem;padding-right:2.2rem}
+.pinfo h3{font-size:1.6rem;font-weight:700}
+.pinfo .price{font-size:1.5rem}
+.pinfo dl{display:grid;grid-template-columns:auto 1fr;gap:.35rem 1rem;margin:0;font-size:.93rem}
+.pinfo dt{color:var(--muted)}
+.pinfo dd{margin:0;font-weight:500}
+.pinfo .desc{color:var(--muted);white-space:pre-line}
 
 </style>
 </head>
 <body>
-<div id="login" class="login" hidden></div>
-
-<div id="app" class="shell" hidden>
-  <aside class="side">
-    <a class="alogo" href="#overview" aria-label="KHAITECH Admin home">
-      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect x="1.5" y="1.5" width="31" height="31" rx="9" fill="var(--accent)"/><rect x="11" y="7" width="12" height="20" rx="3" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><circle cx="17" cy="23" r="1.4" fill="var(--signal)"/><path d="M13.5 12l7 5" stroke="var(--signal)" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span>KHAITECH <small>Admin</small></span>
-    </a>
-    <nav id="nav" aria-label="Dashboard">
-      <a href="#overview" data-v="overview">Overview</a>
-      <a href="#repairs" data-v="repairs">Repairs <span class="nb" id="nbRepairs" hidden></span></a>
-      <a href="#stock" data-v="stock">Stock</a>
-      <a href="#sales" data-v="sales">Sales</a>
-      <a href="#settings" data-v="settings">Settings</a>
-    </nav>
-    <div class="side-foot">
-      <a href="../">View store</a>
-      <button type="button" data-act="logout">Log out</button>
-    </div>
-  </aside>
-  <main class="main" id="view" tabindex="-1"></main>
+<div class="strip">
+  <div class="wrap">
+    <span>Mandate Market, Ilorin, Kwara State</span>
+    <span class="mono">WhatsApp 0915 149 5696</span>
+  </div>
 </div>
 
-<div id="modalRoot"></div>
-<div id="toast" role="status" aria-live="polite"></div>
+<header class="site">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="KHAITECH home">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="1.5" y="1.5" width="31" height="31" rx="9" fill="var(--accent)"/><rect x="11" y="7" width="12" height="20" rx="3" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><circle cx="17" cy="23" r="1.4" fill="var(--signal)"/><path d="M13.5 12l7 5" stroke="var(--signal)" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>KHAI<b>TECH</b></span>
+    </a>
+    <button class="btn small menu-btn" id="menuBtn" aria-expanded="false" aria-controls="mainNav">Menu</button>
+    <nav class="main" id="mainNav" aria-label="Main">
+      <a href="#shop">Shop</a>
+      <a href="#services">Repairs</a>
+      <a href="#repair">Book a repair</a>
+      <a href="#faq">FAQ</a>
+      <a href="#visit">Visit us</a>
+    </nav>
+    <div class="hdr-actions">
+      <button class="btn small cart-btn" id="cartBtn" aria-controls="cart" aria-expanded="false">Order <span class="badge" id="cartCount">0</span></button>
+      <a class="btn small wa hide-sm" data-wa="Hello KHAITECH, I have an enquiry." target="_blank" rel="noopener" href="https://wa.me/2349151495696">WhatsApp</a>
+    </div>
+  </div>
+</header>
 
+<main id="top">
+<!-- HERO -->
+<section class="hero" aria-labelledby="h1">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Phone sales, repairs and gadgets</p>
+      <h1 id="h1" style="margin-top:.9rem">Buy it. <em>Fix it.</em> Keep it running.</h1>
+      <p class="lede">KHAITECH sells phones, accessories and gadgets, and repairs the faults that stop your phone from working, from a cracked screen to a dead phone. Find us at Mandate Market, Ilorin.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#shop">Shop the store</a>
+        <a class="btn" href="#repair">Book a repair</a>
+        <a class="btn wa" data-wa="Hello KHAITECH, I would like to make an enquiry." target="_blank" rel="noopener" href="https://wa.me/2349151495696">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.6-4.8A8.5 8.5 0 1 1 8 19.6L3 21z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2.2-1-1 .8c-1-.4-1.9-1.300-2.300-2.300l.8-1-1-2.200L9 8.500z" fill="currentColor" stroke="none"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+      <div class="facts">
+        <span>Mandate Market, Ilorin</span>
+        <span>Direct WhatsApp line</span>
+        <span>Sales, repairs, accessories</span>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 320 420" role="img" aria-label="A phone showing the IMEI dial code star hash zero six hash">
+        <rect x="30" y="8" width="260" height="404" rx="40" fill="var(--ink)"/>
+        <rect x="42" y="20" width="236" height="380" rx="30" fill="var(--screen)"/>
+        <rect x="124" y="30" width="72" height="16" rx="8" fill="#000"/>
+        <text x="160" y="104" text-anchor="middle" font-family="var(--mono)" font-size="13" fill="#8fa3b3" letter-spacing="2">DIAL TO READ IMEI</text>
+        <text x="160" y="162" text-anchor="middle" font-family="var(--mono)" font-size="44" fill="#fff" letter-spacing="3">*#06#</text>
+        <rect x="64" y="190" width="192" height="92" rx="14" fill="#13263a"/>
+        <text x="78" y="214" font-family="var(--mono)" font-size="11" fill="#8fa3b3">IMEI  (sample)</text>
+        <text x="78" y="240" font-family="var(--mono)" font-size="17" fill="#fff" letter-spacing="1.5">35 612908 417721 3</text>
+        <rect x="78" y="254" width="64" height="10" rx="5" fill="var(--signal)"/>
+        <rect x="150" y="254" width="92" height="10" rx="5" fill="#2b4258"/>
+        <path d="M232 40 L262 96 L244 118 L270 176 L252 214" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="2"/>
+        <path d="M262 96 L284 84 M244 118 L222 124" fill="none" stroke="#ffffff" stroke-opacity=".2" stroke-width="1.5"/>
+        <rect x="64" y="312" width="192" height="46" rx="23" fill="var(--accent)"/>
+        <text x="160" y="341" text-anchor="middle" font-family="var(--display)" font-weight="700" font-size="17" fill="var(--accent-ink)">Book a repair</text>
+      </svg>
+      <div class="chips" aria-hidden="true"><span>Screen</span><span>Dead phone</span><span>Battery</span><span>Charging port</span><span>Software</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="sec band" id="services" aria-labelledby="svcH">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow">Repairs</p>
+        <h2 id="svcH" style="margin-top:.6rem">What we repair</h2>
+        <p>Pick the fault that matches your phone and we will start your repair request for you.</p>
+      </div>
+    </div>
+    <div class="svc-grid" id="svcGrid"></div>
+  </div>
+</section>
+
+<!-- SHOP -->
+<section class="sec" id="shop" aria-labelledby="shopH">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow" id="shopCount">Store</p>
+        <h2 id="shopH" style="margin-top:.6rem">Phones, accessories and gadgets</h2>
+        <p>Add what you want to your order, then send it to us on WhatsApp. We confirm stock and the final price with you.</p>
+      </div>
+    </div>
+    <div class="tools">
+      <label class="sr" for="q">Search the store</label>
+      <input class="search" id="q" type="search" placeholder="Search phones, chargers, earbuds" autocomplete="off">
+      <label class="sr" for="cond">Filter by condition</label>
+      <select class="sort" id="cond"><option value="">Any condition</option></select>
+      <label class="sr" for="sort">Sort products</label>
+      <select class="sort" id="sort">
+        <option value="featured">Featured</option>
+        <option value="low">Price: low to high</option>
+        <option value="high">Price: high to low</option>
+        <option value="name">Name A to Z</option>
+      </select>
+    </div>
+    <div class="pills" id="pills" role="group" aria-label="Filter by category"></div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <p class="note">Prices are in naira and are a guide only. Availability and the final price are confirmed with you on WhatsApp.</p>
+  </div>
+</section>
+
+<!-- REPAIR -->
+<section class="sec band" id="repair" aria-labelledby="repH">
+  <div class="wrap repair-wrap">
+    <div>
+      <p class="eyebrow">Repair request</p>
+      <h2 id="repH" style="margin-top:.6rem;font-size:clamp(1.9rem,4.6vw,3rem);font-weight:700">Tell us what is wrong with your phone</h2>
+      <p style="color:var(--muted);margin-top:.8rem;max-width:30rem">Fill in the form and it opens a ready-written message to us on WhatsApp. You check it, then tap send. Nothing leaves your phone until you do.</p>
+      <div class="imei-tip">
+        <p class="eyebrow">Find your IMEI</p>
+        <span class="dial">*#06#</span>
+        <p>Open your phone dialer and type this code. The 15-digit number shown is your IMEI. It is also printed on the phone box and under Settings, About phone. Dual-SIM phones show two numbers; either one works.</p>
+      </div>
+    </div>
+
+    <div style="min-width:0">
+      <form class="rf" id="repairForm" novalidate>
+        <div class="row2">
+          <div class="field">
+            <label for="rName">Your name</label>
+            <input class="in" id="rName" autocomplete="name" placeholder="Full name">
+            <p class="err" id="eName" hidden></p>
+          </div>
+          <div class="field">
+            <label for="rPhone">Your phone number</label>
+            <input class="in" id="rPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0801 234 5678">
+            <p class="err" id="ePhone" hidden></p>
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="rMaker">Phone maker</label>
+            <select class="in" id="rMaker"><option value="">Select maker</option></select>
+            <p class="err" id="eMaker" hidden></p>
+          </div>
+          <div class="field">
+            <label for="rSeries">Phone series</label>
+            <select class="in" id="rSeries" disabled><option value="">Select maker first</option></select>
+            <p class="err" id="eSeries" hidden></p>
+          </div>
+        </div>
+        <div class="field" id="otherWrap" hidden>
+          <label for="rOther">Maker and series</label>
+          <input class="in" id="rOther" placeholder="For example: Nokia G21">
+        </div>
+        <div class="field">
+          <label for="rModel">Exact model <span class="hint">(optional)</span></label>
+          <input class="in" id="rModel" placeholder="For example: Spark 20 Pro, iPhone 13 Pro Max, A54">
+        </div>
+        <div class="field">
+          <label for="rImei">IMEI number</label>
+          <input class="in" id="rImei" inputmode="numeric" autocomplete="off" maxlength="19" placeholder="15 digits" aria-describedby="imeiHelp">
+          <div style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+            <p class="err" id="eImei" hidden></p>
+            <span class="imei-count" id="imeiCount">0 / 15</span>
+          </div>
+          <label class="check" for="noImei"><input type="checkbox" id="noImei"> I cannot get the IMEI now (for example, the phone is dead). I will show it at the shop.</label>
+        </div>
+        <fieldset class="field">
+          <legend>Fault to repair <span class="hint">(choose one or more)</span></legend>
+          <div class="faults" id="faults"></div>
+          <p class="err" id="eFault" hidden></p>
+        </fieldset>
+        <div class="field">
+          <label for="rNote">More details <span class="hint">(optional)</span></label>
+          <textarea class="in" id="rNote" placeholder="When did it start? Did it fall or get wet? Any repair before?"></textarea>
+        </div>
+        <div class="field">
+          <label for="rWhen">When will you bring it in?</label>
+          <select class="in" id="rWhen">
+            <option>Today</option><option>Tomorrow</option><option>Later this week</option><option>Not sure yet</option>
+          </select>
+        </div>
+        <button class="btn primary block" type="submit">Prepare my repair request</button>
+      </form>
+
+      <div class="result" id="result" hidden aria-live="polite" style="margin-top:1.25rem">
+        <h3 style="font-size:1.25rem">Your request is ready</h3>
+        <pre id="resultText"></pre>
+        <div class="acts">
+          <a class="btn wa" id="resultWa" target="_blank" rel="noopener" href="https://wa.me/2349151495696">Send on WhatsApp</a>
+          <button class="btn" type="button" id="copyBtn">Copy message</button>
+        </div>
+        <p id="copyStatus">Tap Send on WhatsApp, then press send inside WhatsApp to deliver it to us. If WhatsApp does not open, copy the message and send it to 0915 149 5696.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec" id="process" aria-labelledby="procH">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">How a repair works</p><h2 id="procH" style="margin-top:.6rem">From broken to working</h2></div></div>
+    <ol class="steps">
+      <li><h3>Send the request</h3><p>Fill the form above or message us on WhatsApp with your phone and its fault.</p></li>
+      <li><h3>Bring it in</h3><p>Come to our shop at Mandate Market, Ilorin, with the phone and its IMEI.</p></li>
+      <li><h3>We diagnose it</h3><p>We check the phone and tell you what is wrong and what the repair involves.</p></li>
+      <li><h3>We repair it</h3><p>Once you agree, we carry out the repair and test the phone.</p></li>
+      <li><h3>You collect it</h3><p>Check that everything works, then take your phone home.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="sec band" aria-labelledby="whyH">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">Why KHAITECH</p><h2 id="whyH" style="margin-top:.6rem">One shop for your phone, from buying to fixing</h2></div></div>
+    <div class="why">
+      <div><h3>Sales and repairs together</h3><p>Buy a phone, get an accessory for it and bring it back for repair, all in one place.</p></div>
+      <div><h3>Talk to us directly</h3><p>Message our WhatsApp line for prices, stock, repair questions or help choosing a phone.</p></div>
+      <div><h3>Clear repair requests</h3><p>Our form records your phone, IMEI and fault so we know what to expect before you arrive.</p></div>
+      <div><h3>In the heart of Ilorin</h3><p>We are at Mandate Market, easy to reach from anywhere in the city.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq" aria-labelledby="faqH">
+  <div class="wrap">
+    <div class="sec-head"><div><p class="eyebrow">Questions</p><h2 id="faqH" style="margin-top:.6rem">Before you visit</h2></div></div>
+    <div class="faq">
+      <details><summary>What is an IMEI and why do you ask for it?</summary><p>The IMEI is the 15-digit identity number of your phone. It helps us record exactly which phone is being repaired. Dial *#06# to see it, or check the phone box or Settings, About phone.</p></details>
+      <details><summary>My phone is dead. How do I get the IMEI?</summary><p>Tick the box on the repair form that says you cannot get the IMEI. You can also check the phone box, the SIM tray on some models, or the sticker under the battery on older phones. Otherwise we record it at the shop.</p></details>
+      <details><summary>How long will my repair take?</summary><p>It depends on the fault and the parts needed. We tell you what to expect after we have looked at your phone.</p></details>
+      <details><summary>Can I order gadgets without coming to the shop?</summary><p>Yes. Add items to your order and send it to us on WhatsApp. We confirm availability and the final price, then agree how you will pay and collect.</p></details>
+      <details><summary>Do you sell new and used phones?</summary><p>Our store shows the condition of each phone, new or UK used. Ask on WhatsApp for what is currently available.</p></details>
+      <details><summary>Where are you located?</summary><p>KHAITECH is at Mandate Market, Ilorin, Kwara State.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section class="sec band" id="visit" aria-labelledby="visitH">
+  <div class="wrap visit">
+    <div class="addr">
+      <p class="eyebrow">Visit the shop</p>
+      <h3 id="visitH">Mandate Market,<br>Ilorin, Kwara State</h3>
+      <p style="max-width:28rem;color:color-mix(in srgb,var(--paper) 80%,transparent)">Bring your phone for repair, or come and see our phones and gadgets in person.</p>
+      <div class="cta-row" style="margin-top:.2rem">
+        <a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=Mandate+Market+Ilorin+Kwara">Open in Google Maps</a>
+      </div>
+    </div>
+    <div class="contact">
+      <p class="eyebrow">WhatsApp and calls</p>
+      <p class="num" id="numText">0915 149 5696</p>
+      <p style="color:var(--muted)">Message us for sales, repairs or any enquiry. You can select and copy the number above.</p>
+      <a class="btn wa block" data-wa="Hello KHAITECH, I would like to make an enquiry." target="_blank" rel="noopener" href="https://wa.me/2349151495696">Chat on WhatsApp</a>
+      <button class="btn block" type="button" id="copyNum">Copy number</button>
+      <p id="numStatus" class="err" style="color:var(--muted)" hidden></p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <strong style="color:var(--ink);font-family:var(--display)">KHAITECH</strong><br>
+      Phone sales, repairs and gadgets.<br>Mandate Market, Ilorin, Kwara State.
+      <br>&copy; 2026 KHAITECH. All rights reserved.
+    </div>
+    <nav aria-label="Footer"><a href="#shop">Shop</a><a href="#services">Repairs</a><a href="#repair">Book a repair</a><a href="#faq">FAQ</a><a href="#visit">Visit us</a><a href="admin.html" rel="nofollow">Staff login</a></nav>
+  </div>
+</footer>
+
+<a class="fab" data-wa="Hello KHAITECH, I would like to make an enquiry." target="_blank" rel="noopener" href="https://wa.me/2349151495696" aria-label="Chat with KHAITECH on WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.6-4.8A8.5 8.5 0 1 1 8 19.6L3 21z"/><path d="M9 8.5c0 3.5 3 6.5 6.5 6.5l1-1.6-2.2-1-1 .8c-1-.4-1.9-1.300-2.300-2.300l.8-1-1-2.200L9 8.500z" fill="currentColor" stroke="none"/></svg>
+  <span>Chat on WhatsApp</span>
+</a>
+
+<!-- Product detail -->
+<div class="scrim" id="pScrim" hidden></div>
+<div class="pmodal" id="pModal" role="dialog" aria-modal="true" aria-labelledby="pTitle" hidden>
+  <button class="xbtn pclose" id="pClose" aria-label="Close">&#10005;</button>
+  <div class="pgal"><div class="pmain" id="pMain"></div><div class="pthumbs" id="pThumbs"></div></div>
+  <div class="pinfo" id="pInfo"></div>
+</div>
+
+<!-- Order drawer -->
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="cart" aria-label="Your order" hidden>
+  <header>
+    <h2>Your order</h2>
+    <button class="xbtn" id="cartClose" aria-label="Close order">&#10005;</button>
+  </header>
+  <div class="lines" id="lines"></div>
+  <footer>
+    <div class="tot"><span>Total (guide)</span><span id="cartTotal">₦0</span></div>
+    <div class="field">
+      <label for="cName">Your name <span class="hint">(optional)</span></label>
+      <input class="in" id="cName" autocomplete="name" placeholder="So we know who to reply to">
+    </div>
+    <a class="btn wa block" id="cartWa" target="_blank" rel="noopener" href="https://wa.me/2349151495696">Send order on WhatsApp</a>
+    <button class="btn small block" type="button" id="cartClear">Clear order</button>
+  </footer>
+</aside>
 <script>
 /* KHAITECH site settings. Edit this file, commit and push to change contact details. */
 window.KHAITECH_CONFIG = {
@@ -404,6 +691,7 @@ window.KHAITECH_CONFIG = {
   function catalog(base) {
     function fromFile() {
       return fetch((base || '') + 'data/catalog.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r : fetch((base || '') + 'catalog.json', { cache: 'no-cache' }); })
         .then(function (r) { return r.ok ? r.json() : { products: [] }; })
         .then(function (j) { return { items: j.products || [], source: 'file' }; })
         .catch(function () { return { items: [], source: 'file' }; });
@@ -418,622 +706,340 @@ window.KHAITECH_CONFIG = {
 
 </script>
 <script>
-/* KHAITECH admin dashboard. Talks to data only through window.KDB (see db.js). */
-(function () {
-  'use strict';
-  const CFG = window.KHAITECH_CONFIG || {};
-  const $ = (s, r = document) => r.querySelector(s);
-  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-  const naira = n => '₦' + Math.round(+n || 0).toLocaleString('en-NG');
-  const p2 = n => String(n).padStart(2, '0');
-  const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`; };
-  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const fmtDate = s => { if (!s) return ''; const [y, m, d] = s.split('-'); return `${+d} ${MON[+m - 1]} ${y}`; };
-  const ts = s => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
-  const dayDiff = (a, b) => Math.round((ts(b) - ts(a)) / 864e5);
-  const num = v => { const n = parseFloat(String(v).replace(/[^\d.]/g, '')); return isNaN(n) ? 0 : n; };
 
-  const CATS = ['Phones', 'Chargers & power', 'Audio', 'Cases & protection', 'Gadgets', 'Other'];
-  const CONDS = ['New', 'Open box', 'UK used', 'Nigeria used', 'Refurbished', 'Used'];
-  const MAKERS = ['Apple (iPhone)', 'Samsung', 'Tecno', 'Infinix', 'itel', 'Xiaomi / Redmi / Poco', 'Oppo', 'Vivo', 'Realme', 'Huawei', 'Google Pixel', 'Nokia', 'Other'];
-  const FAULTS = ['Screen', 'Dead phone', 'Battery', 'Charging port', 'Water damage', 'Software / unlock', 'Camera', 'Speaker / mic', 'Back glass', 'Other'];
-  const RSTATUS = { received: 'Received', repair: 'In repair', ready: 'Ready for collection', cannot: 'Cannot repair' };
-  const METHODS = ['Cash', 'Transfer', 'POS'];
+(function(){
+  var CFG=window.KHAITECH_CONFIG||{};
+  var WA=CFG.whatsapp||'2349151495696';
+  function $(s,r){return (r||document).querySelector(s)}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+  function naira(n){return '₦'+Math.round(n).toLocaleString('en-NG')}
+  function wa(t){return 'https://wa.me/'+WA+'?text='+encodeURIComponent(t)}
+  $$('[data-wa]').forEach(function(a){a.href=wa(a.getAttribute('data-wa'))});
 
-  const D = { products: [], repairs: [], sales: [] };
-  const V = { rfilter: 'open', rq: '', sq: '', scat: '', sst: '', smonth: todayISO().slice(0, 7) };
+  /* mobile menu */
+  var menuBtn=$('#menuBtn'),nav=$('#mainNav');
+  menuBtn.addEventListener('click',function(){
+    var o=nav.classList.toggle('open');menuBtn.setAttribute('aria-expanded',o?'true':'false');
+  });
+  $$('a',nav).forEach(function(a){a.addEventListener('click',function(){nav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false')})});
 
-  /* ---------- small helpers ---------- */
-  let toastT;
-  function toast(msg) {
-    const t = $('#toast'); t.textContent = msg; clearTimeout(toastT);
-    toastT = setTimeout(() => { t.textContent = ''; }, 3200);
+  /* products: loaded from the data layer (admin device) or data/catalog.json (everyone else) */
+  var CATS=['All','Phones','Chargers & power','Audio','Cases & protection','Gadgets','Other'];
+  var P=[],byId={};
+  var state={cat:'All',q:'',sort:'featured',cond:''};
+  function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+  function priceText(x){return x.price>0?naira(x.price):'Ask for price'}
+  function soldOut(x){return x.status==='sold'||(x.qty!=null&&+x.qty<=0)}
+  function chips(x){
+    var c=[];
+    if(x.storage)c.push(x.storage);
+    if(x.color)c.push(x.color);
+    if(x.battery)c.push('Battery '+x.battery+'%');
+    return c.length?'<div class="chiprow">'+c.map(function(t){return '<span>'+esc(t)+'</span>'}).join('')+'</div>':'';
   }
-  const photoSrc = p => /^(data:|https?:|blob:)/.test(p) ? p : '../' + p;
-  function waNum(p) {
-    let d = String(p || '').replace(/\D/g, '');
-    if (d.startsWith('0') && d.length === 11) d = '234' + d.slice(1);
-    return d;
+  function artHtml(x){
+    var ph=(x.photos||[])[0];
+    var inner=ph?'<img src="'+esc(ph)+'" alt="'+esc(x.name)+'" loading="lazy">':'<span>'+esc(x.category||'Photo coming soon')+'<br>Photo coming soon</span>';
+    return '<div class="art '+(ph?'photo':'noimg tone-a')+'">'+inner+
+      (x.condition?'<span class="tag cond">'+esc(x.condition)+'</span>':'')+
+      (soldOut(x)?'<span class="sold">Sold out</span>':'')+'</div>';
   }
-  function download(name, blob) {
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = name;
-    document.body.appendChild(a); a.click();
-    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  function renderPills(){
+    var counts={};P.forEach(function(x){counts[x.category]=(counts[x.category]||0)+1});
+    var cats=CATS.filter(function(c){return c==='All'||counts[c]});
+    if(cats.indexOf(state.cat)<0)state.cat='All';
+    $('#pills').innerHTML=cats.map(function(c){return '<button type="button" class="pill" data-cat="'+esc(c)+'" aria-pressed="'+(state.cat===c)+'">'+esc(c)+'</button>'}).join('');
+    var conds=[];P.forEach(function(x){if(x.condition&&conds.indexOf(x.condition)<0)conds.push(x.condition)});
+    $('#cond').innerHTML='<option value="">Any condition</option>'+conds.map(function(c){return '<option'+(state.cond===c?' selected':'')+'>'+esc(c)+'</option>'}).join('');
+    $('#cond').hidden=conds.length<2;
   }
-  function fileToJpeg(file, max, q) {
-    return new Promise((res, rej) => {
-      const fr = new FileReader();
-      fr.onerror = () => rej(new Error('Could not read that file.'));
-      fr.onload = () => {
-        const img = new Image();
-        img.onerror = () => rej(new Error('That file is not a picture we can read.'));
-        img.onload = () => {
-          const k = Math.min(1, max / Math.max(img.width, img.height));
-          const c = document.createElement('canvas');
-          c.width = Math.max(1, Math.round(img.width * k)); c.height = Math.max(1, Math.round(img.height * k));
-          const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
-          g.drawImage(img, 0, 0, c.width, c.height);
-          res(c.toDataURL('image/jpeg', q));
-        };
-        img.src = fr.result;
-      };
-      fr.readAsDataURL(file);
+  function renderGrid(){
+    var q=state.q.trim().toLowerCase();
+    var list=P.filter(function(x){
+      return (state.cat==='All'||x.category===state.cat)&&(!state.cond||x.condition===state.cond)&&
+        (!q||[x.name,x.brand,x.description,x.category,x.condition,x.storage,x.color].join(' ').toLowerCase().indexOf(q)>-1);
     });
-  }
-  function loadJSZip() {
-    if (window.JSZip) return Promise.resolve();
-    return new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-      s.onload = res; s.onerror = () => rej(new Error('Could not load the zip tool. Check your internet connection.'));
-      document.head.appendChild(s);
-    });
-  }
-
-  /* ---------- password gate (a light lock only; real accounts come with Supabase) ---------- */
-  const AUTH_KEY = 'khaitech-admin-v1';
-  let memHash = null;
-  const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
-  const lsSet = (k, v) => { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } };
-  const getHash = () => lsGet(AUTH_KEY) || memHash;
-  const setHash = h => { if (!lsSet(AUTH_KEY, h)) memHash = h; };
-  let memSess = false;
-  const sessGet = () => { try { return sessionStorage.getItem('khaitech-session') === '1'; } catch (e) { return memSess; } };
-  const sessSet = v => { try { v ? sessionStorage.setItem('khaitech-session', '1') : sessionStorage.removeItem('khaitech-session'); } catch (e) { memSess = v; } };
-  async function sha(s) {
-    if (!(window.crypto && crypto.subtle)) throw new Error('Open this page over https (or localhost) so the password can be protected.');
-    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('khaitech:' + s));
-    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
-  }
-  function showLogin() {
-    const has = !!getHash();
-    $('#app').hidden = true;
-    const L = $('#login'); L.hidden = false;
-    L.innerHTML = `<form class="lbox" id="lf" novalidate>
-      <p class="eyebrow">KHAITECH Admin</p>
-      <h1>${has ? 'Staff login' : 'Create your admin password'}</h1>
-      <p class="muted">${has ? 'Enter the admin password to open the dashboard.' : 'This is the first time the dashboard is opened on this device. Choose a password of at least 6 characters and keep it safe.'}</p>
-      <div class="field"><label for="lp">Password</label><input class="in" id="lp" type="password" autocomplete="${has ? 'current-password' : 'new-password'}"></div>
-      ${has ? '' : '<div class="field"><label for="lp2">Confirm password</label><input class="in" id="lp2" type="password" autocomplete="new-password"></div>'}
-      <p class="err" id="le" hidden></p>
-      <button class="btn primary block" type="submit">${has ? 'Log in' : 'Create password and continue'}</button>
-      <p class="fine">This password only keeps casual visitors out of the dashboard on this device. Proper staff accounts arrive with the Supabase step.</p>
-    </form>`;
-    $('#lp').focus();
-    $('#lf').addEventListener('submit', async e => {
-      e.preventDefault();
-      const err = m => { const x = $('#le'); x.textContent = m; x.hidden = !m; };
-      const pw = $('#lp').value;
-      try {
-        if (has) {
-          if (await sha(pw) !== getHash()) { err('That password is not right.'); return; }
-        } else {
-          if (pw.length < 6) { err('Use at least 6 characters.'); return; }
-          if (pw !== $('#lp2').value) { err('The two passwords are different.'); return; }
-          setHash(await sha(pw));
-        }
-      } catch (ex) { err(ex.message); return; }
-      sessSet(true); startApp();
-    });
-  }
-
-  /* ---------- modal ---------- */
-  let modalEl = null, lastFocus = null;
-  function modal(title, html) {
-    closeModal(true);
-    lastFocus = document.activeElement;
-    const root = $('#modalRoot');
-    root.innerHTML = `<div class="mscrim" data-close></div><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"><header><h2 id="mTitle">${esc(title)}</h2><button type="button" class="xbtn" data-close aria-label="Close">&#10005;</button></header><div class="mbody">${html}</div></div>`;
-    document.body.classList.add('lock');
-    modalEl = $('.modal', root);
-    const first = $('input:not([type=hidden]):not([type=file]),select,textarea', modalEl);
-    (first || $('.xbtn', modalEl)).focus();
-    return modalEl;
-  }
-  function closeModal(silent) {
-    $('#modalRoot').innerHTML = ''; modalEl = null;
-    document.body.classList.remove('lock');
-    if (!silent && lastFocus && lastFocus.focus && document.contains(lastFocus)) lastFocus.focus();
-  }
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modalEl) closeModal(); });
-
-  /* ---------- data ---------- */
-  async function reload() {
-    const [p, r, s] = await Promise.all([KDB.list('products'), KDB.list('repairs'), KDB.list('sales')]);
-    D.products = p; D.repairs = r; D.sales = s;
-  }
-  const isOpen = r => !r.collected;
-  const isLate = r => isOpen(r) && r.returnDate && r.returnDate < todayISO();
-  const balance = r => Math.max(0, (+r.price || 0) - (+r.paid || 0));
-  const devName = r => [r.maker && r.maker !== 'Other' ? r.maker.replace(/ \(.*\)/, '') : '', r.model].filter(Boolean).join(' ') || 'phone';
-  const inStock = p => p.status !== 'hidden' && p.status !== 'sold' && (+p.qty || 0) > 0;
-  function nextTicket() {
-    const n = D.repairs.reduce((m, r) => Math.max(m, parseInt(String(r.ticket || '').replace(/\D/g, ''), 10) || 0), 0) + 1;
-    return 'KT-' + String(n).padStart(4, '0');
-  }
-  function custMsg(r) {
-    const dev = devName(r), bal = balance(r), faults = (r.faults || []).join(', ');
-    if (r.collected) return `Hello ${r.customer}, thank you for choosing KHAITECH. Ticket ${r.ticket} for your ${dev} is complete. You can reach us on this number any time.`;
-    if (r.status === 'ready') return `Hello ${r.customer}, your ${dev} (ticket ${r.ticket}) is ready for collection at KHAITECH, ${CFG.address || 'Mandate Market, Ilorin'}.` + (bal > 0 ? ` Balance to pay: ${naira(bal)}.` : '');
-    if (r.status === 'cannot') return `Hello ${r.customer}, we checked your ${dev} (ticket ${r.ticket}) and could not repair it. Please come to KHAITECH to collect it.`;
-    return `Hello ${r.customer}, KHAITECH has received your ${dev} on ${fmtDate(r.dateIn)}. Ticket: ${r.ticket}.` + (faults ? ` Fault: ${faults}.` : '') + ` Repair price: ${r.price > 0 ? naira(r.price) : 'to be confirmed'}.` + (r.paid > 0 ? ` Paid so far: ${naira(r.paid)}.` : '') + ` Please come back on ${r.returnDate ? fmtDate(r.returnDate) : 'the date we agree'}.`;
-  }
-  const msgLink = r => `https://wa.me/${waNum(r.phone)}?text=${encodeURIComponent(custMsg(r))}`;
-
-  /* ---------- router ---------- */
-  const VIEWS = { overview: viewOverview, repairs: viewRepairs, stock: viewStock, sales: viewSales, settings: viewSettings };
-  function current() { const h = location.hash.replace('#', ''); return VIEWS[h] ? h : 'overview'; }
-  function render() {
-    const v = current();
-    $$('#nav a').forEach(a => a.setAttribute('aria-current', a.dataset.v === v ? 'page' : 'false'));
-    const open = D.repairs.filter(isOpen).length;
-    const nb = $('#nbRepairs'); nb.textContent = open; nb.hidden = !open;
-    $('#view').innerHTML = VIEWS[v]();
-    if (v === 'repairs') renderRepairList();
-    if (v === 'stock') renderStockList();
-    if (v === 'sales') renderSalesList();
-  }
-  window.addEventListener('hashchange', () => { if (!$('#app').hidden) { render(); window.scrollTo(0, 0); } });
-  async function refresh() { await reload(); render(); }
-
-  /* ---------- overview ---------- */
-  function viewOverview() {
-    const t = todayISO(), mk = t.slice(0, 7);
-    const open = D.repairs.filter(isOpen);
-    const ready = open.filter(r => r.status === 'ready');
-    const late = open.filter(isLate);
-    const owed = open.reduce((s, r) => s + balance(r), 0);
-    const doneM = D.repairs.filter(r => r.collected && (r.collectedDate || '').slice(0, 7) === mk);
-    const repInc = doneM.reduce((s, r) => s + (+r.paid || 0), 0);
-    const salesM = D.sales.filter(s => (s.date || '').slice(0, 7) === mk);
-    const salesInc = salesM.reduce((s, x) => s + x.qty * x.unitPrice, 0);
-    const avail = D.products.filter(inStock);
-    const phones = avail.filter(p => p.category === 'Phones').reduce((s, p) => s + (+p.qty || 0), 0);
-    const acc = avail.filter(p => p.category !== 'Phones').reduce((s, p) => s + (+p.qty || 0), 0);
-    const value = avail.reduce((s, p) => s + (+p.qty || 0) * (+p.price || 0), 0);
-    const upcoming = open.slice().sort((a, b) => (a.returnDate || '9999').localeCompare(b.returnDate || '9999')).slice(0, 6);
-    const low = D.products.filter(p => p.status !== 'hidden' && (+p.qty || 0) <= 1 && p.status !== 'sold').slice(0, 6);
-    const recent = D.sales.slice().sort((a, b) => (b.date + b.createdAt).localeCompare(a.date + a.createdAt)).slice(0, 5);
-    const today = new Date().toLocaleDateString('en-NG', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-    return `<div class="phead"><div><p class="eyebrow">${esc(today)}</p><h1>Overview</h1></div>
-      <div class="acts"><button class="btn primary" data-act="new-repair">New repair</button><button class="btn" data-act="new-item">Add item to stock</button></div></div>
-    <div class="tiles">
-      <a class="tile ${late.length ? 'alert' : ''}" href="#repairs" data-act="rf" data-v="late"><span class="k">Overdue for collection</span><span class="v">${late.length}</span><span class="s">Return date has passed</span></a>
-      <a class="tile" href="#repairs" data-act="rf" data-v="open"><span class="k">Phones in the shop</span><span class="v">${open.length}</span><span class="s">${ready.length} ready to collect</span></a>
-      <div class="tile"><span class="k">Customers still owe</span><span class="v">${naira(owed)}</span><span class="s">On phones not yet collected</span></div>
-      <div class="tile good"><span class="k">Money in this month</span><span class="v">${naira(repInc + salesInc)}</span><span class="s">${naira(repInc)} repairs, ${naira(salesInc)} sales</span></div>
-      <div class="tile"><span class="k">Repairs collected</span><span class="v">${doneM.length}</span><span class="s">This month</span></div>
-      <div class="tile"><span class="k">Phones in stock</span><span class="v">${phones}</span><span class="s">${acc} accessories and gadgets</span></div>
-      <div class="tile"><span class="k">Stock value</span><span class="v">${naira(value)}</span><span class="s">At selling prices</span></div>
-    </div>
-    <div class="panels">
-      <section class="panel"><h2>Coming up for collection</h2>${upcoming.length ? upcoming.map(r => `<div class="li"><div class="l"><b>${esc(r.customer)}</b><span>${esc(devName(r))} · back ${r.returnDate ? esc(fmtDate(r.returnDate)) : 'date not set'}${isLate(r) ? ' · <b style="color:var(--bad)">overdue</b>' : ''}</span></div><button type="button" class="lnk" data-act="edit-repair" data-id="${esc(r.id)}">Open</button></div>`).join('') : '<p class="hint">No phones waiting. New repairs will show here.</p>'}</section>
-      <section class="panel"><h2>Low or no stock</h2>${low.length ? low.map(p => `<div class="li"><div class="l"><b>${esc(p.name)}</b><span>${esc(p.condition || '')} · ${(+p.qty || 0)} left</span></div><button type="button" class="lnk" data-act="edit-item" data-id="${esc(p.id)}">Edit</button></div>`).join('') : '<p class="hint">Nothing is running low.</p>'}</section>
-      <section class="panel"><h2>Recent sales</h2>${recent.length ? recent.map(s => `<div class="li"><div class="l"><b>${esc(s.name)}</b><span>${esc(fmtDate(s.date))}${s.buyer ? ' · ' + esc(s.buyer) : ''}</span></div><span class="mono">${naira(s.qty * s.unitPrice)}</span></div>`).join('') : '<p class="hint">No sales recorded yet. Use Record sale on a stock item.</p>'}</section>
-    </div>`;
-  }
-
-  /* ---------- repairs ---------- */
-  function viewRepairs() {
-    const f = V.rfilter;
-    const P = (k, l) => `<button type="button" class="pill" data-act="rf" data-v="${k}" aria-pressed="${f === k}">${l}</button>`;
-    return `<div class="phead"><div><h1>Repairs</h1><p>Every phone brought in for repair: what we charge, when it came in, when the customer should come back and whether it has been collected.</p></div>
-      <div class="acts"><button class="btn" data-act="paste-wa">From WhatsApp request</button><button class="btn primary" data-act="new-repair">New repair</button></div></div>
-      <div class="pills" role="group" aria-label="Filter repairs">${P('open', 'In the shop')}${P('ready', 'Ready')}${P('late', 'Overdue')}${P('done', 'Collected')}${P('all', 'All')}</div>
-      <div class="toolbar"><label class="sr" for="rq" style="position:absolute;left:-9999px">Search repairs</label><input class="in" id="rq" type="search" placeholder="Search name, phone, IMEI, ticket or model" value="${esc(V.rq)}"></div>
-      <p class="summary" id="rsum"></p><div class="rgrid" id="rlist"></div>`;
-  }
-  function renderRepairList() {
-    const f = V.rfilter, q = V.rq.trim().toLowerCase();
-    let list = D.repairs.filter(r => {
-      if (f === 'open' && r.collected) return false;
-      if (f === 'ready' && (r.collected || r.status !== 'ready')) return false;
-      if (f === 'late' && !isLate(r)) return false;
-      if (f === 'done' && !r.collected) return false;
-      return !q || [r.customer, r.phone, r.imei, r.ticket, r.maker, r.model, (r.faults || []).join(' ')].join(' ').toLowerCase().includes(q);
-    });
-    list.sort((a, b) => {
-      if (!!a.collected !== !!b.collected) return a.collected ? 1 : -1;
-      if (a.collected) return (b.collectedDate || '').localeCompare(a.collectedDate || '');
-      return (a.returnDate || '9999').localeCompare(b.returnDate || '9999');
-    });
-    const owed = list.filter(isOpen).reduce((s, r) => s + balance(r), 0);
-    $('#rsum').textContent = `${list.length} ${list.length === 1 ? 'repair' : 'repairs'}` + (f !== 'done' && owed ? ` · ${naira(owed)} still to be paid` : '');
-    if (!list.length) {
-      $('#rlist').innerHTML = `<div class="empty" style="grid-column:1/-1"><b>${D.repairs.length ? 'No repairs match' : 'No repairs yet'}</b><span>${D.repairs.length ? 'Try another filter or search.' : 'When a customer brings a phone, add it here with the price and the date to come back.'}</span>${D.repairs.length ? '' : '<button class="btn primary" data-act="new-repair">Add the first repair</button>'}</div>`;
+    if(state.sort==='low')list.sort(function(a,b){return (a.price||1e12)-(b.price||1e12)});
+    if(state.sort==='high')list.sort(function(a,b){return (b.price||0)-(a.price||0)});
+    if(state.sort==='name')list.sort(function(a,b){return a.name.localeCompare(b.name)});
+    if(state.sort==='featured')list.sort(function(a,b){return (soldOut(a)-soldOut(b))||(String(b.updatedAt||'').localeCompare(String(a.updatedAt||'')))});
+    $('#shopCount').textContent='Store · '+list.length+(list.length===1?' item':' items');
+    if(!P.length){
+      $('#grid').innerHTML='<div class="empty">We are updating the store with new stock. Message us on WhatsApp to ask what is available today.<br><br><a class="btn wa" target="_blank" rel="noopener" href="'+wa('Hello KHAITECH, what phones and accessories do you have available today?')+'">Ask on WhatsApp</a></div>';
       return;
     }
-    $('#rlist').innerHTML = list.map(r => {
-      const late = isLate(r), bal = balance(r);
-      const stBadge = r.collected ? '<span class="st st-collected">Collected</span>' : `<span class="st st-${r.status}">${esc(RSTATUS[r.status] || r.status)}</span>`;
-      const d = late ? dayDiff(r.returnDate, todayISO()) : 0;
-      return `<article class="rcard ${late ? 'late' : ''}"><header><span class="ticket">${esc(r.ticket)}</span><span>${stBadge}</span></header>
-        <div><h3>${esc(r.customer)}</h3><p class="sub">${esc(r.phone)}</p></div>
-        <div><p class="dev">${esc(devName(r))}</p>${r.imei ? `<p class="imei">IMEI ${esc(r.imei)}</p>` : ''}<p class="sub">${esc((r.faults || []).join(', '))}${r.notes ? ' · ' + esc(r.notes) : ''}</p></div>
-        <dl class="kv"><div><dt>Price</dt><dd>${r.price > 0 ? naira(r.price) : 'Not set'}</dd></div><div><dt>Paid</dt><dd>${naira(r.paid)}</dd></div><div class="${bal > 0 && !r.collected ? 'due' : ''}"><dt>Balance</dt><dd>${naira(bal)}</dd></div></dl>
-        <dl class="kv two"><div><dt>Brought in</dt><dd>${esc(fmtDate(r.dateIn) || '-')}</dd></div><div class="${late ? 'due' : ''}"><dt>${r.collected ? 'Collected' : 'Come back'}</dt><dd>${esc(fmtDate(r.collected ? r.collectedDate : r.returnDate) || 'Not set')}</dd></div></dl>
-        ${late ? `<p class="flag">Overdue by ${d} ${d === 1 ? 'day' : 'days'}</p>` : ''}
-        <footer>${r.collected ? '' : `<button class="btn small primary" data-act="collect" data-id="${esc(r.id)}">Mark collected</button>`}<a class="btn small wa" target="_blank" rel="noopener" href="${esc(msgLink(r))}">Message</a><button class="btn small ghost" data-act="edit-repair" data-id="${esc(r.id)}">Edit</button></footer></article>`;
-    }).join('');
-  }
-
-  function repairForm(r, isDraft) {
-    const isNew = !r || isDraft;
-    r = r || {};
-    const makers = MAKERS.slice(); if (r.maker && !makers.includes(r.maker)) makers.unshift(r.maker);
-    const m = modal(isNew ? 'New repair' : `Edit repair ${r.ticket}`, `<form id="rf" novalidate style="display:grid;gap:1rem">
-      <div class="row2"><div class="field"><label for="rf-name">Customer name</label><input class="in" id="rf-name" value="${esc(r.customer)}" autocomplete="off"><p class="err" id="e-name" hidden></p></div>
-        <div class="field"><label for="rf-phone">Customer phone number</label><input class="in" id="rf-phone" type="tel" value="${esc(r.phone)}" placeholder="0801 234 5678"><p class="err" id="e-phone" hidden></p></div></div>
-      <div class="row2"><div class="field"><label for="rf-maker">Phone maker</label><select class="in" id="rf-maker"><option value="">Select maker</option>${makers.map(x => `<option ${r.maker === x ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select><p class="err" id="e-maker" hidden></p></div>
-        <div class="field"><label for="rf-model">Phone series / model</label><input class="in" id="rf-model" value="${esc(r.model)}" placeholder="For example Galaxy A54"></div></div>
-      <div class="field"><label for="rf-imei">IMEI <span class="hint">(15 digits, leave empty if the phone is dead)</span></label><input class="in" id="rf-imei" inputmode="numeric" value="${esc(r.imei)}" maxlength="19"><p class="err" id="e-imei" hidden></p></div>
-      <fieldset class="field"><legend>Fault to repair</legend><div class="faults">${FAULTS.map((f, i) => `<label class="fchip"><input type="checkbox" name="fault" value="${esc(f)}" ${(r.faults || []).includes(f) ? 'checked' : ''}><span>${esc(f)}</span></label>`).join('')}</div><p class="err" id="e-fault" hidden></p></fieldset>
-      <div class="field"><label for="rf-notes">Notes <span class="hint">(condition, accessories left, anything to remember)</span></label><textarea class="in" id="rf-notes">${esc(r.notes)}</textarea></div>
-      <div class="row3"><div class="field"><label for="rf-price">Price to charge (₦)</label><input class="in" id="rf-price" inputmode="numeric" value="${r.price ? esc(r.price) : ''}" placeholder="0"><p class="err" id="e-price" hidden></p></div>
-        <div class="field"><label for="rf-paid">Paid so far (₦)</label><input class="in" id="rf-paid" inputmode="numeric" value="${r.paid ? esc(r.paid) : ''}" placeholder="0"></div>
-        <div class="field"><label>Balance</label><div class="bal" id="rf-bal">${naira(balance(r))}</div></div></div>
-      <div class="row2"><div class="field"><label for="rf-in">Date brought in</label><input class="in" id="rf-in" type="date" value="${esc(r.dateIn || todayISO())}"><p class="err" id="e-in" hidden></p></div>
-        <div class="field"><label for="rf-ret">Date to come back</label><input class="in" id="rf-ret" type="date" value="${esc(r.returnDate)}"></div></div>
-      <div class="field"><label for="rf-status">Repair status</label><select class="in" id="rf-status">${Object.keys(RSTATUS).map(k => `<option value="${k}" ${(r.status || 'received') === k ? 'selected' : ''}>${RSTATUS[k]}</option>`).join('')}</select></div>
-      <div class="row2" style="align-items:end"><label class="check"><input type="checkbox" id="rf-col" ${r.collected ? 'checked' : ''}> Customer has collected the phone</label>
-        <div class="field"><label for="rf-cold">Date collected</label><input class="in" id="rf-cold" type="date" value="${esc(r.collectedDate)}"></div></div>
-      <div class="mfoot"><div>${isNew ? '' : '<button type="button" class="btn small danger" id="rf-del">Delete record</button>'}<span id="rf-delbox" hidden> <span class="muted">Delete this repair for good?</span> <button type="button" class="btn small danger" id="rf-del2">Yes, delete</button></span></div>
-        <div class="acts"><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn primary">${isNew ? 'Save repair' : 'Save changes'}</button></div></div>
-    </form>`);
-    const upd = () => { const bal = Math.max(0, num($('#rf-price').value) - num($('#rf-paid').value)); $('#rf-bal').textContent = naira(bal); };
-    $('#rf-price').addEventListener('input', upd); $('#rf-paid').addEventListener('input', upd);
-    $('#rf-imei').addEventListener('input', e => { e.target.value = e.target.value.replace(/[^\d ]/g, ''); });
-    if ($('#rf-del')) {
-      $('#rf-del').onclick = () => { $('#rf-del').hidden = true; $('#rf-delbox').hidden = false; };
-      $('#rf-del2').onclick = async () => { await KDB.remove('repairs', r.id); closeModal(); toast('Repair deleted'); refresh(); };
-    }
-    $('#rf').addEventListener('submit', async e => {
-      e.preventDefault();
-      let first = null;
-      const bad = (inp, eid, msg) => { const x = $('#' + eid); x.textContent = msg; x.hidden = !msg; if (inp) inp.setAttribute('aria-invalid', msg ? 'true' : 'false'); if (msg && !first) first = inp; };
-      const customer = $('#rf-name').value.trim(), phone = $('#rf-phone').value.trim(), maker = $('#rf-maker').value, model = $('#rf-model').value.trim();
-      const imei = $('#rf-imei').value.replace(/\D/g, ''), faults = $$('input[name=fault]:checked', m).map(x => x.value);
-      const price = num($('#rf-price').value), paid = num($('#rf-paid').value), dateIn = $('#rf-in').value;
-      bad($('#rf-name'), 'e-name', customer ? '' : 'Enter the customer name.');
-      bad($('#rf-phone'), 'e-phone', phone.replace(/\D/g, '').length >= 10 ? '' : 'Enter a phone number with at least 10 digits.');
-      bad($('#rf-maker'), 'e-maker', maker ? '' : 'Choose the phone maker.');
-      bad($('#rf-imei'), 'e-imei', !imei || imei.length === 15 ? '' : 'An IMEI has 15 digits. Leave it empty if you do not have it.');
-      bad(m.querySelector('input[name=fault]'), 'e-fault', faults.length ? '' : 'Choose at least one fault.');
-      bad($('#rf-price'), 'e-price', price >= 0 ? '' : 'Enter an amount.');
-      bad($('#rf-in'), 'e-in', dateIn ? '' : 'Choose the date the phone was brought in.');
-      if (first) { first.focus(); return; }
-      const collected = $('#rf-col').checked;
-      const o = Object.assign({}, r, {
-        ticket: r.ticket || nextTicket(), customer, phone, maker, model, imei: imei || '', faults, notes: $('#rf-notes').value.trim(),
-        price, paid, dateIn, returnDate: $('#rf-ret').value, status: $('#rf-status').value, collected,
-        collectedDate: collected ? ($('#rf-cold').value || todayISO()) : ''
-      });
-      if (isDraft) delete o.id;
-      await KDB.save('repairs', o);
-      closeModal(); toast(isNew ? `Repair ${o.ticket} saved` : 'Changes saved'); refresh();
-    });
-  }
-
-  function collectModal(id) {
-    const r = D.repairs.find(x => x.id === id); if (!r) return;
-    const bal = balance(r);
-    const m = modal('Mark as collected', `<form id="cf" style="display:grid;gap:1rem" novalidate>
-      <div><p class="ticket">${esc(r.ticket)}</p><h3 style="font-size:1.3rem">${esc(r.customer)}</h3><p class="muted">${esc(devName(r))}${r.imei ? ' · IMEI ' + esc(r.imei) : ''}</p></div>
-      <dl class="kv"><div><dt>Price</dt><dd>${naira(r.price)}</dd></div><div><dt>Paid so far</dt><dd>${naira(r.paid)}</dd></div><div class="${bal ? 'due' : ''}"><dt>Balance</dt><dd>${naira(bal)}</dd></div></dl>
-      <div class="row2"><div class="field"><label for="cf-amt">Amount received now (₦)</label><input class="in" id="cf-amt" inputmode="numeric" value="${bal || ''}" placeholder="0"></div>
-        <div class="field"><label for="cf-date">Date collected</label><input class="in" id="cf-date" type="date" value="${todayISO()}"></div></div>
-      <p class="muted" id="cf-note"></p>
-      <div class="mfoot"><span></span><div class="acts"><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn primary">Confirm collected</button></div></div></form>`);
-    const note = () => { const left = Math.max(0, bal - num($('#cf-amt').value)); $('#cf-note').textContent = left > 0 ? `${naira(left)} will still be recorded as unpaid.` : 'The customer has paid in full.'; };
-    $('#cf-amt').addEventListener('input', note); note();
-    $('#cf').addEventListener('submit', async e => {
-      e.preventDefault();
-      r.paid = (+r.paid || 0) + num($('#cf-amt').value);
-      r.collected = true; r.collectedDate = $('#cf-date').value || todayISO();
-      await KDB.save('repairs', r);
-      closeModal(); toast(`${r.ticket} marked as collected`); refresh();
-    });
-  }
-
-  function pasteModal() {
-    const m = modal('Add from a WhatsApp request', `<form id="pf" style="display:grid;gap:1rem" novalidate>
-      <p class="muted">Paste the repair request message a customer sent from the website form. We fill in the repair form for you.</p>
-      <div class="field"><label for="pf-t">Message</label><textarea class="in" id="pf-t" style="min-height:160px" placeholder="*KHAITECH repair request*&#10;Name: ...&#10;Phone: Samsung, Galaxy A series (A54)&#10;IMEI: ...&#10;Fault: Screen"></textarea><p class="err" id="pf-e" hidden></p></div>
-      <div class="mfoot"><span></span><div class="acts"><button type="button" class="btn" data-close>Cancel</button><button class="btn primary" type="submit">Fill the repair form</button></div></div></form>`);
-    $('#pf').addEventListener('submit', e => {
-      e.preventDefault();
-      const t = $('#pf-t').value, get = k => { const x = t.match(new RegExp('^\\s*' + k + '\\s*:\\s*(.+)$', 'im')); return x ? x[1].trim() : ''; };
-      if (!/KHAITECH repair request|^\s*name\s*:/im.test(t) || !get('Name')) { const x = $('#pf-e'); x.textContent = 'This does not look like a KHAITECH repair request. Check the message and try again.'; x.hidden = false; return; }
-      const dev = get('Phone'), mm = dev.match(/^([^,]+),\s*(.+)$/);
-      let maker = mm ? mm[1].trim() : dev, model = mm ? mm[2].trim() : '';
-      const imei = get('IMEI').replace(/\D/g, '');
-      const faults = get('Fault').split(',').map(s => s.trim()).filter(s => FAULTS.includes(s));
-      const draft = { customer: get('Name'), phone: get('Phone number'), maker, model, imei: imei.length === 15 ? imei : '', faults, notes: get('Details'), dateIn: todayISO(), status: 'received' };
-      closeModal(true); repairForm(draft, true);
-    });
-  }
-
-  /* ---------- stock ---------- */
-  function viewStock() {
-    return `<div class="phead"><div><h1>Stock</h1><p>Phones, accessories and gadgets for sale. Upload your real photos and set the real price and condition. Items that are not hidden appear in the store.</p></div>
-      <div class="acts"><button class="btn primary" data-act="new-item">Add item</button></div></div>
-      <div class="toolbar"><input class="in" id="sq" type="search" placeholder="Search stock" value="${esc(V.sq)}" aria-label="Search stock">
-        <select class="in" id="scat" aria-label="Category"><option value="">All categories</option>${CATS.map(c => `<option ${V.scat === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>
-        <select class="in" id="sst" aria-label="Status"><option value="">Any status</option><option value="avail" ${V.sst === 'avail' ? 'selected' : ''}>In stock</option><option value="sold" ${V.sst === 'sold' ? 'selected' : ''}>Sold out</option><option value="hidden" ${V.sst === 'hidden' ? 'selected' : ''}>Hidden from store</option></select></div>
-      <p class="summary" id="ssum"></p><div class="sgrid" id="slist"></div>`;
-  }
-  const stockState = p => p.status === 'hidden' ? 'hidden' : (p.status === 'sold' || (+p.qty || 0) <= 0) ? 'sold' : 'avail';
-  function renderStockList() {
-    const q = V.sq.trim().toLowerCase();
-    const list = D.products.filter(p => (!V.scat || p.category === V.scat) && (!V.sst || stockState(p) === V.sst) &&
-      (!q || [p.name, p.brand, p.condition, p.category, p.storage, p.color, p.imei].join(' ').toLowerCase().includes(q)))
-      .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
-    const units = list.filter(inStock).reduce((s, p) => s + (+p.qty || 0), 0), val = list.filter(inStock).reduce((s, p) => s + (+p.qty || 0) * (+p.price || 0), 0);
-    $('#ssum').textContent = `${list.length} ${list.length === 1 ? 'item' : 'items'} · ${units} units in stock worth ${naira(val)}`;
-    if (!list.length) {
-      $('#slist').innerHTML = `<div class="empty" style="grid-column:1/-1"><b>${D.products.length ? 'No items match' : 'Your stock list is empty'}</b><span>${D.products.length ? 'Try another search or filter.' : 'Add your first phone or accessory with its real photo, price and condition.'}</span>${D.products.length ? '' : '<button class="btn primary" data-act="new-item">Add the first item</button>'}</div>`;
+    if(!list.length){
+      $('#grid').innerHTML='<div class="empty">Nothing matches that search. Ask us on WhatsApp and we will check if we can get it for you.</div>';
       return;
     }
-    $('#slist').innerHTML = list.map(p => {
-      const st = stockState(p), ph = (p.photos || [])[0];
-      const badge = st === 'hidden' ? '<span class="st st-muted">Hidden</span>' : st === 'sold' ? '<span class="st st-bad">Sold out</span>' : (+p.qty || 0) <= 1 ? '<span class="st st-warn">Last one</span>' : '<span class="st st-ok">In stock</span>';
-      return `<article class="scard"><div class="sph">${ph ? `<img src="${esc(photoSrc(ph))}" alt="${esc(p.name)}" loading="lazy">` : '<span class="np">No photo yet</span>'}${badge}${(p.photos || []).length > 1 ? `<span class="cnt">${p.photos.length} photos</span>` : ''}</div>
-        <div class="sbody"><h3>${esc(p.name)}</h3><p class="meta">${esc(p.condition || 'Condition not set')} · ${esc(p.category)}${p.storage ? ' · ' + esc(p.storage) : ''}</p>
-        <div class="row"><span class="price">${naira(p.price)}</span><span class="meta">Qty ${+p.qty || 0}</span></div>
-        <div class="btns"><button class="btn small ghost" data-act="edit-item" data-id="${esc(p.id)}">Edit</button>${st === 'avail' || (st === 'hidden' && (+p.qty || 0) > 0) ? `<button class="btn small primary" data-act="sell" data-id="${esc(p.id)}">Record sale</button>` : ''}<button class="btn small ghost" data-act="toggle-item" data-id="${esc(p.id)}">${st === 'hidden' ? 'Show' : 'Hide'}</button></div></div></article>`;
+    $('#grid').innerHTML=list.map(function(x){
+      var out=soldOut(x);
+      return '<article class="card"><button type="button" class="open" data-open="'+esc(x.id)+'" aria-label="View '+esc(x.name)+'">'+artHtml(x)+'</button>'+
+      '<div class="card-body"><h3>'+esc(x.name)+'</h3>'+chips(x)+'<p class="spec">'+esc(x.brand||'')+(x.brand&&x.category?' · ':'')+esc(x.category||'')+'</p>'+
+      '<div class="buy"><span class="price">'+priceText(x)+'</span>'+
+      (out?'<button type="button" class="btn small" disabled>Sold out</button>':'<button type="button" class="btn small primary" data-add="'+esc(x.id)+'">Add to order</button>')+'</div>'+
+      '<a class="ask" target="_blank" rel="noopener" href="'+wa('Hello KHAITECH, is the '+x.name+(x.condition?' ('+x.condition+')':'')+' available?'+(x.price>0?' Price shown: '+naira(x.price):''))+'">Ask about this on WhatsApp</a></div></article>';
     }).join('');
   }
+  $('#pills').addEventListener('click',function(e){
+    var b=e.target.closest('[data-cat]');if(!b)return;
+    state.cat=b.getAttribute('data-cat');renderPills();renderGrid();
+  });
+  $('#q').addEventListener('input',function(e){state.q=e.target.value;renderGrid()});
+  $('#sort').addEventListener('change',function(e){state.sort=e.target.value;renderGrid()});
+  $('#cond').addEventListener('change',function(e){state.cond=e.target.value;renderGrid()});
+  $('#grid').addEventListener('click',function(e){
+    var b=e.target.closest('[data-add]');
+    if(b){add(b.getAttribute('data-add'));b.textContent='Added';setTimeout(function(){b.textContent='Add to order'},900);return}
+    var o=e.target.closest('[data-open]');
+    if(o)openProduct(o.getAttribute('data-open'));
+  });
 
-  function itemForm(p) {
-    const isNew = !p; p = p || { category: 'Phones', condition: 'UK used', qty: 1, status: 'available', photos: [] };
-    let photos = (p.photos || []).slice();
-    const m = modal(isNew ? 'Add item to stock' : 'Edit stock item', `<form id="if" novalidate style="display:grid;gap:1rem">
-      <div class="field"><label>Photos <span class="hint">(up to 5, the first one is the main photo)</span></label><div class="phlist" id="phl"></div><p class="err" id="e-ph" hidden></p></div>
-      <div class="field"><label for="if-name">Name</label><input class="in" id="if-name" value="${esc(p.name)}" placeholder="For example iPhone 13 128GB"><p class="err" id="e-name" hidden></p></div>
-      <div class="row2"><div class="field"><label for="if-cat">Category</label><select class="in" id="if-cat">${CATS.map(c => `<option ${p.category === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
-        <div class="field"><label for="if-brand">Brand</label><input class="in" id="if-brand" value="${esc(p.brand)}" placeholder="Apple, Samsung, Anker"></div></div>
-      <div class="row2"><div class="field"><label for="if-cond">Condition</label><select class="in" id="if-cond">${CONDS.map(c => `<option ${p.condition === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
-        <div class="field"><label for="if-qty">Quantity in stock</label><input class="in" id="if-qty" inputmode="numeric" value="${esc(p.qty)}"><p class="err" id="e-qty" hidden></p></div></div>
-      <div class="row2"><div class="field"><label for="if-price">Selling price (₦)</label><input class="in" id="if-price" inputmode="numeric" value="${p.price ? esc(p.price) : ''}"><p class="err" id="e-price" hidden></p></div>
-        <div class="field"><label for="if-cost">Cost price (₦) <span class="private">only you see this</span></label><input class="in" id="if-cost" inputmode="numeric" value="${p.costPrice ? esc(p.costPrice) : ''}"></div></div>
-      <div id="phone-only" style="display:grid;gap:1rem"><div class="row3"><div class="field"><label for="if-stor">Storage</label><input class="in" id="if-stor" value="${esc(p.storage)}" placeholder="128GB"></div>
-        <div class="field"><label for="if-col">Colour</label><input class="in" id="if-col" value="${esc(p.color)}" placeholder="Midnight"></div>
-        <div class="field"><label for="if-bat">Battery health %</label><input class="in" id="if-bat" inputmode="numeric" value="${esc(p.battery)}" placeholder="89"></div></div>
-        <div class="field"><label for="if-imei">IMEI <span class="private">only you see this</span></label><input class="in" id="if-imei" inputmode="numeric" value="${esc(p.imei)}"></div></div>
-      <div class="field"><label for="if-desc">Description <span class="hint">(faults, what is in the box, warranty)</span></label><textarea class="in" id="if-desc">${esc(p.description)}</textarea></div>
-      <div class="field"><label for="if-st">Store visibility</label><select class="in" id="if-st"><option value="available" ${p.status !== 'hidden' ? 'selected' : ''}>Show in the store</option><option value="hidden" ${p.status === 'hidden' ? 'selected' : ''}>Hide from the store</option></select></div>
-      <div class="mfoot"><div>${isNew ? '' : '<button type="button" class="btn small danger" id="if-del">Delete item</button>'}<span id="if-delbox" hidden> <span class="muted">Delete for good?</span> <button type="button" class="btn small danger" id="if-del2">Yes, delete</button></span></div>
-        <div class="acts"><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn primary">${isNew ? 'Add to stock' : 'Save changes'}</button></div></div></form>`);
-    const drawPhotos = () => {
-      $('#phl').innerHTML = photos.map((u, i) => `<div class="ph ${i === 0 ? 'main' : ''}"><img src="${esc(photoSrc(u))}" alt="Photo ${i + 1}">${i === 0 ? '<span class="mk">MAIN</span>' : ''}<div class="pb">${i === 0 ? '<span></span>' : `<button type="button" data-main="${i}">Make main</button>`}<button type="button" data-rm="${i}">Remove</button></div></div>`).join('') +
-        (photos.length < 5 ? '<label class="phadd" id="phadd">Add photos<input type="file" id="if-file" accept="image/*" multiple></label>' : '');
-      const fi = $('#if-file'); if (fi) fi.addEventListener('change', onFiles);
-    };
-    async function onFiles(e) {
-      const files = [...e.target.files].slice(0, 5 - photos.length), err = $('#e-ph'); err.hidden = true;
-      $('#phadd').firstChild.textContent = 'Working...';
-      for (const f of files) {
-        try { photos.push(await fileToJpeg(f, 1000, 0.8)); } catch (ex) { err.textContent = ex.message; err.hidden = false; }
-      }
-      drawPhotos();
+  /* product detail window */
+  var pLast=null;
+  function openProduct(id){
+    var x=byId[id];if(!x)return;
+    pLast=document.activeElement;
+    var ph=x.photos||[];
+    function main(i){
+      $('#pMain').innerHTML=ph.length?'<img src="'+esc(ph[i])+'" alt="'+esc(x.name)+' photo '+(i+1)+'">':'<span class="eyebrow">Photo coming soon</span>';
+      $$('#pThumbs button').forEach(function(t,j){t.setAttribute('aria-current',j===i?'true':'false')});
     }
-    $('#phl').addEventListener('click', e => {
-      const mk = e.target.closest('[data-main]'), rm = e.target.closest('[data-rm]');
-      if (mk) { const i = +mk.dataset.main; photos.unshift(photos.splice(i, 1)[0]); drawPhotos(); }
-      if (rm) { photos.splice(+rm.dataset.rm, 1); drawPhotos(); }
-    });
-    drawPhotos();
-    const syncCat = () => { $('#phone-only').hidden = $('#if-cat').value !== 'Phones'; };
-    $('#if-cat').addEventListener('change', syncCat); syncCat();
-    if ($('#if-del')) {
-      $('#if-del').onclick = () => { $('#if-del').hidden = true; $('#if-delbox').hidden = false; };
-      $('#if-del2').onclick = async () => { await KDB.remove('products', p.id); closeModal(); toast('Item deleted'); refresh(); };
+    $('#pThumbs').innerHTML=ph.length>1?ph.map(function(u,i){return '<button type="button" data-i="'+i+'" aria-label="Photo '+(i+1)+'"><img src="'+esc(u)+'" alt=""></button>'}).join(''):'';
+    $('#pThumbs').onclick=function(e){var t=e.target.closest('[data-i]');if(t)main(+t.getAttribute('data-i'))};
+    main(0);
+    var rows=[['Condition',x.condition],['Brand',x.brand],['Category',x.category],['Storage',x.storage],['Colour',x.color],['Battery health',x.battery?x.battery+'%':'']].filter(function(r){return r[1]});
+    $('#pInfo').innerHTML='<p class="eyebrow">'+esc(x.category||'')+'</p><h3 id="pTitle">'+esc(x.name)+'</h3><span class="price">'+priceText(x)+'</span>'+
+      (rows.length?'<dl>'+rows.map(function(r){return '<dt>'+r[0]+'</dt><dd>'+esc(r[1])+'</dd>'}).join('')+'</dl>':'')+
+      (x.description?'<p class="desc">'+esc(x.description)+'</p>':'')+
+      '<div class="cta-row" style="margin-top:.4rem">'+
+      (soldOut(x)?'<button class="btn" disabled>Sold out</button>':'<button type="button" class="btn primary" data-padd="'+esc(x.id)+'">Add to order</button>')+
+      '<a class="btn wa" target="_blank" rel="noopener" href="'+wa('Hello KHAITECH, I am interested in the '+x.name+(x.condition?' ('+x.condition+')':'')+'. Is it available?')+'">Ask on WhatsApp</a></div>';
+    $('#pScrim').hidden=false;$('#pModal').hidden=false;document.body.classList.add('lock');$('#pClose').focus();
+  }
+  function closeProduct(){
+    $('#pScrim').hidden=true;$('#pModal').hidden=true;document.body.classList.remove('lock');
+    if(pLast&&pLast.focus)pLast.focus();
+  }
+  $('#pClose').addEventListener('click',closeProduct);
+  $('#pScrim').addEventListener('click',closeProduct);
+  $('#pInfo').addEventListener('click',function(e){
+    var b=e.target.closest('[data-padd]');if(!b)return;
+    add(b.getAttribute('data-padd'));b.textContent='Added to order';
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('#pModal').hidden)closeProduct()});
+
+  /* cart */
+  var cart={};
+  try{
+    var saved=JSON.parse(localStorage.getItem('khaitech-cart')||'{}');
+    Object.keys(saved).forEach(function(k){if(saved[k]>0)cart[k]=Math.min(99,saved[k]|0)});
+  }catch(err){}
+  function persist(){try{localStorage.setItem('khaitech-cart',JSON.stringify(cart))}catch(err){}}
+  function add(id){var x=byId[id];if(!x)return;var max=(x.qty!=null&&+x.qty>0)?+x.qty:99;cart[id]=Math.min(max,(cart[id]||0)+1);renderCart()}
+  function renderCart(){
+    Object.keys(cart).forEach(function(k){if(!byId[k])delete cart[k]});
+    var ids=Object.keys(cart),count=0,total=0;
+    ids.forEach(function(k){count+=cart[k];total+=cart[k]*(byId[k].price||0)});
+    $('#cartCount').textContent=count;
+    $('#cartTotal').textContent=naira(total);
+    var box=$('#lines');
+    if(!ids.length){
+      box.innerHTML='<div class="cart-empty">Your order is empty.<br>Add phones or accessories from the store.</div>';
+    }else{
+      box.innerHTML=ids.map(function(k){var x=byId[k];
+        return '<div class="line"><b>'+esc(x.name)+(x.condition?' <span class="hint" style="font-weight:400;color:var(--muted)">('+esc(x.condition)+')</span>':'')+'</b><span class="lp">'+(x.price>0?naira(x.price*cart[k]):'Ask')+'</span>'+
+        '<div class="qty"><button type="button" data-dec="'+k+'" aria-label="One less">−</button><span>'+cart[k]+'</span><button type="button" data-inc="'+k+'" aria-label="One more">+</button></div>'+
+        '<button type="button" class="rm" data-rm="'+k+'">Remove</button></div>';
+      }).join('');
     }
-    $('#if').addEventListener('submit', async e => {
-      e.preventDefault();
-      let first = null;
-      const bad = (inp, eid, msg) => { const x = $('#' + eid); x.textContent = msg; x.hidden = !msg; inp.setAttribute('aria-invalid', msg ? 'true' : 'false'); if (msg && !first) first = inp; };
-      const name = $('#if-name').value.trim(), price = num($('#if-price').value), qtyRaw = $('#if-qty').value.trim(), qty = parseInt(qtyRaw, 10);
-      bad($('#if-name'), 'e-name', name ? '' : 'Enter the item name.');
-      bad($('#if-price'), 'e-price', price > 0 ? '' : 'Enter the selling price.');
-      bad($('#if-qty'), 'e-qty', qtyRaw !== '' && qty >= 0 ? '' : 'Enter how many you have, 0 or more.');
-      if (first) { first.focus(); return; }
-      const phone = $('#if-cat').value === 'Phones';
-      const hidden = $('#if-st').value === 'hidden';
-      const o = Object.assign({}, p, {
-        name, category: $('#if-cat').value, brand: $('#if-brand').value.trim(), condition: $('#if-cond').value, price, costPrice: num($('#if-cost').value), qty,
-        storage: phone ? $('#if-stor').value.trim() : '', color: phone ? $('#if-col').value.trim() : '', battery: phone ? $('#if-bat').value.replace(/\D/g, '') : '', imei: phone ? $('#if-imei').value.replace(/\D/g, '') : '',
-        description: $('#if-desc').value.trim(), photos, status: hidden ? 'hidden' : (qty <= 0 ? 'sold' : 'available')
-      });
-      try { await KDB.save('products', o); } catch (ex) { toast('Could not save. The browser storage may be full.'); return; }
-      closeModal(); toast(isNew ? 'Item added to stock' : 'Changes saved'); refresh();
-    });
+    $('#cartClear').hidden=!ids.length;
+    updateCartLink();persist();
   }
+  function updateCartLink(){
+    var ids=Object.keys(cart),name=$('#cName').value.trim();
+    var t='*KHAITECH order*\n';
+    if(!ids.length){t='Hello KHAITECH, I would like to place an order.'}
+    else{
+      var total=0;
+      ids.forEach(function(k){var x=byId[k];total+=(x.price||0)*cart[k];t+=cart[k]+' x '+x.name+(x.condition?' ['+x.condition+']':'')+' ('+(x.price>0?naira(x.price*cart[k]):'price on request')+')\n'});
+      t+='Total (guide): '+naira(total)+'\n';
+      if(name)t+='Name: '+name+'\n';
+      t+='Please confirm availability and the final price.';
+    }
+    $('#cartWa').href=wa(t);
+  }
+  $('#cName').addEventListener('input',updateCartLink);
+  $('#lines').addEventListener('click',function(e){
+    var t=e.target;
+    if(t.dataset.inc){add(t.dataset.inc);return}
+    else if(t.dataset.dec){cart[t.dataset.dec]--;if(cart[t.dataset.dec]<=0)delete cart[t.dataset.dec]}
+    else if(t.dataset.rm){delete cart[t.dataset.rm]}
+    else return;
+    renderCart();
+  });
+  $('#cartClear').addEventListener('click',function(){cart={};renderCart()});
+  var lastFocus=null;
+  function openCart(){
+    lastFocus=document.activeElement;
+    $('#scrim').hidden=false;$('#cart').hidden=false;document.body.classList.add('lock');
+    $('#cartBtn').setAttribute('aria-expanded','true');$('#cartClose').focus();
+  }
+  function closeCart(){
+    $('#scrim').hidden=true;$('#cart').hidden=true;document.body.classList.remove('lock');
+    $('#cartBtn').setAttribute('aria-expanded','false');
+    if(lastFocus&&lastFocus.focus)lastFocus.focus();
+  }
+  $('#cartBtn').addEventListener('click',openCart);
+  $('#cartClose').addEventListener('click',closeCart);
+  $('#scrim').addEventListener('click',closeCart);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!$('#cart').hidden)closeCart()});
 
-  function sellModal(id) {
-    const p = D.products.find(x => x.id === id); if (!p) return;
-    const m = modal('Record a sale', `<form id="sf" style="display:grid;gap:1rem" novalidate>
-      <div><h3 style="font-size:1.25rem">${esc(p.name)}</h3><p class="muted">${esc(p.condition || '')} · ${+p.qty || 0} in stock</p></div>
-      <div class="row3"><div class="field"><label for="sf-price">Price sold at (₦)</label><input class="in" id="sf-price" inputmode="numeric" value="${esc(p.price)}"></div>
-        <div class="field"><label for="sf-qty">Quantity</label><input class="in" id="sf-qty" inputmode="numeric" value="1"></div>
-        <div class="field"><label for="sf-date">Date</label><input class="in" id="sf-date" type="date" value="${todayISO()}"></div></div>
-      <div class="row2"><div class="field"><label for="sf-buyer">Buyer name <span class="hint">(optional)</span></label><input class="in" id="sf-buyer"></div>
-        <div class="field"><label for="sf-method">Paid by</label><select class="in" id="sf-method">${METHODS.map(x => `<option>${x}</option>`).join('')}</select></div></div>
-      <p class="err" id="sf-e" hidden></p>
-      <div class="mfoot"><span class="bal" id="sf-tot"></span><div class="acts"><button type="button" class="btn" data-close>Cancel</button><button class="btn primary" type="submit">Save sale</button></div></div></form>`);
-    const tot = () => { $('#sf-tot').textContent = 'Total ' + naira(num($('#sf-price').value) * (parseInt($('#sf-qty').value, 10) || 0)); };
-    $('#sf-price').addEventListener('input', tot); $('#sf-qty').addEventListener('input', tot); tot();
-    $('#sf').addEventListener('submit', async e => {
-      e.preventDefault();
-      const price = num($('#sf-price').value), qty = parseInt($('#sf-qty').value, 10) || 0, er = $('#sf-e');
-      if (price <= 0) { er.textContent = 'Enter the price it sold at.'; er.hidden = false; return; }
-      if (qty < 1 || qty > (+p.qty || 0)) { er.textContent = `Quantity must be between 1 and ${+p.qty || 0}.`; er.hidden = false; return; }
-      await KDB.save('sales', { productId: p.id, name: p.name, category: p.category, condition: p.condition, qty, unitPrice: price, unitCost: +p.costPrice || 0, buyer: $('#sf-buyer').value.trim(), method: $('#sf-method').value, date: $('#sf-date').value || todayISO() });
-      p.qty = (+p.qty || 0) - qty; if (p.qty <= 0) p.status = 'sold';
-      await KDB.save('products', p);
-      closeModal(); toast('Sale recorded'); refresh();
-    });
-  }
-
-  /* ---------- sales ---------- */
-  function viewSales() {
-    return `<div class="phead"><div><h1>Sales</h1><p>Everything sold from stock. Record a sale from the Stock page and the quantity is reduced for you.</p></div>
-      <div class="field"><label for="smonth" class="hint">Month</label><input class="in" type="month" id="smonth" value="${esc(V.smonth)}"></div></div>
-      <div class="tiles" id="stiles"></div><div id="slistw"></div>`;
-  }
-  function renderSalesList() {
-    const list = D.sales.filter(s => (s.date || '').slice(0, 7) === V.smonth).sort((a, b) => (b.date + b.createdAt).localeCompare(a.date + a.createdAt));
-    const rev = list.reduce((s, x) => s + x.qty * x.unitPrice, 0), prof = list.filter(x => x.unitCost > 0).reduce((s, x) => s + x.qty * (x.unitPrice - x.unitCost), 0), items = list.reduce((s, x) => s + x.qty, 0);
-    $('#stiles').innerHTML = `<div class="tile"><span class="k">Items sold</span><span class="v">${items}</span></div><div class="tile good"><span class="k">Sales total</span><span class="v">${naira(rev)}</span></div><div class="tile"><span class="k">Estimated profit</span><span class="v">${naira(prof)}</span><span class="s">Only items with a cost price</span></div>`;
-    $('#slistw').innerHTML = list.length ? `<div class="table"><div class="trow head"><div>Date</div><div>Item</div><div>Buyer</div><div>Total</div><div></div></div>${list.map(s => `<div class="trow"><div>${esc(fmtDate(s.date))}</div><div>${esc(s.name)}${s.qty > 1 ? ' × ' + s.qty : ''}</div><div>${esc(s.buyer || '-')} · ${esc(s.method || '')}</div><div class="num">${naira(s.qty * s.unitPrice)}</div><div><button class="btn small ghost" data-act="undo-sale" data-id="${esc(s.id)}">Undo</button></div></div>`).join('')}</div>`
-      : `<div class="empty"><b>No sales in this month</b><span>Open Stock and press Record sale on an item.</span></div>`;
-  }
-  async function undoSale(id) {
-    const s = D.sales.find(x => x.id === id); if (!s) return;
-    modal('Undo this sale?', `<p>${esc(s.name)} × ${s.qty} sold on ${esc(fmtDate(s.date))} for ${naira(s.qty * s.unitPrice)} will be removed and the quantity goes back into stock.</p><div class="mfoot"><span></span><div class="acts"><button class="btn" data-close>Keep sale</button><button class="btn danger" id="us">Undo sale</button></div></div>`);
-    $('#us').onclick = async () => {
-      const p = D.products.find(x => x.id === s.productId);
-      if (p) { p.qty = (+p.qty || 0) + s.qty; if (p.status === 'sold') p.status = 'available'; await KDB.save('products', p); }
-      await KDB.remove('sales', s.id); closeModal(); toast('Sale undone'); refresh();
-    };
-  }
-
-  /* ---------- settings, backup, publishing ---------- */
-  function viewSettings() {
-    const pub = D.products.filter(p => p.status !== 'hidden').length;
-    return `<div class="phead"><div><h1>Settings</h1><p>Publish your stock to the website, back up your records and manage the password.</p></div></div>
-    <div class="panels">
-      <section class="panel"><h2>Publish stock to the website</h2>
-        <p class="hint">The public store reads <span class="code">data/catalog.json</span> and the photos in <span class="code">data/images</span>. Customers do not see what you add here until you publish it. ${pub} ${pub === 1 ? 'item is' : 'items are'} ready.</p>
-        <ol class="steps"><li><b>Download</b> the catalog zip below.</li><li>In your project folder, <b>delete the old</b> <span class="code">data</span> folder, then <b>unzip</b> the file so a new <span class="code">data</span> folder appears.</li><li><b>Commit and push</b> to GitHub. The website updates in about a minute.</li></ol>
-        <div class="acts" style="margin-top:.9rem"><button class="btn primary" data-act="dl-catalog">Download website catalog</button></div><p class="hint" id="pubmsg" style="margin-top:.6rem"></p>
-        <p class="hint" style="margin-top:.6rem">Cost prices, IMEI numbers and repair records are never included.</p></section>
-      <section class="panel"><h2>Load the published catalog</h2><p class="hint">Starting on a new computer or phone? Load the stock that is already live on the website so you can keep editing it. Items already here are not changed.</p>
-        <div class="acts" style="margin-top:.9rem"><button class="btn" data-act="load-catalog">Load published catalog</button></div><p class="hint" id="loadmsg" style="margin-top:.6rem"></p></section>
-      <section class="panel"><h2>Back up your records</h2><p class="hint">Your repairs, stock and sales are saved in this browser on this device. Download a backup often and keep it somewhere safe, such as your email or Google Drive. A backup contains customer details, so never put it on GitHub.</p>
-        <div class="acts" style="margin-top:.9rem"><button class="btn primary" data-act="dl-backup">Download backup</button></div>
-        <div class="field" style="margin-top:1rem"><label for="restore">Restore from a backup file</label><input class="in" type="file" id="restore" accept=".json,application/json"></div><div id="restorebox"></div></section>
-      <section class="panel"><h2>Change password</h2><form id="pwf" style="display:grid;gap:.8rem" novalidate>
-        <div class="field"><label for="pw0">Current password</label><input class="in" id="pw0" type="password" autocomplete="current-password"></div>
-        <div class="field"><label for="pw1">New password</label><input class="in" id="pw1" type="password" autocomplete="new-password"></div>
-        <p class="err" id="pwe" hidden></p><div class="acts"><button class="btn" type="submit">Change password</button></div></form></section>
-      <section class="panel"><h2>What is stored where</h2><p class="hint">${D.products.length} stock items, ${D.repairs.length} repairs and ${D.sales.length} sales are saved in this browser. The public website shows what you last published. When Supabase is connected, this data moves online, every device sees the same records and publishing becomes automatic.</p></section>
-    </div>`;
-  }
-  async function dlCatalog() {
-    const msg = $('#pubmsg'); msg.textContent = 'Preparing the catalog...';
-    try {
-      await loadJSZip();
-      const zip = new JSZip(), items = D.products.filter(p => p.status !== 'hidden'), out = [];
-      let skipped = 0;
-      for (const p of items) {
-        const paths = [];
-        for (let i = 0; i < (p.photos || []).length; i++) {
-          const src = p.photos[i], path = `data/images/${String(p.id).replace(/[^\w-]/g, '')}-${i + 1}.jpg`;
-          try {
-            if (src.startsWith('data:')) zip.file(path, src.split(',')[1], { base64: true });
-            else { const r = await fetch(photoSrc(src)); if (!r.ok) throw 0; zip.file(path, await r.blob()); }
-            paths.push(path);
-          } catch (e) { skipped++; }
-        }
-        out.push({ id: p.id, name: p.name, category: p.category, brand: p.brand || '', condition: p.condition || '', price: +p.price || 0, qty: +p.qty || 0, status: (+p.qty || 0) > 0 && p.status !== 'sold' ? 'available' : 'sold', storage: p.storage || '', color: p.color || '', battery: p.battery || '', description: p.description || '', photos: paths, updatedAt: p.updatedAt });
-      }
-      zip.file('data/catalog.json', JSON.stringify({ updated: new Date().toISOString(), products: out }, null, 2));
-      download(`khaitech-catalog-${todayISO()}.zip`, await zip.generateAsync({ type: 'blob' }));
-      msg.textContent = `Catalog with ${out.length} ${out.length === 1 ? 'item' : 'items'} downloaded.` + (skipped ? ` ${skipped} photo(s) could not be included.` : '') + ' Now follow the steps above.';
-    } catch (e) { msg.textContent = e.message || 'Could not build the catalog.'; }
-  }
-  async function loadCatalog() {
-    const msg = $('#loadmsg'); msg.textContent = 'Loading...';
-    try {
-      const r = await fetch('../data/catalog.json', { cache: 'no-cache' }); if (!r.ok) throw 0;
-      const j = await r.json(), have = new Set(D.products.map(p => p.id)); let n = 0;
-      for (const p of j.products || []) { if (have.has(p.id)) continue; await KDB.save('products', Object.assign({ costPrice: 0, imei: '' }, p)); n++; }
-      msg.textContent = n ? `${n} item(s) loaded.` : 'Nothing new to load.'; await refresh();
-    } catch (e) { msg.textContent = 'Could not read the published catalog.'; }
-  }
-  async function dlBackup() { download(`khaitech-backup-${todayISO()}.json`, new Blob([JSON.stringify(await KDB.exportAll())], { type: 'application/json' })); toast('Backup downloaded'); }
-
-  /* ---------- events ---------- */
-  const actions = {
-    'new-repair': () => repairForm(),
-    'edit-repair': id => repairForm(D.repairs.find(r => r.id === id)),
-    collect: id => collectModal(id),
-    'paste-wa': pasteModal,
-    'new-item': () => itemForm(),
-    'edit-item': id => itemForm(D.products.find(p => p.id === id)),
-    sell: id => sellModal(id),
-    'toggle-item': async id => { const p = D.products.find(x => x.id === id); if (!p) return; p.status = p.status === 'hidden' ? ((+p.qty || 0) > 0 ? 'available' : 'sold') : 'hidden'; await KDB.save('products', p); toast(p.status === 'hidden' ? 'Hidden from the store' : 'Showing in the store'); refresh(); },
-    'undo-sale': undoSale,
-    rf: (id, b) => { V.rfilter = b.dataset.v; if (current() === 'repairs') render(); },
-    'dl-catalog': dlCatalog, 'load-catalog': loadCatalog, 'dl-backup': dlBackup,
-    logout: () => { sessSet(false); showLogin(); }
+  /* services */
+  var FAULTS=['Screen','Dead phone','Battery','Charging port','Water damage','Software / unlock','Camera','Speaker / mic','Back glass','Other'];
+  var SVC=[
+    ['Screen','Screen replacement','Cracked, shattered, lines on the display or a touch that does not respond.'],
+    ['Dead phone','Dead phone','The phone will not switch on, will not charge or is stuck on the logo.'],
+    ['Battery','Battery replacement','The battery drains quickly, swells or the phone switches off by itself.'],
+    ['Charging port','Charging port','Loose cable, slow charging or the phone does not charge at all.'],
+    ['Water damage','Water damage','Phone dropped in water or liquid. Switch it off and bring it in quickly.'],
+    ['Software / unlock','Software and unlocking','Hanging, forgotten passcode, updates, network unlock and software faults.'],
+    ['Camera','Camera repair','Blurry, black or cracked camera, or the camera app will not open.'],
+    ['Speaker / mic','Speaker and microphone','No sound, crackling calls or people cannot hear you.'],
+    ['Back glass','Back glass and body','Broken back cover, bent frame or damaged housing.']
+  ];
+  var iconPaths={
+    'Screen':'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M9 7l3 4-2 3 3 3"/>',
+    'Dead phone':'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M12 9v4M10 10.500a3 3 0 1 0 4 0"/>',
+    'Battery':'<rect x="3" y="8" width="16" height="8" rx="2"/><path d="M21 11v2M7 11v2M10 11v2"/>',
+    'Charging port':'<path d="M13 3L6 13h5l-1 8 8-11h-5z"/>',
+    'Water damage':'<path d="M12 3s6 6.500 6 11a6 6 0 0 1-12 0c0-4.500 6-11 6-11z"/>',
+    'Software / unlock':'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    'Camera':'<rect x="3" y="7" width="18" height="13" rx="3"/><circle cx="12" cy="13.500" r="3.500"/><path d="M9 7l1-3h4l1 3"/>',
+    'Speaker / mic':'<path d="M4 10v4h4l5 4V6L8 10z"/><path d="M16 9a4 4 0 0 1 0 6"/>',
+    'Back glass':'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M7 9l10 4M12 3l-2 7"/>'
   };
-  document.addEventListener('click', e => {
-    if (e.target.closest('[data-close]')) { closeModal(); return; }
-    const b = e.target.closest('[data-act]'); if (!b) return;
-    const a = actions[b.dataset.act]; if (a) { if (b.tagName !== 'A') e.preventDefault(); a(b.dataset.id, b, e); }
-  });
-  document.addEventListener('input', e => {
-    const id = e.target.id;
-    if (id === 'rq') { V.rq = e.target.value; renderRepairList(); }
-    if (id === 'sq') { V.sq = e.target.value; renderStockList(); }
-  });
-  document.addEventListener('change', e => {
-    const id = e.target.id;
-    if (id === 'scat') { V.scat = e.target.value; renderStockList(); }
-    if (id === 'sst') { V.sst = e.target.value; renderStockList(); }
-    if (id === 'smonth') { V.smonth = e.target.value || todayISO().slice(0, 7); renderSalesList(); }
-    if (id === 'restore') restoreFile(e.target.files[0]);
-  });
-  document.addEventListener('submit', async e => {
-    if (e.target.id !== 'pwf') return;
-    e.preventDefault();
-    const er = $('#pwe'), say = m => { er.textContent = m; er.hidden = !m; };
-    try {
-      if (await sha($('#pw0').value) !== getHash()) return say('The current password is not right.');
-      if ($('#pw1').value.length < 6) return say('Use at least 6 characters.');
-      setHash(await sha($('#pw1').value)); say(''); e.target.reset(); toast('Password changed');
-    } catch (ex) { say(ex.message); }
-  });
-  function restoreFile(file) {
-    const box = $('#restorebox'); if (!file) return;
-    file.text().then(t => {
-      const j = JSON.parse(t);
-      if (j.app !== 'khaitech') throw new Error('x');
-      box.innerHTML = `<p class="hint" style="margin:.7rem 0">This backup has ${(j.products || []).length} stock items, ${(j.repairs || []).length} repairs and ${(j.sales || []).length} sales. Restoring replaces everything now saved in this browser.</p><button class="btn danger" id="dorestore">Replace my data with this backup</button>`;
-      $('#dorestore').onclick = async () => { await KDB.importAll(j); toast('Backup restored'); refresh(); };
-    }).catch(() => { box.innerHTML = '<p class="err" style="margin-top:.6rem">This is not a KHAITECH backup file.</p>'; });
-  }
+  $('#svcGrid').innerHTML=SVC.map(function(s){
+    return '<div class="svc"><div class="ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+iconPaths[s[0]]+'</svg></div><h3>'+s[1]+'</h3><p>'+s[2]+'</p><a href="#repair" data-fault="'+s[0]+'">Book this repair</a></div>';
+  }).join('');
 
-  /* ---------- start ---------- */
-  async function startApp() {
-    $('#login').hidden = true; $('#app').hidden = false;
-    await reload(); render();
+  /* repair form */
+  var SERIES={
+    'Apple (iPhone)':['iPhone 6 / 7 / 8 series','iPhone X / XR / XS series','iPhone 11 series','iPhone 12 series','iPhone 13 series','iPhone 14 series','iPhone 15 series','iPhone 16 series','Other iPhone'],
+    'Samsung':['Galaxy S series','Galaxy A series','Galaxy Note series','Galaxy Z Fold / Flip','Galaxy M / J series','Other Samsung'],
+    'Tecno':['Spark','Camon','Phantom','Pova','Pop','Other Tecno'],
+    'Infinix':['Hot','Note','Zero','Smart','Other Infinix'],
+    'itel':['A series','P series','S series','Vision','Other itel'],
+    'Xiaomi / Redmi / Poco':['Redmi','Redmi Note','Poco','Xiaomi (Mi / numbered)','Other Xiaomi'],
+    'Oppo':['A series','Reno','Find','Other Oppo'],
+    'Huawei':['P series','Nova','Y series','Other Huawei'],
+    'Google Pixel':['Pixel 6 series','Pixel 7 series','Pixel 8 series','Pixel 9 series','Other Pixel'],
+    'Other maker':[]
+  };
+  var maker=$('#rMaker'),series=$('#rSeries');
+  Object.keys(SERIES).forEach(function(m){var o=document.createElement('option');o.value=m;o.textContent=m;maker.appendChild(o)});
+  maker.addEventListener('change',function(){
+    var m=maker.value,list=SERIES[m]||[];
+    series.innerHTML='';
+    if(m==='Other maker'){
+      series.disabled=true;series.innerHTML='<option value="">Not needed</option>';
+      $('#otherWrap').hidden=false;
+    }else if(m){
+      series.disabled=false;
+      series.innerHTML='<option value="">Select series</option>'+list.map(function(s){return '<option>'+s+'</option>'}).join('');
+      $('#otherWrap').hidden=true;
+    }else{
+      series.disabled=true;series.innerHTML='<option value="">Select maker first</option>';$('#otherWrap').hidden=true;
+    }
+  });
+  $('#faults').innerHTML=FAULTS.map(function(f,i){
+    return '<label class="fchip"><input type="checkbox" name="fault" value="'+f+'" id="f'+i+'"><span>'+f+'</span></label>';
+  }).join('');
+
+  var imei=$('#rImei');
+  imei.addEventListener('input',function(){
+    var d=imei.value.replace(/\D/g,'').slice(0,17);
+    $('#imeiCount').textContent=Math.min(d.length,15)+' / 15';
+    imei.value=d.replace(/(\d{2})(\d{6})(\d{6})(\d{0,3})/,function(m,a,b,c,e){return a+' '+b+' '+c+(e?' '+e:'')});
+  });
+  function luhn(s){
+    var sum=0,alt=false;
+    for(var i=s.length-1;i>=0;i--){var n=+s[i];if(alt){n*=2;if(n>9)n-=9}sum+=n;alt=!alt}
+    return sum%10===0;
   }
-  if (sessGet() && getHash()) startApp(); else showLogin();
+  function showErr(id,msg){var e=$('#'+id);e.textContent=msg||'';e.hidden=!msg}
+  function mark(el,bad){if(el)el.setAttribute('aria-invalid',bad?'true':'false')}
+
+  $('#svcGrid').addEventListener('click',function(e){
+    var a=e.target.closest('[data-fault]');if(!a)return;
+    $$('input[name="fault"]').forEach(function(c){if(c.value===a.getAttribute('data-fault'))c.checked=true});
+    showErr('eFault','');
+  });
+
+  var lastMsg='';
+  $('#repairForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=$('#rName').value.trim(),phone=$('#rPhone').value.replace(/[^\d+]/g,''),m=maker.value,s=series.value,other=$('#rOther').value.trim(),
+        model=$('#rModel').value.trim(),digits=imei.value.replace(/\D/g,''),skip=$('#noImei').checked,
+        faults=$$('input[name="fault"]:checked').map(function(c){return c.value}),note=$('#rNote').value.trim(),when=$('#rWhen').value;
+    var first=null;
+    function bad(el,id,msg){showErr(id,msg);mark(el,true);if(!first)first=el}
+    function ok(el,id){showErr(id,'');mark(el,false)}
+    name?ok($('#rName'),'eName'):bad($('#rName'),'eName','Enter your name.');
+    (phone.replace(/\D/g,'').length>=10)?ok($('#rPhone'),'ePhone'):bad($('#rPhone'),'ePhone','Enter a phone number we can reach, at least 10 digits.');
+    m?ok(maker,'eMaker'):bad(maker,'eMaker','Choose the phone maker.');
+    if(m==='Other maker'){other?ok($('#rOther'),'eSeries'):bad($('#rOther'),'eSeries','Type the maker and series.')}
+    else{(m&&s)?ok(series,'eSeries'):bad(series,'eSeries','Choose the phone series.')}
+    if(skip){ok(imei,'eImei')}
+    else if(digits.length!==15){bad(imei,'eImei','The IMEI has 15 digits. Dial *#06# to see it, or tick the box below.')}
+    else if(!luhn(digits)){bad(imei,'eImei','This IMEI does not look right. Check the digits and try again.')}
+    else ok(imei,'eImei');
+    faults.length?showErr('eFault',''):(showErr('eFault','Choose at least one fault.'),first=first||$('#f0'));
+    if(first){first.focus();return}
+
+    var phoneLine=(m==='Other maker')?other:(m+', '+s);
+    var msg='*KHAITECH repair request*\n'+
+      'Name: '+name+'\n'+
+      'Phone number: '+$('#rPhone').value.trim()+'\n'+
+      'Phone: '+phoneLine+(model?' ('+model+')':'')+'\n'+
+      'IMEI: '+(skip?'Not available now, will show at the shop':digits)+'\n'+
+      'Fault: '+faults.join(', ')+'\n'+
+      (note?'Details: '+note+'\n':'')+
+      'Bringing it in: '+when;
+    lastMsg=msg;
+    $('#resultText').textContent=msg;
+    $('#resultWa').href=wa(msg);
+    $('#copyStatus').textContent='Tap Send on WhatsApp, then press send inside WhatsApp to deliver it to us. If WhatsApp does not open, copy the message and send it to 0915 149 5696.';
+    var r=$('#result');r.hidden=false;
+    r.scrollIntoView({behavior:'smooth',block:'center'});
+  });
+
+  function copyText(text,statusEl,okMsg,failMsg,selectEl){
+    function fallback(){
+      try{
+        var range=document.createRange();range.selectNodeContents(selectEl);
+        var sel=window.getSelection();sel.removeAllRanges();sel.addRange(range);
+      }catch(err){}
+      statusEl.textContent=failMsg;statusEl.hidden=false;
+    }
+    try{
+      navigator.clipboard.writeText(text).then(function(){statusEl.textContent=okMsg;statusEl.hidden=false},fallback);
+    }catch(err){fallback()}
+  }
+  $('#copyBtn').addEventListener('click',function(){
+    copyText(lastMsg,$('#copyStatus'),'Copied. Paste it into WhatsApp and send to 0915 149 5696.','Copy was blocked here. The message is selected, so use your phone or keyboard copy option.',$('#resultText'));
+  });
+  $('#copyNum').addEventListener('click',function(){
+    copyText('09151495696',$('#numStatus'),'Number copied.','Copy was blocked here. The number is selected, so use your phone or keyboard copy option.',$('#numText'));
+  });
+
+  /* start: show an empty state at once, then load the real catalog */
+  renderPills();renderGrid();renderCart();
+  KDB.catalog('').then(function(c){
+    P=(c.items||[]).filter(function(x){return x&&x.name&&x.status!=='hidden'});
+    byId={};P.forEach(function(x){byId[x.id]=x});
+    renderPills();renderGrid();renderCart();
+  });
 })();
 
 </script>
