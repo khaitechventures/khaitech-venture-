@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>KHAITECH Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* KHAITECH shared design tokens and base styles. Used by the store and the admin dashboard. */
+:root{
+  --paper:#F0F3F1; --surface:#FFFFFF; --ink:#0D1B26; --muted:#566874; --line:#D3DBD7;
+  --accent:#2346F0; --accent-ink:#FFFFFF; --signal:#FFD23F; --signal-ink:#2A2200;
+  --wa:#1FAF56; --wa-ink:#FFFFFF; --screen:#0B1622; --danger:#C62F2F;
+  --t1:#E1E8FF; --t2:#FFF0BA; --t3:#DAEEE1; --t4:#EBE5EF; --grid:rgba(13,27,38,.055);
+  --ok:#146C36; --ok-bg:#DCF2E3; --warn:#7A5200; --warn-bg:#FFF0BA; --bad:#B42318; --bad-bg:#FBE0DD; --info:#1F3FD0; --info-bg:#E1E8FF;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Instrument Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#09111A; --surface:#111C28; --ink:#E8EEF2; --muted:#93A4B1; --line:#223344;
+    --accent:#7D97FF; --accent-ink:#07101A; --wa:#25D366; --wa-ink:#04200E; --danger:#FF8A8A;
+    --t1:#16254A; --t2:#3A3112; --t3:#123221; --t4:#2A2234; --grid:rgba(232,238,242,.05);
+    --ok:#6FE3A0; --ok-bg:#123221; --warn:#FFD23F; --warn-bg:#3A3112; --bad:#FF9C9C; --bad-bg:#3F1B1B; --info:#9FB2FF; --info-bg:#16254A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#09111A; --surface:#111C28; --ink:#E8EEF2; --muted:#93A4B1; --line:#223344;
+  --accent:#7D97FF; --accent-ink:#07101A; --wa:#25D366; --wa-ink:#04200E; --danger:#FF8A8A;
+  --t1:#16254A; --t2:#3A3112; --t3:#123221; --t4:#2A2234; --grid:rgba(232,238,242,.05);
+  --ok:#6FE3A0; --ok-bg:#123221; --warn:#FFD23F; --warn-bg:#3A3112; --bad:#FF9C9C; --bad-bg:#3F1B1B; --info:#9FB2FF; --info-bg:#16254A;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--paper);z-index:60}
+h1,h2,h3{font-family:var(--display);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.015em}
+p{margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1180px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono)}
+.eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.55rem;border:2px solid var(--ink);background:transparent;color:var(--ink);padding:.72rem 1.15rem;border-radius:999px;font-weight:600;text-decoration:none;cursor:pointer;line-height:1.1;transition:transform .15s,background .15s,color .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:var(--wa-ink)}
+.btn.small{padding:.5rem .85rem;font-size:.9rem}
+.btn.block{width:100%}
+.btn svg{flex:none}
+
+
+/* standalone-page safety (the preview host adds these too) */
+[hidden]{display:none!important}
+img{max-width:100%}
+body{margin:0}
+
+</style>
+<style>
+/* KHAITECH admin dashboard */
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;letter-spacing:-.01em;text-wrap:balance}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* shell */
+.shell{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;align-self:start;height:100vh;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:1.4rem;padding:1.2rem 1rem;padding-left:max(1rem,env(safe-area-inset-left,0px))}
+.alogo{display:flex;gap:.6rem;align-items:center;text-decoration:none;font-family:var(--display);font-weight:800;font-size:1.15rem;letter-spacing:-.01em}
+.alogo small{display:block;font-family:var(--mono);font-weight:500;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+#nav{display:flex;flex-direction:column;gap:.2rem}
+#nav a{display:flex;justify-content:space-between;align-items:center;text-decoration:none;font-weight:600;padding:.6rem .8rem;border-radius:10px;color:var(--muted)}
+#nav a:hover{background:var(--paper);color:var(--ink)}
+#nav a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.nb{background:var(--signal);color:var(--signal-ink);border-radius:999px;font-size:.75rem;padding:0 .5rem;min-width:1.4rem;text-align:center}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:.5rem;font-size:.9rem}
+.side-foot a{color:var(--muted)}
+.side-foot button{all:unset;cursor:pointer;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.side-foot button:focus-visible{outline:3px solid var(--accent)}
+.main{min-width:0;padding-block:1.6rem 5rem;padding-left:clamp(16px,3vw,2.2rem);padding-right:max(16px,env(safe-area-inset-right,0px),clamp(16px,3vw,2.2rem))}
+.main:focus{outline:none}
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .side{position:sticky;top:0;z-index:30;height:auto;flex-direction:row;align-items:center;gap:.8rem;padding:.6rem max(12px,env(safe-area-inset-right,0px)) .6rem max(12px,env(safe-area-inset-left,0px));padding-top:calc(.6rem + env(safe-area-inset-top,0px));border-right:0;border-bottom:1px solid var(--line);overflow-x:auto}
+  .alogo span{display:none}
+  #nav{flex-direction:row;gap:.15rem}
+  #nav a{white-space:nowrap;padding:.5rem .7rem}
+  .side-foot{margin:0 0 0 auto;flex-direction:row;gap:1rem;white-space:nowrap}
+  .main{padding-left:max(16px,env(safe-area-inset-left,0px))}
+}
+
+/* page head */
+.phead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:.8rem 1.5rem;margin-bottom:1.3rem}
+.phead h1{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:800}
+.phead p{color:var(--muted);margin-top:.35rem;max-width:40rem}
+.acts{display:flex;flex-wrap:wrap;gap:.5rem}
+
+/* buttons (extends base .btn) */
+.btn.small{padding:.45rem .8rem;font-size:.88rem}
+.btn.ghost{border-color:var(--line)}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.btn.block{width:100%}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:.8rem;margin-bottom:1.4rem}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.25rem;min-width:0;text-decoration:none}
+.tile .k{font-size:.85rem;color:var(--muted)}
+.tile .v{font-family:var(--display);font-weight:800;font-size:clamp(1.5rem,3vw,2rem);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tile .s{font-size:.8rem;color:var(--muted)}
+.tile.alert{border-color:var(--bad);background:var(--bad-bg)}
+.tile.alert .v{color:var(--bad)}
+.tile.good .v{color:var(--ok)}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:1rem;align-items:start}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.1rem 1.2rem;min-width:0}
+.panel h2{font-size:1.15rem;margin-bottom:.7rem}
+.panel .hint{font-size:.9rem;color:var(--muted)}
+.li{display:flex;justify-content:space-between;gap:.8rem;align-items:center;padding:.65rem 0;border-top:1px solid var(--line);min-width:0}
+.li:first-of-type{border-top:0}
+.li b{font-weight:600}
+.li .l{min-width:0}
+.li .l span{display:block;font-size:.85rem;color:var(--muted);overflow-wrap:anywhere}
+.li button.lnk{all:unset;cursor:pointer;font-weight:600;color:var(--accent);font-size:.9rem;white-space:nowrap}
+.li button.lnk:focus-visible{outline:3px solid var(--accent)}
+
+/* badges */
+.st{display:inline-block;font-size:.76rem;font-weight:600;border-radius:999px;padding:.12rem .6rem;white-space:nowrap}
+.st-received{background:var(--info-bg);color:var(--info)}
+.st-repair{background:var(--warn-bg);color:var(--warn)}
+.st-ready{background:var(--ok-bg);color:var(--ok)}
+.st-cannot,.st-bad{background:var(--bad-bg);color:var(--bad)}
+.st-collected,.st-muted{background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+.st-ok{background:var(--ok-bg);color:var(--ok)}
+.st-warn{background:var(--warn-bg);color:var(--warn)}
+
+/* toolbar */
+.toolbar{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:.9rem}
+.toolbar .in{width:auto;flex:1 1 220px}
+.toolbar select.in{flex:0 1 auto}
+.pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1rem}
+.pill{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:.35rem .9rem;cursor:pointer;font-weight:500;font-size:.9rem}
+.pill[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.summary{font-size:.9rem;color:var(--muted);margin-bottom:.9rem}
+.empty{border:2px dashed var(--line);border-radius:18px;padding:2.4rem 1.2rem;text-align:center;color:var(--muted);display:grid;gap:.9rem;justify-items:center}
+.empty b{color:var(--ink);font-family:var(--display);font-size:1.2rem}
+
+/* repair cards */
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:.9rem}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.55rem;min-width:0}
+.rcard.late{border-color:var(--bad)}
+.rcard header{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
+.ticket{font-family:var(--mono);font-size:.82rem;font-weight:500}
+.rcard h3{font-size:1.15rem;overflow-wrap:anywhere}
+.rcard .sub{font-size:.9rem;color:var(--muted);overflow-wrap:anywhere}
+.rcard .dev{font-weight:600;overflow-wrap:anywhere}
+.rcard .imei{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.4rem;margin:0}
+.kv.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kv div{background:var(--paper);border-radius:10px;padding:.4rem .6rem;min-width:0}
+.kv dt{font-size:.72rem;color:var(--muted)}
+.kv dd{margin:0;font-weight:600;font-size:.92rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.kv .due dd{color:var(--bad)}
+.rcard footer{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.2rem}
+.flag{font-size:.8rem;font-weight:600;color:var(--bad)}
+
+/* stock cards */
+.sgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:.9rem}
+.scard{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.sph{aspect-ratio:1/.8;background:var(--t1);display:grid;place-items:center;position:relative;max-width:100%}
+.sph img{width:100%;height:100%;object-fit:cover;display:block}
+.sph .np{font-family:var(--mono);font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;text-align:center;padding:.5rem}
+.sph .st{position:absolute;left:.6rem;top:.6rem}
+.sph .cnt{position:absolute;right:.6rem;top:.6rem;background:var(--ink);color:var(--paper);border-radius:6px;font-family:var(--mono);font-size:.7rem;padding:.1rem .45rem}
+.sbody{padding:.8rem .9rem 1rem;display:flex;flex-direction:column;gap:.35rem;flex:1}
+.sbody h3{font-size:1.02rem;overflow-wrap:anywhere}
+.sbody .meta{font-size:.82rem;color:var(--muted)}
+.sbody .price{font-family:var(--mono);font-weight:500}
+.sbody .row{display:flex;justify-content:space-between;align-items:center;gap:.5rem;flex-wrap:wrap}
+.sbody .btns{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:auto;padding-top:.5rem}
+
+/* sales list */
+.table{display:grid;gap:0;border:1px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden}
+.trow{display:grid;grid-template-columns:90px minmax(0,2fr) minmax(0,1fr) minmax(0,1fr) auto;gap:.6rem;padding:.7rem 1rem;align-items:center;border-top:1px solid var(--line)}
+.trow:first-child{border-top:0}
+.trow.head{background:var(--paper);font-size:.78rem;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.trow div{min-width:0;overflow-wrap:anywhere}
+.trow .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+@media (max-width:700px){
+  .trow{grid-template-columns:1fr auto;grid-template-areas:"a b" "c c" "d e"}
+  .trow.head{display:none}
+  .trow>:nth-child(1){grid-area:a;color:var(--muted);font-size:.85rem}
+  .trow>:nth-child(2){grid-area:c;font-weight:600}
+  .trow>:nth-child(3){grid-area:d;color:var(--muted);font-size:.85rem}
+  .trow>:nth-child(4){grid-area:b;text-align:right;font-weight:600}
+  .trow>:nth-child(5){grid-area:e;justify-self:end}
+}
+
+/* forms */
+.field{display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.field label,.field legend{font-weight:600;font-size:.9rem}
+.field .hint{font-size:.78rem;color:var(--muted);font-weight:400}
+.in{width:100%;min-width:0;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:.62rem .8rem}
+.in:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent)}
+.in[aria-invalid="true"]{border-color:var(--danger)}
+textarea.in{min-height:84px;resize:vertical}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+.err{color:var(--danger);font-size:.84rem;font-weight:500}
+.row2,.row3{display:grid;gap:.9rem}
+.row2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.row3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:560px){.row2,.row3{grid-template-columns:minmax(0,1fr)}}
+.faults{display:flex;flex-wrap:wrap;gap:.45rem}
+.fchip{position:relative}
+.fchip input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.fchip span{display:inline-block;border:2px solid var(--line);background:var(--surface);border-radius:999px;padding:.35rem .85rem;font-size:.88rem;font-weight:500}
+.fchip input:checked+span{background:var(--signal);border-color:var(--ink);color:var(--signal-ink)}
+.fchip input:focus-visible+span{outline:3px solid var(--accent);outline-offset:2px}
+.check{display:flex;gap:.55rem;align-items:flex-start;font-size:.92rem}
+.check input{margin-top:.28rem}
+.bal{font-family:var(--mono);font-weight:500;background:var(--paper);border-radius:10px;padding:.5rem .7rem;font-size:.9rem}
+.private{font-size:.7rem;font-family:var(--mono);background:var(--warn-bg);color:var(--warn);padding:.05rem .4rem;border-radius:5px;margin-left:.3rem;font-weight:500}
+
+/* photo editor */
+.phlist{display:flex;flex-wrap:wrap;gap:.6rem}
+.ph{width:96px;border:2px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);position:relative}
+.ph.main{border-color:var(--ink)}
+.ph img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}
+.ph .mk{position:absolute;left:4px;top:4px;background:var(--ink);color:var(--paper);font-family:var(--mono);font-size:.62rem;padding:0 .35rem;border-radius:4px}
+.ph .pb{display:flex;justify-content:space-between;padding:.2rem .3rem;font-size:.72rem}
+.ph .pb button{all:unset;cursor:pointer;color:var(--accent);text-decoration:underline}
+.ph .pb button:focus-visible{outline:2px solid var(--accent)}
+.phadd{width:96px;aspect-ratio:1/1;border:2px dashed var(--muted);border-radius:12px;display:grid;place-items:center;text-align:center;font-size:.8rem;color:var(--muted);cursor:pointer;padding:.3rem}
+.phadd:hover,.phadd:focus-within{border-color:var(--ink);color:var(--ink)}
+.phadd input{position:absolute;opacity:0;width:1px;height:1px}
+
+/* modal */
+.mscrim{position:fixed;inset:0;background:rgba(5,10,15,.6);z-index:100}
+.modal{position:fixed;z-index:110;top:max(12px,env(safe-area-inset-top,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 24px));height:fit-content;max-height:calc(100% - 24px);margin:auto 0;background:var(--paper);border:2px solid var(--ink);border-radius:22px;display:flex;flex-direction:column;overflow:hidden}
+.modal>header{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1rem 1.2rem;border-bottom:1px solid var(--line);background:var(--surface)}
+.modal h2{font-size:1.3rem}
+.xbtn{border:2px solid var(--ink);background:transparent;border-radius:999px;width:2.3rem;height:2.3rem;cursor:pointer;line-height:1;flex:none}
+.mbody{padding:1.1rem 1.2rem 1.3rem;overflow-y:auto;display:grid;gap:1rem}
+.mfoot{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:space-between;align-items:center;margin-top:.3rem}
+body.lock{overflow:hidden}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:200;background:var(--ink);color:var(--paper);padding:.7rem 1.1rem;border-radius:999px;font-weight:600;max-width:calc(100% - 32px);box-shadow:0 10px 26px -6px rgba(0,0,0,.5)}
+#toast:empty{display:none}
+
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding:1.5rem max(16px,env(safe-area-inset-right,0px)) 1.5rem max(16px,env(safe-area-inset-left,0px));background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px}
+.lbox{width:min(420px,100%);background:var(--surface);border:2px solid var(--ink);border-radius:22px;padding:1.6rem;display:grid;gap:1rem}
+.lbox h1{font-size:1.7rem}
+.lbox .fine{font-size:.8rem;color:var(--muted)}
+
+/* settings */
+.steps{margin:.2rem 0 0;padding-left:1.2rem;display:grid;gap:.4rem;color:var(--muted);font-size:.93rem}
+.steps b{color:var(--ink)}
+code,.code{font-family:var(--mono);font-size:.85em;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:0 .3rem}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+</style>
+</head>
+<body>
+<div id="login" class="login" hidden></div>
+
+<div id="app" class="shell" hidden>
+  <aside class="side">
+    <a class="alogo" href="#overview" aria-label="KHAITECH Admin home">
+      <svg width="30" height="30" viewBox="0 0 34 34" aria-hidden="true"><rect x="1.5" y="1.5" width="31" height="31" rx="9" fill="var(--accent)"/><rect x="11" y="7" width="12" height="20" rx="3" fill="none" stroke="var(--accent-ink)" stroke-width="2"/><circle cx="17" cy="23" r="1.4" fill="var(--signal)"/><path d="M13.5 12l7 5" stroke="var(--signal)" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span>KHAITECH <small>Admin</small></span>
+    </a>
+    <nav id="nav" aria-label="Dashboard">
+      <a href="#overview" data-v="overview">Overview</a>
+      <a href="#repairs" data-v="repairs">Repairs <span class="nb" id="nbRepairs" hidden></span></a>
+      <a href="#stock" data-v="stock">Stock</a>
+      <a href="#sales" data-v="sales">Sales</a>
+      <a href="#settings" data-v="settings">Settings</a>
+    </nav>
+    <div class="side-foot">
+      <a href="../">View store</a>
+      <button type="button" data-act="logout">Log out</button>
+    </div>
+  </aside>
+  <main class="main" id="view" tabindex="-1"></main>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* KHAITECH site settings. Edit this file, commit and push to change contact details. */
+window.KHAITECH_CONFIG = {
+  shopName: 'KHAITECH',
+  whatsapp: '2349151495696',          // international format, no plus sign
+  whatsappDisplay: '0915 149 5696',
+  address: 'Mandate Market, Ilorin, Kwara State',
+  // 'local' keeps data in the browser of the device used for admin (current setup).
+  // 'supabase' is the planned next step, see supabase/schema.sql and README.md.
+  backend: 'local',
+  supabase: { url: '', anonKey: '' }
+};
+
+</script>
+<script>
+/* KHAITECH data layer.
+   Every page talks to data only through window.KDB. Today it stores data in the browser (IndexedDB).
+   When Supabase is added, only this file changes; the store and the dashboard keep working. */
+(function () {
+  var STORES = ['products', 'repairs', 'sales'];
+  var mem = { products: [], repairs: [], sales: [] };
+  var dbp = null;
+
+  function uid() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'id' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+  }
+  function open() {
+    if (dbp) return dbp;
+    dbp = new Promise(function (res, rej) {
+      if (!window.indexedDB) { rej(new Error('IndexedDB unavailable')); return; }
+      var r = indexedDB.open('khaitech', 1);
+      r.onupgradeneeded = function () {
+        var d = r.result;
+        STORES.forEach(function (s) { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: 'id' }); });
+      };
+      r.onsuccess = function () { res(r.result); };
+      r.onerror = function () { rej(r.error); };
+    });
+    return dbp;
+  }
+  var ready = open().then(function () { return true; }, function () { return false; });
+
+  function run(store, mode, fn) {
+    return open().then(function (d) {
+      return new Promise(function (res, rej) {
+        var t = d.transaction(store, mode), s = t.objectStore(store), r = fn(s);
+        t.oncomplete = function () { res(r && 'result' in r ? r.result : undefined); };
+        t.onerror = t.onabort = function () { rej(t.error); };
+      });
+    });
+  }
+
+  function list(col) {
+    return ready.then(function (ok) {
+      return ok ? run(col, 'readonly', function (s) { return s.getAll(); }) : mem[col].slice();
+    });
+  }
+  function save(col, obj) {
+    var now = new Date().toISOString();
+    if (!obj.id) { obj.id = uid(); obj.createdAt = now; }
+    obj.updatedAt = now;
+    return ready.then(function (ok) {
+      if (ok) return run(col, 'readwrite', function (s) { return s.put(obj); }).then(function () { return obj; });
+      var i = mem[col].findIndex(function (x) { return x.id === obj.id; });
+      if (i > -1) mem[col][i] = obj; else mem[col].push(obj);
+      return obj;
+    });
+  }
+  function remove(col, id) {
+    return ready.then(function (ok) {
+      if (ok) return run(col, 'readwrite', function (s) { return s.delete(id); });
+      mem[col] = mem[col].filter(function (x) { return x.id !== id; });
+    });
+  }
+  function replaceAll(col, arr) {
+    return ready.then(function (ok) {
+      if (!ok) { mem[col] = arr.slice(); return; }
+      return open().then(function (d) {
+        return new Promise(function (res, rej) {
+          var t = d.transaction(col, 'readwrite'), s = t.objectStore(col);
+          s.clear(); arr.forEach(function (o) { s.put(o); });
+          t.oncomplete = function () { res(); }; t.onerror = t.onabort = function () { rej(t.error); };
+        });
+      });
+    });
+  }
+  function exportAll() {
+    return Promise.all(STORES.map(list)).then(function (r) {
+      return { app: 'khaitech', version: 1, exportedAt: new Date().toISOString(), products: r[0], repairs: r[1], sales: r[2] };
+    });
+  }
+  function importAll(data) {
+    if (!data || data.app !== 'khaitech') return Promise.reject(new Error('This is not a KHAITECH backup file.'));
+    return Promise.all(STORES.map(function (c) { return replaceAll(c, Array.isArray(data[c]) ? data[c] : []); }));
+  }
+
+  /* Public store: products added in this browser win (live preview on the admin device).
+     Everyone else gets the published data/catalog.json. */
+  function catalog(base) {
+    function fromFile() {
+      return fetch((base || '') + 'data/catalog.json', { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : { products: [] }; })
+        .then(function (j) { return { items: j.products || [], source: 'file' }; })
+        .catch(function () { return { items: [], source: 'file' }; });
+    }
+    return list('products').then(function (l) {
+      return l.length ? { items: l, source: 'local' } : fromFile();
+    }, fromFile);
+  }
+
+  window.KDB = { uid: uid, list: list, save: save, remove: remove, replaceAll: replaceAll, exportAll: exportAll, importAll: importAll, catalog: catalog };
+})();
+
+</script>
+<script>
+/* KHAITECH admin dashboard. Talks to data only through window.KDB (see db.js). */
+(function () {
+  'use strict';
+  const CFG = window.KHAITECH_CONFIG || {};
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const naira = n => '₦' + Math.round(+n || 0).toLocaleString('en-NG');
+  const p2 = n => String(n).padStart(2, '0');
+  const todayISO = () => { const d = new Date(); return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`; };
+  const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const fmtDate = s => { if (!s) return ''; const [y, m, d] = s.split('-'); return `${+d} ${MON[+m - 1]} ${y}`; };
+  const ts = s => { const [y, m, d] = s.split('-').map(Number); return Date.UTC(y, m - 1, d); };
+  const dayDiff = (a, b) => Math.round((ts(b) - ts(a)) / 864e5);
+  const num = v => { const n = parseFloat(String(v).replace(/[^\d.]/g, '')); return isNaN(n) ? 0 : n; };
+
+  const CATS = ['Phones', 'Chargers & power', 'Audio', 'Cases & protection', 'Gadgets', 'Other'];
+  const CONDS = ['New', 'Open box', 'UK used', 'Nigeria used', 'Refurbished', 'Used'];
+  const MAKERS = ['Apple (iPhone)', 'Samsung', 'Tecno', 'Infinix', 'itel', 'Xiaomi / Redmi / Poco', 'Oppo', 'Vivo', 'Realme', 'Huawei', 'Google Pixel', 'Nokia', 'Other'];
+  const FAULTS = ['Screen', 'Dead phone', 'Battery', 'Charging port', 'Water damage', 'Software / unlock', 'Camera', 'Speaker / mic', 'Back glass', 'Other'];
+  const RSTATUS = { received: 'Received', repair: 'In repair', ready: 'Ready for collection', cannot: 'Cannot repair' };
+  const METHODS = ['Cash', 'Transfer', 'POS'];
+
+  const D = { products: [], repairs: [], sales: [] };
+  const V = { rfilter: 'open', rq: '', sq: '', scat: '', sst: '', smonth: todayISO().slice(0, 7) };
+
+  /* ---------- small helpers ---------- */
+  let toastT;
+  function toast(msg) {
+    const t = $('#toast'); t.textContent = msg; clearTimeout(toastT);
+    toastT = setTimeout(() => { t.textContent = ''; }, 3200);
+  }
+  const photoSrc = p => /^(data:|https?:|blob:)/.test(p) ? p : '../' + p;
+  function waNum(p) {
+    let d = String(p || '').replace(/\D/g, '');
+    if (d.startsWith('0') && d.length === 11) d = '234' + d.slice(1);
+    return d;
+  }
+  function download(name, blob) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+  function fileToJpeg(file, max, q) {
+    return new Promise((res, rej) => {
+      const fr = new FileReader();
+      fr.onerror = () => rej(new Error('Could not read that file.'));
+      fr.onload = () => {
+        const img = new Image();
+        img.onerror = () => rej(new Error('That file is not a picture we can read.'));
+        img.onload = () => {
+          const k = Math.min(1, max / Math.max(img.width, img.height));
+          const c = document.createElement('canvas');
+          c.width = Math.max(1, Math.round(img.width * k)); c.height = Math.max(1, Math.round(img.height * k));
+          const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+          g.drawImage(img, 0, 0, c.width, c.height);
+          res(c.toDataURL('image/jpeg', q));
+        };
+        img.src = fr.result;
+      };
+      fr.readAsDataURL(file);
+    });
+  }
+  function loadJSZip() {
+    if (window.JSZip) return Promise.resolve();
+    return new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+      s.onload = res; s.onerror = () => rej(new Error('Could not load the zip tool. Check your internet connection.'));
+      document.head.appendChild(s);
+    });
+  }
+
+  /* ---------- password gate (a light lock only; real accounts come with Supabase) ---------- */
+  const AUTH_KEY = 'khaitech-admin-v1';
+  let memHash = null;
+  const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } };
+  const getHash = () => lsGet(AUTH_KEY) || memHash;
+  const setHash = h => { if (!lsSet(AUTH_KEY, h)) memHash = h; };
+  let memSess = false;
+  const sessGet = () => { try { return sessionStorage.getItem('khaitech-session') === '1'; } catch (e) { return memSess; } };
+  const sessSet = v => { try { v ? sessionStorage.setItem('khaitech-session', '1') : sessionStorage.removeItem('khaitech-session'); } catch (e) { memSess = v; } };
+  async function sha(s) {
+    if (!(window.crypto && crypto.subtle)) throw new Error('Open this page over https (or localhost) so the password can be protected.');
+    const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('khaitech:' + s));
+    return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+  }
+  function showLogin() {
+    const has = !!getHash();
+    $('#app').hidden = true;
+    const L = $('#login'); L.hidden = false;
+    L.innerHTML = `<form class="lbox" id="lf" novalidate>
+      <p class="eyebrow">KHAITECH Admin</p>
+      <h1>${has ? 'Staff login' : 'Create your admin password'}</h1>
+      <p class="muted">${has ? 'Enter the admin password to open the dashboard.' : 'This is the first time the dashboard is opened on this device. Choose a password of at least 6 characters and keep it safe.'}</p>
+      <div class="field"><label for="lp">Password</label><input class="in" id="lp" type="password" autocomplete="${has ? 'current-password' : 'new-password'}"></div>
+      ${has ? '' : '<div class="field"><label for="lp2">Confirm password</label><input class="in" id="lp2" type="password" autocomplete="new-password"></div>'}
+      <p class="err" id="le" hidden></p>
+      <button class="btn primary block" type="submit">${has ? 'Log in' : 'Create password and continue'}</button>
+      <p class="fine">This password only keeps casual visitors out of the dashboard on this device. Proper staff accounts arrive with the Supabase step.</p>
+    </form>`;
+    $('#lp').focus();
+    $('#lf').addEventListener('submit', async e => {
+      e.preventDefault();
+      const err = m => { const x = $('#le'); x.textContent = m; x.hidden = !m; };
+      const pw = $('#lp').value;
+      try {
+        if (has) {
+          if (await sha(pw) !== getHash()) { err('That password is not right.'); return; }
+        } else {
+          if (pw.length < 6) { err('Use at least 6 characters.'); return; }
+          if (pw !== $('#lp2').value) { err('The two passwords are different.'); return; }
+          setHash(await sha(pw));
+        }
+      } catch (ex) { err(ex.message); return; }
+      sessSet(true); startApp();
+    });
+  }
+
+  /* ---------- modal ---------- */
+  let modalEl = null, lastFocus = null;
+  function modal(title, html) {
+    closeModal(true);
+    lastFocus = document.activeElement;
+    const root = $('#modalRoot');
+    root.innerHTML = `<div class="mscrim" data-close></div><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle"><header><h2 id="mTitle">${esc(title)}</h2><button type="button" class="xbtn" data-close aria-label="Close">&#10005;</button></header><div class="mbody">${html}</div></div>`;
+    document.body.classList.add('lock');
+    modalEl = $('.modal', root);
+    const first = $('input:not([type=hidden]):not([type=file]),select,textarea', modalEl);
+    (first || $('.xbtn', modalEl)).focus();
+    return modalEl;
+  }
+  function closeModal(silent) {
+    $('#modalRoot').innerHTML = ''; modalEl = null;
+    document.body.classList.remove('lock');
+    if (!silent && lastFocus && lastFocus.focus && document.contains(lastFocus)) lastFocus.focus();
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && modalEl) closeModal(); });
+
+  /* ---------- data ---------- */
+  async function reload() {
+    const [p, r, s] = await Promise.all([KDB.list('products'), KDB.list('repairs'), KDB.list('sales')]);
+    D.products = p; D.repairs = r; D.sales = s;
+  }
+  const isOpen = r => !r.collected;
+  const isLate = r => isOpen(r) && r.returnDate && r.returnDate < todayISO();
+  const balance = r => Math.max(0, (+r.price || 0) - (+r.paid || 0));
+  const devName = r => [r.maker && r.maker !== 'Other' ? r.maker.replace(/ \(.*\)/, '') : '', r.model].filter(Boolean).join(' ') || 'phone';
+  const inStock = p => p.status !== 'hidden' && p.status !== 'sold' && (+p.qty || 0) > 0;
+  function nextTicket() {
+    const n = D.repairs.reduce((m, r) => Math.max(m, parseInt(String(r.ticket || '').replace(/\D/g, ''), 10) || 0), 0) + 1;
+    return 'KT-' + String(n).padStart(4, '0');
+  }
+  function custMsg(r) {
+    const dev = devName(r), bal = balance(r), faults = (r.faults || []).join(', ');
+    if (r.collected) return `Hello ${r.customer}, thank you for choosing KHAITECH. Ticket ${r.ticket} for your ${dev} is complete. You can reach us on this number any time.`;
+    if (r.status === 'ready') return `Hello ${r.customer}, your ${dev} (ticket ${r.ticket}) is ready for collection at KHAITECH, ${CFG.address || 'Mandate Market, Ilorin'}.` + (bal > 0 ? ` Balance to pay: ${naira(bal)}.` : '');
+    if (r.status === 'cannot') return `Hello ${r.customer}, we checked your ${dev} (ticket ${r.ticket}) and could not repair it. Please come to KHAITECH to collect it.`;
+    return `Hello ${r.customer}, KHAITECH has received your ${dev} on ${fmtDate(r.dateIn)}. Ticket: ${r.ticket}.` + (faults ? ` Fault: ${faults}.` : '') + ` Repair price: ${r.price > 0 ? naira(r.price) : 'to be confirmed'}.` + (r.paid > 0 ? ` Paid so far: ${naira(r.paid)}.` : '') + ` Please come back on ${r.returnDate ? fmtDate(r.returnDate) : 'the date we agree'}.`;
+  }
+  const msgLink = r => `https://wa.me/${waNum(r.phone)}?text=${encodeURIComponent(custMsg(r))}`;
+
+  /* ---------- router ---------- */
+  const VIEWS = { overview: viewOverview, repairs: viewRepairs, stock: viewStock, sales: viewSales, settings: viewSettings };
+  function current() { const h = location.hash.replace('#', ''); return VIEWS[h] ? h : 'overview'; }
+  function render() {
+    const v = current();
+    $$('#nav a').forEach(a => a.setAttribute('aria-current', a.dataset.v === v ? 'page' : 'false'));
+    const open = D.repairs.filter(isOpen).length;
+    const nb = $('#nbRepairs'); nb.textContent = open; nb.hidden = !open;
+    $('#view').innerHTML = VIEWS[v]();
+    if (v === 'repairs') renderRepairList();
+    if (v === 'stock') renderStockList();
+    if (v === 'sales') renderSalesList();
+  }
+  window.addEventListener('hashchange', () => { if (!$('#app').hidden) { render(); window.scrollTo(0, 0); } });
+  async function refresh() { await reload(); render(); }
+
+  /* ---------- overview ---------- */
+  function viewOverview() {
+    const t = todayISO(), mk = t.slice(0, 7);
+    const open = D.repairs.filter(isOpen);
+    const ready = open.filter(r => r.status === 'ready');
+    const late = open.filter(isLate);
+    const owed = open.reduce((s, r) => s + balance(r), 0);
+    const doneM = D.repairs.filter(r => r.collected && (r.collectedDate || '').slice(0, 7) === mk);
+    const repInc = doneM.reduce((s, r) => s + (+r.paid || 0), 0);
+    const salesM = D.sales.filter(s => (s.date || '').slice(0, 7) === mk);
+    const salesInc = salesM.reduce((s, x) => s + x.qty * x.unitPrice, 0);
+    const avail = D.products.filter(inStock);
+    const phones = avail.filter(p => p.category === 'Phones').reduce((s, p) => s + (+p.qty || 0), 0);
+    const acc = avail.filter(p => p.category !== 'Phones').reduce((s, p) => s + (+p.qty || 0), 0);
+    const value = avail.reduce((s, p) => s + (+p.qty || 0) * (+p.price || 0), 0);
+    const upcoming = open.slice().sort((a, b) => (a.returnDate || '9999').localeCompare(b.returnDate || '9999')).slice(0, 6);
+    const low = D.products.filter(p => p.status !== 'hidden' && (+p.qty || 0) <= 1 && p.status !== 'sold').slice(0, 6);
+    const recent = D.sales.slice().sort((a, b) => (b.date + b.createdAt).localeCompare(a.date + a.createdAt)).slice(0, 5);
+    const today = new Date().toLocaleDateString('en-NG', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    return `<div class="phead"><div><p class="eyebrow">${esc(today)}</p><h1>Overview</h1></div>
+      <div class="acts"><button class="btn primary" data-act="new-repair">New repair</button><button class="btn" data-act="new-item">Add item to stock</button></div></div>
+    <div class="tiles">
+      <a class="tile ${late.length ? 'alert' : ''}" href="#repairs" data-act="rf" data-v="late"><span class="k">Overdue for collection</span><span class="v">${late.length}</span><span class="s">Return date has passed</span></a>
+      <a class="tile" href="#repairs" data-act="rf" data-v="open"><span class="k">Phones in the shop</span><span class="v">${open.length}</span><span class="s">${ready.length} ready to collect</span></a>
+      <div class="tile"><span class="k">Customers still owe</span><span class="v">${naira(owed)}</span><span class="s">On phones not yet collected</span></div>
+      <div class="tile good"><span class="k">Money in this month</span><span class="v">${naira(repInc + salesInc)}</span><span class="s">${naira(repInc)} repairs, ${naira(salesInc)} sales</span></div>
+      <div class="tile"><span class="k">Repairs collected</span><span class="v">${doneM.length}</span><span class="s">This month</span></div>
+      <div class="tile"><span class="k">Phones in stock</span><span class="v">${phones}</span><span class="s">${acc} accessories and gadgets</span></div>
+      <div class="tile"><span class="k">Stock value</span><span class="v">${naira(value)}</span><span class="s">At selling prices</span></div>
+    </div>
+    <div class="panels">
+      <section class="panel"><h2>Coming up for collection</h2>${upcoming.length ? upcoming.map(r => `<div class="li"><div class="l"><b>${esc(r.customer)}</b><span>${esc(devName(r))} · back ${r.returnDate ? esc(fmtDate(r.returnDate)) : 'date not set'}${isLate(r) ? ' · <b style="color:var(--bad)">overdue</b>' : ''}</span></div><button type="button" class="lnk" data-act="edit-repair" data-id="${esc(r.id)}">Open</button></div>`).join('') : '<p class="hint">No phones waiting. New repairs will show here.</p>'}</section>
+      <section class="panel"><h2>Low or no stock</h2>${low.length ? low.map(p => `<div class="li"><div class="l"><b>${esc(p.name)}</b><span>${esc(p.condition || '')} · ${(+p.qty || 0)} left</span></div><button type="button" class="lnk" data-act="edit-item" data-id="${esc(p.id)}">Edit</button></div>`).join('') : '<p class="hint">Nothing is running low.</p>'}</section>
+      <section class="panel"><h2>Recent sales</h2>${recent.length ? recent.map(s => `<div class="li"><div class="l"><b>${esc(s.name)}</b><span>${esc(fmtDate(s.date))}${s.buyer ? ' · ' + esc(s.buyer) : ''}</span></div><span class="mono">${naira(s.qty * s.unitPrice)}</span></div>`).join('') : '<p class="hint">No sales recorded yet. Use Record sale on a stock item.</p>'}</section>
+    </div>`;
+  }
+
+  /* ---------- repairs ---------- */
+  function viewRepairs() {
+    const f = V.rfilter;
+    const P = (k, l) => `<button type="button" class="pill" data-act="rf" data-v="${k}" aria-pressed="${f === k}">${l}</button>`;
+    return `<div class="phead"><div><h1>Repairs</h1><p>Every phone brought in for repair: what we charge, when it came in, when the customer should come back and whether it has been collected.</p></div>
+      <div class="acts"><button class="btn" data-act="paste-wa">From WhatsApp request</button><button class="btn primary" data-act="new-repair">New repair</button></div></div>
+      <div class="pills" role="group" aria-label="Filter repairs">${P('open', 'In the shop')}${P('ready', 'Ready')}${P('late', 'Overdue')}${P('done', 'Collected')}${P('all', 'All')}</div>
+      <div class="toolbar"><label class="sr" for="rq" style="position:absolute;left:-9999px">Search repairs</label><input class="in" id="rq" type="search" placeholder="Search name, phone, IMEI, ticket or model" value="${esc(V.rq)}"></div>
+      <p class="summary" id="rsum"></p><div class="rgrid" id="rlist"></div>`;
+  }
+  function renderRepairList() {
+    const f = V.rfilter, q = V.rq.trim().toLowerCase();
+    let list = D.repairs.filter(r => {
+      if (f === 'open' && r.collected) return false;
+      if (f === 'ready' && (r.collected || r.status !== 'ready')) return false;
+      if (f === 'late' && !isLate(r)) return false;
+      if (f === 'done' && !r.collected) return false;
+      return !q || [r.customer, r.phone, r.imei, r.ticket, r.maker, r.model, (r.faults || []).join(' ')].join(' ').toLowerCase().includes(q);
+    });
+    list.sort((a, b) => {
+      if (!!a.collected !== !!b.collected) return a.collected ? 1 : -1;
+      if (a.collected) return (b.collectedDate || '').localeCompare(a.collectedDate || '');
+      return (a.returnDate || '9999').localeCompare(b.returnDate || '9999');
+    });
+    const owed = list.filter(isOpen).reduce((s, r) => s + balance(r), 0);
+    $('#rsum').textContent = `${list.length} ${list.length === 1 ? 'repair' : 'repairs'}` + (f !== 'done' && owed ? ` · ${naira(owed)} still to be paid` : '');
+    if (!list.length) {
+      $('#rlist').innerHTML = `<div class="empty" style="grid-column:1/-1"><b>${D.repairs.length ? 'No repairs match' : 'No repairs yet'}</b><span>${D.repairs.length ? 'Try another filter or search.' : 'When a customer brings a phone, add it here with the price and the date to come back.'}</span>${D.repairs.length ? '' : '<button class="btn primary" data-act="new-repair">Add the first repair</button>'}</div>`;
+      return;
+    }
+    $('#rlist').innerHTML = list.map(r => {
+      const late = isLate(r), bal = balance(r);
+      const stBadge = r.collected ? '<span class="st st-collected">Collected</span>' : `<span class="st st-${r.status}">${esc(RSTATUS[r.status] || r.status)}</span>`;
+      const d = late ? dayDiff(r.returnDate, todayISO()) : 0;
+      return `<article class="rcard ${late ? 'late' : ''}"><header><span class="ticket">${esc(r.ticket)}</span><span>${stBadge}</span></header>
+        <div><h3>${esc(r.customer)}</h3><p class="sub">${esc(r.phone)}</p></div>
+        <div><p class="dev">${esc(devName(r))}</p>${r.imei ? `<p class="imei">IMEI ${esc(r.imei)}</p>` : ''}<p class="sub">${esc((r.faults || []).join(', '))}${r.notes ? ' · ' + esc(r.notes) : ''}</p></div>
+        <dl class="kv"><div><dt>Price</dt><dd>${r.price > 0 ? naira(r.price) : 'Not set'}</dd></div><div><dt>Paid</dt><dd>${naira(r.paid)}</dd></div><div class="${bal > 0 && !r.collected ? 'due' : ''}"><dt>Balance</dt><dd>${naira(bal)}</dd></div></dl>
+        <dl class="kv two"><div><dt>Brought in</dt><dd>${esc(fmtDate(r.dateIn) || '-')}</dd></div><div class="${late ? 'due' : ''}"><dt>${r.collected ? 'Collected' : 'Come back'}</dt><dd>${esc(fmtDate(r.collected ? r.collectedDate : r.returnDate) || 'Not set')}</dd></div></dl>
+        ${late ? `<p class="flag">Overdue by ${d} ${d === 1 ? 'day' : 'days'}</p>` : ''}
+        <footer>${r.collected ? '' : `<button class="btn small primary" data-act="collect" data-id="${esc(r.id)}">Mark collected</button>`}<a class="btn small wa" target="_blank" rel="noopener" href="${esc(msgLink(r))}">Message</a><button class="btn small ghost" data-act="edit-repair" data-id="${esc(r.id)}">Edit</button></footer></article>`;
+    }).join('');
+  }
+
+  function repairForm(r, isDraft) {
+    const isNew = !r || isDraft;
+    r = r || {};
+    const makers = MAKERS.slice(); if (r.maker && !makers.includes(r.maker)) makers.unshift(r.maker);
+    const m = modal(isNew ? 'New repair' : `Edit repair ${r.ticket}`, `<form id="rf" novalidate style="display:grid;gap:1rem">
+      <div class="row2"><div class="field"><label for="rf-name">Customer name</label><input class="in" id="rf-name" value="${esc(r.customer)}" autocomplete="off"><p class="err" id="e-name" hidden></p></div>
+        <div class="field"><label for="rf-phone">Customer phone number</label><input class="in" id="rf-phone" type="tel" value="${esc(r.phone)}" placeholder="0801 234 5678"><p class="err" id="e-phone" hidden></p></div></div>
+      <div class="row2"><div class="field"><label for="rf-maker">Phone maker</label><select class="in" id="rf-maker"><option value="">Select maker</option>${makers.map(x => `<option ${r.maker === x ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select><p class="err" id="e-maker" hidden></p></div>
+        <div class="field"><label for="rf-model">Phone series / model</label><input class="in" id="rf-model" value="${esc(r.model)}" placeholder="For example Galaxy A54"></div></div>
+      <div class="field"><label for="rf-imei">IMEI <span class="hint">(15 digits, leave empty if the phone is dead)</span></label><input class="in" id="rf-imei" inputmode="numeric" value="${esc(r.imei)}" maxlength="19"><p class="err" id="e-imei" hidden></p></div>
+      <fieldset class="field"><legend>Fault to repair</legend><div class="faults">${FAULTS.map((f, i) => `<label class="fchip"><input type="checkbox" name="fault" value="${esc(f)}" ${(r.faults || []).includes(f) ? 'checked' : ''}><span>${esc(f)}</span></label>`).join('')}</div><p class="err" id="e-fault" hidden></p></fieldset>
+      <div class="field"><label for="rf-notes">Notes <span class="hint">(condition, accessories left, anything to remember)</span></label><textarea class="in" id="rf-notes">${esc(r.notes)}</textarea></div>
+      <div class="row3"><div class="field"><label for="rf-price">Price to charge (₦)</label><input class="in" id="rf-price" inputmode="numeric" value="${r.price ? esc(r.price) : ''}" placeholder="0"><p class="err" id="e-price" hidden></p></div>
+        <div class="field"><label for="rf-paid">Paid so far (₦)</label><input class="in" id="rf-paid" inputmode="numeric" value="${r.paid ? esc(r.paid) : ''}" placeholder="0"></div>
+        <div class="field"><label>Balance</label><div class="bal" id="rf-bal">${naira(balance(r))}</div></div></div>
+      <div class="row2"><div class="field"><label for="rf-in">Date brought in</label><input class="in" id="rf-in" type="date" value="${esc(r.dateIn || todayISO())}"><p class="err" id="e-in" hidden></p></div>
+        <div class="field"><label for="rf-ret">Date to come back</label><input class="in" id="rf-ret" type="date" value="${esc(r.returnDate)}"></div></div>
+      <div class="field"><label for="rf-status">Repair status</label><select class="in" id="rf-status">${Object.keys(RSTATUS).map(k => `<option value="${k}" ${(r.status || 'received') === k ? 'selected' : ''}>${RSTATUS[k]}</option>`).join('')}</select></div>
+      <div class="row2" style="align-items:end"><label class="check"><input type="checkbox" id="rf-col" ${r.collected ? 'checked' : ''}> Customer has collected the phone</label>
+        <div class="field"><label for="rf-cold">Date collected</label><input class="in" id="rf-cold" type="date" value="${esc(r.collectedDate)}"></div></div>
+      <div class="mfoot"><div>${isNew ? '' : '<button type="button" class="btn small danger" id="rf-del">Delete record</button>'}<span id="rf-delbox" hidden> <span class="muted">Delete this repair for good?</span> <button type="button" class="btn small danger" id="rf-del2">Yes, delete</button></span></div>
+        <div class="acts"><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn primary">${isNew ? 'Save repair' : 'Save changes'}</button></div></div>
+    </form>`);
+    const upd = () => { const bal = Math.max(0, num($('#rf-price').value) - num($('#rf-paid').value)); $('#rf-bal').textContent = naira(bal); };
+    $('#rf-price').addEventListener('input', upd); $('#rf-paid').addEventListener('input', upd);
+    $('#rf-imei').addEventListener('input', e => { e.target.value = e.target.value.replace(/[^\d ]/g, ''); });
+    if ($('#rf-del')) {
+      $('#rf-del').onclick = () => { $('#rf-del').hidden = true; $('#rf-delbox').hidden = false; };
+      $('#rf-del2').onclick = async () => { await KDB.remove('repairs', r.id); closeModal(); toast('Repair deleted'); refresh(); };
+    }
+    $('#rf').addEventListener('submit', async e => {
+      e.preventDefault();
+      let first = null;
+      const bad = (inp, eid, msg) => { const x = $('#' + eid); x.textContent = msg; x.hidden = !msg; if (inp) inp.setAttribute('aria-invalid', msg ? 'true' : 'false'); if (msg && !first) first = inp; };
+      const customer = $('#rf-name').value.trim(), phone = $('#rf-phone').value.trim(), maker = $('#rf-maker').value, model = $('#rf-model').value.trim();
+      const imei = $('#rf-imei').value.replace(/\D/g, ''), faults = $$('input[name=fault]:checked', m).map(x => x.value);
+      const price = num($('#rf-price').value), paid = num($('#rf-paid').value), dateIn = $('#rf-in').value;
+      bad($('#rf-name'), 'e-name', customer ? '' : 'Enter the customer name.');
+      bad($('#rf-phone'), 'e-phone', phone.replace(/\D/g, '').length >= 10 ? '' : 'Enter a phone number with at least 10 digits.');
+      bad($('#rf-maker'), 'e-maker', maker ? '' : 'Choose the phone maker.');
+      bad($('#rf-imei'), 'e-imei', !imei || imei.length === 15 ? '' : 'An IMEI has 15 digits. Leave it empty if you do not have it.');
+      bad(m.querySelector('input[name=fault]'), 'e-fault', faults.length ? '' : 'Choose at least one fault.');
+      bad($('#rf-price'), 'e-price', price >= 0 ? '' : 'Enter an amount.');
+      bad($('#rf-in'), 'e-in', dateIn ? '' : 'Choose the date the phone was brought in.');
+      if (first) { first.focus(); return; }
+      const collected = $('#rf-col').checked;
+      const o = Object.assign({}, r, {
+        ticket: r.ticket || nextTicket(), customer, phone, maker, model, imei: imei || '', faults, notes: $('#rf-notes').value.trim(),
+        price, paid, dateIn, returnDate: $('#rf-ret').value, status: $('#rf-status').value, collected,
+        collectedDate: collected ? ($('#rf-cold').value || todayISO()) : ''
+      });
+      if (isDraft) delete o.id;
+      await KDB.save('repairs', o);
+      closeModal(); toast(isNew ? `Repair ${o.ticket} saved` : 'Changes saved'); refresh();
+    });
+  }
+
+  function collectModal(id) {
+    const r = D.repairs.find(x => x.id === id); if (!r) return;
+    const bal = balance(r);
+    const m = modal('Mark as collected', `<form id="cf" style="display:grid;gap:1rem" novalidate>
+      <div><p class="ticket">${esc(r.ticket)}</p><h3 style="font-size:1.3rem">${esc(r.customer)}</h3><p class="muted">${esc(devName(r))}${r.imei ? ' · IMEI ' + esc(r.imei) : ''}</p></div>
+      <dl class="kv"><div><dt>Price</dt><dd>${naira(r.price)}</dd></div><div><dt>Paid so far</dt><dd>${naira(r.paid)}</dd></div><div class="${bal ? 'due' : ''}"><dt>Balance</dt><dd>${naira(bal)}</dd></div></dl>
+      <div class="row2"><div class="field"><label for="cf-amt">Amount received now (₦)</label><input class="in" id="cf-amt" inputmode="numeric" value="${bal || ''}" placeholder="0"></div>
+        <div class="field"><label for="cf-date">Date collected</label><input class="in" id="cf-date" type="date" value="${todayISO()}"></div></div>
+      <p class="muted" id="cf-note"></p>
+      <div class="mfoot"><span></span><div class="acts"><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn primary">Confirm collected</button></div></div></form>`);
+    const note = () => { const left = Math.max(0, bal - num($('#cf-amt').value)); $('#cf-note').textContent = left > 0 ? `${naira(left)} will still be recorded as unpaid.` : 'The customer has paid in full.'; };
+    $('#cf-amt').addEventListener('input', note); note();
+    $('#cf').addEventListener('submit', async e => {
+      e.preventDefault();
+      r.paid = (+r.paid || 0) + num($('#cf-amt').value);
+      r.collected = true; r.collectedDate = $('#cf-date').value || todayISO();
+      await KDB.save('repairs', r);
+      closeModal(); toast(`${r.ticket} marked as collected`); refresh();
+    });
+  }
+
+  function pasteModal() {
+    const m = modal('Add from a WhatsApp request', `<form id="pf" style="display:grid;gap:1rem" novalidate>
+      <p class="muted">Paste the repair request message a customer sent from the website form. We fill in the repair form for you.</p>
+      <div class="field"><label for="pf-t">Message</label><textarea class="in" id="pf-t" style="min-height:160px" placeholder="*KHAITECH repair request*&#10;Name: ...&#10;Phone: Samsung, Galaxy A series (A54)&#10;IMEI: ...&#10;Fault: Screen"></textarea><p class="err" id="pf-e" hidden></p></div>
+      <div class="mfoot"><span></span><div class="acts"><button type="button" class="btn" data-close>Cancel</button><button class="btn primary" type="submit">Fill the repair form</button></div></div></form>`);
+    $('#pf').addEventListener('submit', e => {
+      e.preventDefault();
+      const t = $('#pf-t').value, get = k => { const x = t.match(new RegExp('^\\s*' + k + '\\s*:\\s*(.+)$', 'im')); return x ? x[1].trim() : ''; };
+      if (!/KHAITECH repair request|^\s*name\s*:/im.test(t) || !get('Name')) { const x = $('#pf-e'); x.textContent = 'This does not look like a KHAITECH repair request. Check the message and try again.'; x.hidden = false; return; }
+      const dev = get('Phone'), mm = dev.match(/^([^,]+),\s*(.+)$/);
+      let maker = mm ? mm[1].trim() : dev, model = mm ? mm[2].trim() : '';
+      const imei = get('IMEI').replace(/\D/g, '');
+      const faults = get('Fault').split(',').map(s => s.trim()).filter(s => FAULTS.includes(s));
+      const draft = { customer: get('Name'), phone: get('Phone number'), maker, model, imei: imei.length === 15 ? imei : '', faults, notes: get('Details'), dateIn: todayISO(), status: 'received' };
+      closeModal(true); repairForm(draft, true);
+    });
+  }
+
+  /* ---------- stock ---------- */
+  function viewStock() {
+    return `<div class="phead"><div><h1>Stock</h1><p>Phones, accessories and gadgets for sale. Upload your real photos and set the real price and condition. Items that are not hidden appear in the store.</p></div>
+      <div class="acts"><button class="btn primary" data-act="new-item">Add item</button></div></div>
+      <div class="toolbar"><input class="in" id="sq" type="search" placeholder="Search stock" value="${esc(V.sq)}" aria-label="Search stock">
+        <select class="in" id="scat" aria-label="Category"><option value="">All categories</option>${CATS.map(c => `<option ${V.scat === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select>
+        <select class="in" id="sst" aria-label="Status"><option value="">Any status</option><option value="avail" ${V.sst === 'avail' ? 'selected' : ''}>In stock</option><option value="sold" ${V.sst === 'sold' ? 'selected' : ''}>Sold out</option><option value="hidden" ${V.sst === 'hidden' ? 'selected' : ''}>Hidden from store</option></select></div>
+      <p class="summary" id="ssum"></p><div class="sgrid" id="slist"></div>`;
+  }
+  const stockState = p => p.status === 'hidden' ? 'hidden' : (p.status === 'sold' || (+p.qty || 0) <= 0) ? 'sold' : 'avail';
+  function renderStockList() {
+    const q = V.sq.trim().toLowerCase();
+    const list = D.products.filter(p => (!V.scat || p.category === V.scat) && (!V.sst || stockState(p) === V.sst) &&
+      (!q || [p.name, p.brand, p.condition, p.category, p.storage, p.color, p.imei].join(' ').toLowerCase().includes(q)))
+      .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+    const units = list.filter(inStock).reduce((s, p) => s + (+p.qty || 0), 0), val = list.filter(inStock).reduce((s, p) => s + (+p.qty || 0) * (+p.price || 0), 0);
+    $('#ssum').textContent = `${list.length} ${list.length === 1 ? 'item' : 'items'} · ${units} units in stock worth ${naira(val)}`;
+    if (!list.length) {
+      $('#slist').innerHTML = `<div class="empty" style="grid-column:1/-1"><b>${D.products.length ? 'No items match' : 'Your stock list is empty'}</b><span>${D.products.length ? 'Try another search or filter.' : 'Add your first phone or accessory with its real photo, price and condition.'}</span>${D.products.length ? '' : '<button class="btn primary" data-act="new-item">Add the first item</button>'}</div>`;
+      return;
+    }
+    $('#slist').innerHTML = list.map(p => {
+      const st = stockState(p), ph = (p.photos || [])[0];
+      const badge = st === 'hidden' ? '<span class="st st-muted">Hidden</span>' : st === 'sold' ? '<span class="st st-bad">Sold out</span>' : (+p.qty || 0) <= 1 ? '<span class="st st-warn">Last one</span>' : '<span class="st st-ok">In stock</span>';
+      return `<article class="scard"><div class="sph">${ph ? `<img src="${esc(photoSrc(ph))}" alt="${esc(p.name)}" loading="lazy">` : '<span class="np">No photo yet</span>'}${badge}${(p.photos || []).length > 1 ? `<span class="cnt">${p.photos.length} photos</span>` : ''}</div>
+        <div class="sbody"><h3>${esc(p.name)}</h3><p class="meta">${esc(p.condition || 'Condition not set')} · ${esc(p.category)}${p.storage ? ' · ' + esc(p.storage) : ''}</p>
+        <div class="row"><span class="price">${naira(p.price)}</span><span class="meta">Qty ${+p.qty || 0}</span></div>
+        <div class="btns"><button class="btn small ghost" data-act="edit-item" data-id="${esc(p.id)}">Edit</button>${st === 'avail' || (st === 'hidden' && (+p.qty || 0) > 0) ? `<button class="btn small primary" data-act="sell" data-id="${esc(p.id)}">Record sale</button>` : ''}<button class="btn small ghost" data-act="toggle-item" data-id="${esc(p.id)}">${st === 'hidden' ? 'Show' : 'Hide'}</button></div></div></article>`;
+    }).join('');
+  }
+
+  function itemForm(p) {
+    const isNew = !p; p = p || { category: 'Phones', condition: 'UK used', qty: 1, status: 'available', photos: [] };
+    let photos = (p.photos || []).slice();
+    const m = modal(isNew ? 'Add item to stock' : 'Edit stock item', `<form id="if" novalidate style="display:grid;gap:1rem">
+      <div class="field"><label>Photos <span class="hint">(up to 5, the first one is the main photo)</span></label><div class="phlist" id="phl"></div><p class="err" id="e-ph" hidden></p></div>
+      <div class="field"><label for="if-name">Name</label><input class="in" id="if-name" value="${esc(p.name)}" placeholder="For example iPhone 13 128GB"><p class="err" id="e-name" hidden></p></div>
+      <div class="row2"><div class="field"><label for="if-cat">Category</label><select class="in" id="if-cat">${CATS.map(c => `<option ${p.category === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
+        <div class="field"><label for="if-brand">Brand</label><input class="in" id="if-brand" value="${esc(p.brand)}" placeholder="Apple, Samsung, Anker"></div></div>
+      <div class="row2"><div class="field"><label for="if-cond">Condition</label><select class="in" id="if-cond">${CONDS.map(c => `<option ${p.condition === c ? 'selected' : ''}>${esc(c)}</option>`).join('')}</select></div>
+        <div class="field"><label for="if-qty">Quantity in stock</label><input class="in" id="if-qty" inputmode="numeric" value="${esc(p.qty)}"><p class="err" id="e-qty" hidden></p></div></div>
+      <div class="row2"><div class="field"><label for="if-price">Selling price (₦)</label><input class="in" id="if-price" inputmode="numeric" value="${p.price ? esc(p.price) : ''}"><p class="err" id="e-price" hidden></p></div>
+        <div class="field"><label for="if-cost">Cost price (₦) <span class="private">only you see this</span></label><input class="in" id="if-cost" inputmode="numeric" value="${p.costPrice ? esc(p.costPrice) : ''}"></div></div>
+      <div id="phone-only" style="display:grid;gap:1rem"><div class="row3"><div class="field"><label for="if-stor">Storage</label><input class="in" id="if-stor" value="${esc(p.storage)}" placeholder="128GB"></div>
+        <div class="field"><label for="if-col">Colour</label><input class="in" id="if-col" value="${esc(p.color)}" placeholder="Midnight"></div>
+        <div class="field"><label for="if-bat">Battery health %</label><input class="in" id="if-bat" inputmode="numeric" value="${esc(p.battery)}" placeholder="89"></div></div>
+        <div class="field"><label for="if-imei">IMEI <span class="private">only you see this</span></label><input class="in" id="if-imei" inputmode="numeric" value="${esc(p.imei)}"></div></div>
+      <div class="field"><label for="if-desc">Description <span class="hint">(faults, what is in the box, warranty)</span></label><textarea class="in" id="if-desc">${esc(p.description)}</textarea></div>
+      <div class="field"><label for="if-st">Store visibility</label><select class="in" id="if-st"><option value="available" ${p.status !== 'hidden' ? 'selected' : ''}>Show in the store</option><option value="hidden" ${p.status === 'hidden' ? 'selected' : ''}>Hide from the store</option></select></div>
+      <div class="mfoot"><div>${isNew ? '' : '<button type="button" class="btn small danger" id="if-del">Delete item</button>'}<span id="if-delbox" hidden> <span class="muted">Delete for good?</span> <button type="button" class="btn small danger" id="if-del2">Yes, delete</button></span></div>
+        <div class="acts"><button type="button" class="btn" data-close>Cancel</button><button type="submit" class="btn primary">${isNew ? 'Add to stock' : 'Save changes'}</button></div></div></form>`);
+    const drawPhotos = () => {
+      $('#phl').innerHTML = photos.map((u, i) => `<div class="ph ${i === 0 ? 'main' : ''}"><img src="${esc(photoSrc(u))}" alt="Photo ${i + 1}">${i === 0 ? '<span class="mk">MAIN</span>' : ''}<div class="pb">${i === 0 ? '<span></span>' : `<button type="button" data-main="${i}">Make main</button>`}<button type="button" data-rm="${i}">Remove</button></div></div>`).join('') +
+        (photos.length < 5 ? '<label class="phadd" id="phadd">Add photos<input type="file" id="if-file" accept="image/*" multiple></label>' : '');
+      const fi = $('#if-file'); if (fi) fi.addEventListener('change', onFiles);
+    };
+    async function onFiles(e) {
+      const files = [...e.target.files].slice(0, 5 - photos.length), err = $('#e-ph'); err.hidden = true;
+      $('#phadd').firstChild.textContent = 'Working...';
+      for (const f of files) {
+        try { photos.push(await fileToJpeg(f, 1000, 0.8)); } catch (ex) { err.textContent = ex.message; err.hidden = false; }
+      }
+      drawPhotos();
+    }
+    $('#phl').addEventListener('click', e => {
+      const mk = e.target.closest('[data-main]'), rm = e.target.closest('[data-rm]');
+      if (mk) { const i = +mk.dataset.main; photos.unshift(photos.splice(i, 1)[0]); drawPhotos(); }
+      if (rm) { photos.splice(+rm.dataset.rm, 1); drawPhotos(); }
+    });
+    drawPhotos();
+    const syncCat = () => { $('#phone-only').hidden = $('#if-cat').value !== 'Phones'; };
+    $('#if-cat').addEventListener('change', syncCat); syncCat();
+    if ($('#if-del')) {
+      $('#if-del').onclick = () => { $('#if-del').hidden = true; $('#if-delbox').hidden = false; };
+      $('#if-del2').onclick = async () => { await KDB.remove('products', p.id); closeModal(); toast('Item deleted'); refresh(); };
+    }
+    $('#if').addEventListener('submit', async e => {
+      e.preventDefault();
+      let first = null;
+      const bad = (inp, eid, msg) => { const x = $('#' + eid); x.textContent = msg; x.hidden = !msg; inp.setAttribute('aria-invalid', msg ? 'true' : 'false'); if (msg && !first) first = inp; };
+      const name = $('#if-name').value.trim(), price = num($('#if-price').value), qtyRaw = $('#if-qty').value.trim(), qty = parseInt(qtyRaw, 10);
+      bad($('#if-name'), 'e-name', name ? '' : 'Enter the item name.');
+      bad($('#if-price'), 'e-price', price > 0 ? '' : 'Enter the selling price.');
+      bad($('#if-qty'), 'e-qty', qtyRaw !== '' && qty >= 0 ? '' : 'Enter how many you have, 0 or more.');
+      if (first) { first.focus(); return; }
+      const phone = $('#if-cat').value === 'Phones';
+      const hidden = $('#if-st').value === 'hidden';
+      const o = Object.assign({}, p, {
+        name, category: $('#if-cat').value, brand: $('#if-brand').value.trim(), condition: $('#if-cond').value, price, costPrice: num($('#if-cost').value), qty,
+        storage: phone ? $('#if-stor').value.trim() : '', color: phone ? $('#if-col').value.trim() : '', battery: phone ? $('#if-bat').value.replace(/\D/g, '') : '', imei: phone ? $('#if-imei').value.replace(/\D/g, '') : '',
+        description: $('#if-desc').value.trim(), photos, status: hidden ? 'hidden' : (qty <= 0 ? 'sold' : 'available')
+      });
+      try { await KDB.save('products', o); } catch (ex) { toast('Could not save. The browser storage may be full.'); return; }
+      closeModal(); toast(isNew ? 'Item added to stock' : 'Changes saved'); refresh();
+    });
+  }
+
+  function sellModal(id) {
+    const p = D.products.find(x => x.id === id); if (!p) return;
+    const m = modal('Record a sale', `<form id="sf" style="display:grid;gap:1rem" novalidate>
+      <div><h3 style="font-size:1.25rem">${esc(p.name)}</h3><p class="muted">${esc(p.condition || '')} · ${+p.qty || 0} in stock</p></div>
+      <div class="row3"><div class="field"><label for="sf-price">Price sold at (₦)</label><input class="in" id="sf-price" inputmode="numeric" value="${esc(p.price)}"></div>
+        <div class="field"><label for="sf-qty">Quantity</label><input class="in" id="sf-qty" inputmode="numeric" value="1"></div>
+        <div class="field"><label for="sf-date">Date</label><input class="in" id="sf-date" type="date" value="${todayISO()}"></div></div>
+      <div class="row2"><div class="field"><label for="sf-buyer">Buyer name <span class="hint">(optional)</span></label><input class="in" id="sf-buyer"></div>
+        <div class="field"><label for="sf-method">Paid by</label><select class="in" id="sf-method">${METHODS.map(x => `<option>${x}</option>`).join('')}</select></div></div>
+      <p class="err" id="sf-e" hidden></p>
+      <div class="mfoot"><span class="bal" id="sf-tot"></span><div class="acts"><button type="button" class="btn" data-close>Cancel</button><button class="btn primary" type="submit">Save sale</button></div></div></form>`);
+    const tot = () => { $('#sf-tot').textContent = 'Total ' + naira(num($('#sf-price').value) * (parseInt($('#sf-qty').value, 10) || 0)); };
+    $('#sf-price').addEventListener('input', tot); $('#sf-qty').addEventListener('input', tot); tot();
+    $('#sf').addEventListener('submit', async e => {
+      e.preventDefault();
+      const price = num($('#sf-price').value), qty = parseInt($('#sf-qty').value, 10) || 0, er = $('#sf-e');
+      if (price <= 0) { er.textContent = 'Enter the price it sold at.'; er.hidden = false; return; }
+      if (qty < 1 || qty > (+p.qty || 0)) { er.textContent = `Quantity must be between 1 and ${+p.qty || 0}.`; er.hidden = false; return; }
+      await KDB.save('sales', { productId: p.id, name: p.name, category: p.category, condition: p.condition, qty, unitPrice: price, unitCost: +p.costPrice || 0, buyer: $('#sf-buyer').value.trim(), method: $('#sf-method').value, date: $('#sf-date').value || todayISO() });
+      p.qty = (+p.qty || 0) - qty; if (p.qty <= 0) p.status = 'sold';
+      await KDB.save('products', p);
+      closeModal(); toast('Sale recorded'); refresh();
+    });
+  }
+
+  /* ---------- sales ---------- */
+  function viewSales() {
+    return `<div class="phead"><div><h1>Sales</h1><p>Everything sold from stock. Record a sale from the Stock page and the quantity is reduced for you.</p></div>
+      <div class="field"><label for="smonth" class="hint">Month</label><input class="in" type="month" id="smonth" value="${esc(V.smonth)}"></div></div>
+      <div class="tiles" id="stiles"></div><div id="slistw"></div>`;
+  }
+  function renderSalesList() {
+    const list = D.sales.filter(s => (s.date || '').slice(0, 7) === V.smonth).sort((a, b) => (b.date + b.createdAt).localeCompare(a.date + a.createdAt));
+    const rev = list.reduce((s, x) => s + x.qty * x.unitPrice, 0), prof = list.filter(x => x.unitCost > 0).reduce((s, x) => s + x.qty * (x.unitPrice - x.unitCost), 0), items = list.reduce((s, x) => s + x.qty, 0);
+    $('#stiles').innerHTML = `<div class="tile"><span class="k">Items sold</span><span class="v">${items}</span></div><div class="tile good"><span class="k">Sales total</span><span class="v">${naira(rev)}</span></div><div class="tile"><span class="k">Estimated profit</span><span class="v">${naira(prof)}</span><span class="s">Only items with a cost price</span></div>`;
+    $('#slistw').innerHTML = list.length ? `<div class="table"><div class="trow head"><div>Date</div><div>Item</div><div>Buyer</div><div>Total</div><div></div></div>${list.map(s => `<div class="trow"><div>${esc(fmtDate(s.date))}</div><div>${esc(s.name)}${s.qty > 1 ? ' × ' + s.qty : ''}</div><div>${esc(s.buyer || '-')} · ${esc(s.method || '')}</div><div class="num">${naira(s.qty * s.unitPrice)}</div><div><button class="btn small ghost" data-act="undo-sale" data-id="${esc(s.id)}">Undo</button></div></div>`).join('')}</div>`
+      : `<div class="empty"><b>No sales in this month</b><span>Open Stock and press Record sale on an item.</span></div>`;
+  }
+  async function undoSale(id) {
+    const s = D.sales.find(x => x.id === id); if (!s) return;
+    modal('Undo this sale?', `<p>${esc(s.name)} × ${s.qty} sold on ${esc(fmtDate(s.date))} for ${naira(s.qty * s.unitPrice)} will be removed and the quantity goes back into stock.</p><div class="mfoot"><span></span><div class="acts"><button class="btn" data-close>Keep sale</button><button class="btn danger" id="us">Undo sale</button></div></div>`);
+    $('#us').onclick = async () => {
+      const p = D.products.find(x => x.id === s.productId);
+      if (p) { p.qty = (+p.qty || 0) + s.qty; if (p.status === 'sold') p.status = 'available'; await KDB.save('products', p); }
+      await KDB.remove('sales', s.id); closeModal(); toast('Sale undone'); refresh();
+    };
+  }
+
+  /* ---------- settings, backup, publishing ---------- */
+  function viewSettings() {
+    const pub = D.products.filter(p => p.status !== 'hidden').length;
+    return `<div class="phead"><div><h1>Settings</h1><p>Publish your stock to the website, back up your records and manage the password.</p></div></div>
+    <div class="panels">
+      <section class="panel"><h2>Publish stock to the website</h2>
+        <p class="hint">The public store reads <span class="code">data/catalog.json</span> and the photos in <span class="code">data/images</span>. Customers do not see what you add here until you publish it. ${pub} ${pub === 1 ? 'item is' : 'items are'} ready.</p>
+        <ol class="steps"><li><b>Download</b> the catalog zip below.</li><li>In your project folder, <b>delete the old</b> <span class="code">data</span> folder, then <b>unzip</b> the file so a new <span class="code">data</span> folder appears.</li><li><b>Commit and push</b> to GitHub. The website updates in about a minute.</li></ol>
+        <div class="acts" style="margin-top:.9rem"><button class="btn primary" data-act="dl-catalog">Download website catalog</button></div><p class="hint" id="pubmsg" style="margin-top:.6rem"></p>
+        <p class="hint" style="margin-top:.6rem">Cost prices, IMEI numbers and repair records are never included.</p></section>
+      <section class="panel"><h2>Load the published catalog</h2><p class="hint">Starting on a new computer or phone? Load the stock that is already live on the website so you can keep editing it. Items already here are not changed.</p>
+        <div class="acts" style="margin-top:.9rem"><button class="btn" data-act="load-catalog">Load published catalog</button></div><p class="hint" id="loadmsg" style="margin-top:.6rem"></p></section>
+      <section class="panel"><h2>Back up your records</h2><p class="hint">Your repairs, stock and sales are saved in this browser on this device. Download a backup often and keep it somewhere safe, such as your email or Google Drive. A backup contains customer details, so never put it on GitHub.</p>
+        <div class="acts" style="margin-top:.9rem"><button class="btn primary" data-act="dl-backup">Download backup</button></div>
+        <div class="field" style="margin-top:1rem"><label for="restore">Restore from a backup file</label><input class="in" type="file" id="restore" accept=".json,application/json"></div><div id="restorebox"></div></section>
+      <section class="panel"><h2>Change password</h2><form id="pwf" style="display:grid;gap:.8rem" novalidate>
+        <div class="field"><label for="pw0">Current password</label><input class="in" id="pw0" type="password" autocomplete="current-password"></div>
+        <div class="field"><label for="pw1">New password</label><input class="in" id="pw1" type="password" autocomplete="new-password"></div>
+        <p class="err" id="pwe" hidden></p><div class="acts"><button class="btn" type="submit">Change password</button></div></form></section>
+      <section class="panel"><h2>What is stored where</h2><p class="hint">${D.products.length} stock items, ${D.repairs.length} repairs and ${D.sales.length} sales are saved in this browser. The public website shows what you last published. When Supabase is connected, this data moves online, every device sees the same records and publishing becomes automatic.</p></section>
+    </div>`;
+  }
+  async function dlCatalog() {
+    const msg = $('#pubmsg'); msg.textContent = 'Preparing the catalog...';
+    try {
+      await loadJSZip();
+      const zip = new JSZip(), items = D.products.filter(p => p.status !== 'hidden'), out = [];
+      let skipped = 0;
+      for (const p of items) {
+        const paths = [];
+        for (let i = 0; i < (p.photos || []).length; i++) {
+          const src = p.photos[i], path = `data/images/${String(p.id).replace(/[^\w-]/g, '')}-${i + 1}.jpg`;
+          try {
+            if (src.startsWith('data:')) zip.file(path, src.split(',')[1], { base64: true });
+            else { const r = await fetch(photoSrc(src)); if (!r.ok) throw 0; zip.file(path, await r.blob()); }
+            paths.push(path);
+          } catch (e) { skipped++; }
+        }
+        out.push({ id: p.id, name: p.name, category: p.category, brand: p.brand || '', condition: p.condition || '', price: +p.price || 0, qty: +p.qty || 0, status: (+p.qty || 0) > 0 && p.status !== 'sold' ? 'available' : 'sold', storage: p.storage || '', color: p.color || '', battery: p.battery || '', description: p.description || '', photos: paths, updatedAt: p.updatedAt });
+      }
+      zip.file('data/catalog.json', JSON.stringify({ updated: new Date().toISOString(), products: out }, null, 2));
+      download(`khaitech-catalog-${todayISO()}.zip`, await zip.generateAsync({ type: 'blob' }));
+      msg.textContent = `Catalog with ${out.length} ${out.length === 1 ? 'item' : 'items'} downloaded.` + (skipped ? ` ${skipped} photo(s) could not be included.` : '') + ' Now follow the steps above.';
+    } catch (e) { msg.textContent = e.message || 'Could not build the catalog.'; }
+  }
+  async function loadCatalog() {
+    const msg = $('#loadmsg'); msg.textContent = 'Loading...';
+    try {
+      const r = await fetch('../data/catalog.json', { cache: 'no-cache' }); if (!r.ok) throw 0;
+      const j = await r.json(), have = new Set(D.products.map(p => p.id)); let n = 0;
+      for (const p of j.products || []) { if (have.has(p.id)) continue; await KDB.save('products', Object.assign({ costPrice: 0, imei: '' }, p)); n++; }
+      msg.textContent = n ? `${n} item(s) loaded.` : 'Nothing new to load.'; await refresh();
+    } catch (e) { msg.textContent = 'Could not read the published catalog.'; }
+  }
+  async function dlBackup() { download(`khaitech-backup-${todayISO()}.json`, new Blob([JSON.stringify(await KDB.exportAll())], { type: 'application/json' })); toast('Backup downloaded'); }
+
+  /* ---------- events ---------- */
+  const actions = {
+    'new-repair': () => repairForm(),
+    'edit-repair': id => repairForm(D.repairs.find(r => r.id === id)),
+    collect: id => collectModal(id),
+    'paste-wa': pasteModal,
+    'new-item': () => itemForm(),
+    'edit-item': id => itemForm(D.products.find(p => p.id === id)),
+    sell: id => sellModal(id),
+    'toggle-item': async id => { const p = D.products.find(x => x.id === id); if (!p) return; p.status = p.status === 'hidden' ? ((+p.qty || 0) > 0 ? 'available' : 'sold') : 'hidden'; await KDB.save('products', p); toast(p.status === 'hidden' ? 'Hidden from the store' : 'Showing in the store'); refresh(); },
+    'undo-sale': undoSale,
+    rf: (id, b) => { V.rfilter = b.dataset.v; if (current() === 'repairs') render(); },
+    'dl-catalog': dlCatalog, 'load-catalog': loadCatalog, 'dl-backup': dlBackup,
+    logout: () => { sessSet(false); showLogin(); }
+  };
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-close]')) { closeModal(); return; }
+    const b = e.target.closest('[data-act]'); if (!b) return;
+    const a = actions[b.dataset.act]; if (a) { if (b.tagName !== 'A') e.preventDefault(); a(b.dataset.id, b, e); }
+  });
+  document.addEventListener('input', e => {
+    const id = e.target.id;
+    if (id === 'rq') { V.rq = e.target.value; renderRepairList(); }
+    if (id === 'sq') { V.sq = e.target.value; renderStockList(); }
+  });
+  document.addEventListener('change', e => {
+    const id = e.target.id;
+    if (id === 'scat') { V.scat = e.target.value; renderStockList(); }
+    if (id === 'sst') { V.sst = e.target.value; renderStockList(); }
+    if (id === 'smonth') { V.smonth = e.target.value || todayISO().slice(0, 7); renderSalesList(); }
+    if (id === 'restore') restoreFile(e.target.files[0]);
+  });
+  document.addEventListener('submit', async e => {
+    if (e.target.id !== 'pwf') return;
+    e.preventDefault();
+    const er = $('#pwe'), say = m => { er.textContent = m; er.hidden = !m; };
+    try {
+      if (await sha($('#pw0').value) !== getHash()) return say('The current password is not right.');
+      if ($('#pw1').value.length < 6) return say('Use at least 6 characters.');
+      setHash(await sha($('#pw1').value)); say(''); e.target.reset(); toast('Password changed');
+    } catch (ex) { say(ex.message); }
+  });
+  function restoreFile(file) {
+    const box = $('#restorebox'); if (!file) return;
+    file.text().then(t => {
+      const j = JSON.parse(t);
+      if (j.app !== 'khaitech') throw new Error('x');
+      box.innerHTML = `<p class="hint" style="margin:.7rem 0">This backup has ${(j.products || []).length} stock items, ${(j.repairs || []).length} repairs and ${(j.sales || []).length} sales. Restoring replaces everything now saved in this browser.</p><button class="btn danger" id="dorestore">Replace my data with this backup</button>`;
+      $('#dorestore').onclick = async () => { await KDB.importAll(j); toast('Backup restored'); refresh(); };
+    }).catch(() => { box.innerHTML = '<p class="err" style="margin-top:.6rem">This is not a KHAITECH backup file.</p>'; });
+  }
+
+  /* ---------- start ---------- */
+  async function startApp() {
+    $('#login').hidden = true; $('#app').hidden = false;
+    await reload(); render();
+  }
+  if (sessGet() && getHash()) startApp(); else showLogin();
+})();
+
+</script>
+</body>
+</html>
